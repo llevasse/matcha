@@ -1,0 +1,20 @@
+@if (loaded()) {
+  <main class="main">
+    @if (isAuth()) {
+      <ul id="navbar">
+        <li (click)="goHome()">Home</li>
+        <li (click)="goProfile()">Profile</li>
+        <li (click)="goLikes()">Likes</li>
+        <li (click)="goMatches()">Matches</li>
+        <li (click)="logout()">Log out</li>
+      </ul>
+    }
+    <h1 id="title">MATCHA</h1>
+  </main>
+
+  <router-outlet />
+}
+
+@else {
+  <h1>Loading...</h1>
+}

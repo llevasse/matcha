@@ -1,0 +1,18 @@
+<div>
+  <div class="{{contentClass()}} container"  (click)="onClick($event)">
+    @if (searchable()) {
+      <div class="flexRow" id="input-container" >
+        <input autocomplete="off" (input)="search()"  id="{{inputId()}}" [placeholder]="placeholder()" [value]="value()"/>
+        <!-- <button type="button" (click)="search()">search</button> -->
+      </div>
+    }
+    @else {
+      <a>{{value() == "" ? placeholder() : value()}}</a>
+    }
+    <div id="content" [style]="values().length == 0 ? 'display: none !important;' : ''" class="{{`content-`.concat(contentDirection())}}">
+      @for (item of values(); track $index) {
+        <dropdown-selector [value]="item" (onClick)="setSelectedValue(item, $index)"/>
+      }
+    </div>
+  </div>
+</div>

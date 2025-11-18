@@ -1,0 +1,51 @@
+@use '../../utilities/variables.scss' as v;
+
+.container{
+  width: 90vw;
+  height: 80vh;
+  color: v.$text-color;
+
+  background-color: v.$text-color;
+  border: solid v.$primary-bg-color .25rem;
+  border-radius: 1.5rem;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+}
+
+#chat-content-container{
+  display: flex;
+  flex-direction: column;
+  flex: auto;
+  height: 75vh;
+  overflow: auto;
+  padding: .75em;
+  gap: .2em;
+}
+
+#chat-input{
+  border-width: 0;
+  border-radius: 0 0 1rem 1rem;
+}
+
+.message{
+  width: fit-content;
+  padding: 1em;
+  border-radius: v.$border-radius-default;
+  background: v.$secondary-bg-color;
+}
+
+.received{
+  align-self: start;
+  background: v.$primary-bg-color;
+
+}
+.sent{
+  align-self: end;
+}
+
+#chat-start{
+  color: black;
+  align-self: center;
+}

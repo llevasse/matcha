@@ -1,0 +1,53 @@
+@use '../../utilities/variables.scss' as v;
+
+.container{
+  padding: 2em;
+  background: v.$secondary-bg-color;
+  width: fit-content;
+  max-width: 60vw;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+
+  border-radius: v.$border-radius-default;
+
+  margin: 0em auto;
+}
+
+.background{
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: rgba($color: #000000, $alpha: .8);
+  z-index: 10;
+
+  align-content: center;
+  justify-items: center;
+}
+
+#image-viewer-container{
+  display: flex;
+  flex-direction: row;
+  width: 60vw;
+  height: 50vh;
+
+  div{
+    flex: 1;
+  }
+}
+
+#picture-viewer{
+  height: 100%;
+  width: 100%;
+  min-width: 20vw;
+  display: block;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+#picture-input{
+  display: none;
+}

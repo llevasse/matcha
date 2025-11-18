@@ -1,0 +1,160 @@
+@use './utilities/variables.scss' as v;
+
+.center-block{
+  margin: 5em auto;
+  display: block;
+  width: fit-content;
+}
+
+#title {
+  margin: 0;
+  text-align: center;
+  font-size: 6em;
+  font-style: italic;
+  color: v.$text-color;
+}
+
+app-profile-view, app-chat{
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: rgba(0,0,0,.4);
+}
+
+button{
+  background: v.$primary-bg-color;
+  width: 100%;
+
+  border: transparent;
+  border-radius: v.$border-radius-default;
+  padding: .5em;
+  box-sizing: border-box;
+
+  color: v.$text-color;;
+  font-size: 2em;
+  opacity: 100%;
+  transition: opacity 300ms;
+}
+
+#global-dropdown-button{
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  padding: 1rem;
+  font-size: 1.5rem;
+
+  background: v.$secondary-bg-color;
+  border-radius: v.$border-radius-default;
+
+  user-select: none;
+
+  button{
+    background: transparent;
+    width: fit-content;
+
+    border: transparent;
+    border-radius: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    color: v.$text-color;;
+    font-size: 1em;
+    opacity: 100%;
+    transition: opacity 300ms;
+  }
+  a{
+    display: none;
+  }
+}
+
+.inactive#global-dropdown-button{
+  button{
+    display:none;
+  }
+  a{
+    display: block;
+  }
+}
+
+app-image-viewer{
+  position: fixed;
+  z-index: 10;
+}
+
+#navbar{
+  background: v.$secondary-bg-color;
+  overflow: hidden;
+  margin: 0;
+  padding: 1rem;
+  font-size: 1.2rem;
+  list-style-type: none;
+
+  li{
+    padding: 0 1rem;
+    display: block;
+    float: left;
+    user-select: none;
+    color: black;
+    transition: color 300ms;
+  }
+
+  li:hover{
+    color: v.$text-color;
+  }
+
+  li:last-child{
+    float: right !important;
+  }
+}
+
+
+label{
+  color: v.$text-color;
+  width: 100%;
+
+  span{
+    position: relative;
+    padding-left: .5rem;
+
+  }
+}
+
+input{
+  background: v.$primary-bg-color;
+  width: 100%;
+
+  border: solid 1px;
+  border-color: v.$text-color;
+  border-radius: v.$border-radius-default;
+  padding: 1rem;
+  box-sizing: border-box;
+  height: 42px;
+
+  font-size: .8rem;
+
+  color: v.$text-color;
+  outline: none;
+}
+
+input:is(:autofill, :-webkit-autofill, :focus){
+  background: v.$primary-bg-color !important;
+  color: v.$text-color !important;
+  -webkit-text-fill-color: v.$text-color !important;
+  -webkit-box-shadow: 0 0 0px 1000px v.$primary-bg-color inset;
+}
+
+input::placeholder{
+  color: v.$text-color;
+  font-style: italic;
+  opacity: .7;
+}

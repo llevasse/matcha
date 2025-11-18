@@ -1,0 +1,14 @@
+<div class="background">
+  <div class="container" id="image-viewer-container">
+    <div id="image-viewer">
+      <label (click)="preventClick($event)" id="picture-viewer" for="picture-input" [style]="'background-image: url('+ image().url +');'"></label>
+      <input (change)="onChange()" id="picture-input" type="file" accept="image/png, image/jpeg"/>
+    </div>
+    @if (allowEditing()) {
+      <div style="display: flex; flex-direction: column; justify-content: space-around;">
+        <button id="replace-button" type="button" (click)="openFileSelector()">replace</button>
+        <button id="delete-button" type="button" (click)="deletePhoto()">delete</button>
+      </div>
+    }
+  </div>
+</div>

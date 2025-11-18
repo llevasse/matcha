@@ -1,0 +1,13 @@
+@use './app/utilities/variables.scss' as v;
+
+body{
+  margin: 0px;
+  padding: 0em;
+  background: v.$background-deg;
+  background-attachment: fixed;
+}
+
+
+html{
+  height: 100vh;
+}

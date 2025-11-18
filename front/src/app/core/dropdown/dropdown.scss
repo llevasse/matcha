@@ -1,0 +1,111 @@
+@use '../../utilities/variables.scss' as v;
+
+.container{
+  background: v.$primary-bg-color;
+  width: 100%;
+
+  border: solid 1px;
+  border-color: v.$text-color;
+  text-align: left;
+  border-radius: v.$border-radius-default;
+  box-sizing: border-box;
+
+  color: v.$text-color;
+
+  font-size: .9em;
+  font-style: italic;
+
+  display: flex;
+  flex-direction: column;
+  gap: .5em;
+
+  position: relative;
+  z-index: 3;
+
+  user-select: none;
+
+  a{
+    height: 42px;
+    padding: 0 1em;
+    align-content: center;
+  }
+}
+
+.flexRow{
+  display: flex;
+  flex-direction: row;
+}
+.container>a{
+  pointer-events: none;
+}
+
+#content{
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25em;
+  padding: 1em;
+  padding-top: 0px;
+}
+
+.content-column{
+  flex-direction: column;
+
+}
+.content-row{
+  flex-direction: row;
+  gap: .5em !important;
+}
+
+.inactive{
+  height: 42px;
+}
+
+.inactive #content{
+  display: none !important;
+}
+
+.options-container{
+  font-size: 1em;
+  font-style: normal;
+}
+
+.options-container:hover{
+  color: black;
+}
+
+input{
+  background: none;
+  border: 0;
+  color: v.$text-color;
+  outline: none;
+  padding: 1em;
+  box-sizing: border-box;
+  height: 42;
+}
+
+input::placeholder{
+  font-style: italic;
+  font-weight: lighter;
+  color: v.$text-color;
+
+}
+
+#input-container{
+  border-bottom: solid 1px v.$text-color;
+  user-select: auto;
+
+  input{
+    width: 100%;
+  }
+  button{
+    width: 50%;
+    background: transparent;
+    border: 0;
+    border-left: solid 1px v.$text-color;
+    color: v.$text-color;
+  }
+}
+
+.inactive #input-container{
+  border-bottom: transparent;
+}

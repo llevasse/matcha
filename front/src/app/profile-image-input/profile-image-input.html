@@ -1,0 +1,18 @@
+<div class="container">
+  <div id="images-preview">
+    @for (item of images(); track $index) {
+      @if (item) {
+        <div>
+          <label (click)="labelClick($event, $index)" class="picture-preview" [htmlFor]="'picture' + $index" [style]="'background-image: url('+ item.url  +');'"></label>
+          <input [id]="'picture' + $index" type="file" accept="image/png, image/jpeg"/>
+        </div>
+      }
+      @else {
+        <div>
+          <label class="picture-preview" [htmlFor]="'picture' + $index"></label>
+          <input (change)="addImage($index)" [id]="'picture' + $index" type="file" accept="image/png, image/jpeg"/>
+        </div>
+      }
+    }
+  </div>
+</div>

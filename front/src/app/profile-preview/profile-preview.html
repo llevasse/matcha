@@ -1,0 +1,26 @@
+<div class="container">
+  <div (click)="onClick.emit(user())">
+    <div class="picture-preview" [style]="'background-image: url('+ user().photos[0].url+');'"></div>
+    <div class="fame-container">
+      <a>{{user().fame}}</a>
+    </div>
+    <div class="profile-info">
+      <div class="profile-name-distance-container">
+        <a>{{user().username}}</a>
+        <a>~{{distance().toFixed(0)}}km away</a>
+      </div>
+      <a id="profile-bio">{{user().bio}}</a>
+      <div class="profile-interest-container">
+        @for (item of user().interest; track $index) {
+          <span>{{item}}</span>
+        }
+      </div>
+    </div>
+  </div>
+  @if (allowInteraction()) {
+    <div class="profile-interact-container">
+      <button class="interact-button" id="dislike-button">X</button>
+      <button class="interact-button" (click)="likeUser()" id="like-button"><3</button>
+    </div>
+  }
+</div>

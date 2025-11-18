@@ -1,0 +1,116 @@
+@use '../utilities/variables.scss' as v;
+
+$--picture-size: 15rem;
+
+.container{
+  width: 90vw;
+  height: 80vh;
+  color: v.$text-color;
+
+  background-color: v.$secondary-bg-color;
+  border: solid black .25rem;
+  border-radius: 1.5rem;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+#name-container{
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  font-size: 4rem;
+  gap: 1rem;
+
+  align-self: center;
+}
+
+#name-container span:nth-child(2){
+  font-weight: bold;
+}
+
+#picture-container, #bio-container, #detail-container{
+  padding: 1rem;
+  margin: 1rem;
+  background-color: rgba(255, 255, 255, .2);
+  border-radius: 1.5rem;
+  box-sizing: border-box;
+}
+
+#picture-container{
+  display: flex;
+  flex-direction: row;
+
+  gap: 1rem;
+  justify-content: space-evenly;
+
+
+  .picture-viewer{
+    height: $--picture-size;
+    width: $--picture-size;
+    position: relative;
+
+
+    border: solid black .5rem;
+    border-radius: .5rem;
+    box-sizing: border-box;
+
+    display: block;
+    background-color: transparent;
+    background-size: cover;
+    background-position: center;
+  }
+}
+
+#info-container{
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+
+  white-space: break-spaces;
+
+  overflow: hidden;
+
+  div{
+    width: 100%;
+    overflow: auto;
+  }
+
+  #bio-container span{
+    height: 100%;
+  }
+
+  span{
+    overflow: auto;
+    display: block;
+  }
+
+  #detail-container{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+}
+
+#interest-container{
+  display: flex !important;
+  flex-direction: row;
+  flex-wrap: wrap;
+  max-height: 10rem;
+}
+
+.interest-span{
+  width: fit-content;
+}
+
+.interest-span:not(:last-child)::after{
+  content: ", ";
+}
+
+#buttons-container{
+  display: flex;
+  flex-direction: row;
+}

@@ -1,0 +1,70 @@
+<div class="container">
+  @if (loading()) {
+    <span>Loading...</span>
+  }
+  @else {
+    <form (submit)="processForm($event)" id="profileForm" class="flexColumn">
+      <div class="flexRow">
+        <label>
+          <span>Firstname</span>
+          <input (input)="setFirstname($event)" id="first-name-input" type="text" placeholder="Firstname" [value]="tmpUser().firstName"/>
+        </label>
+
+        <label>
+          <span>Username</span>
+          <input (input)="setUsername($event)" id="username-input" type="text" placeholder="Username" [value]="tmpUser().username"/>
+        </label>
+
+        <label>
+          <span>Lastname</span>
+          <input (input)="setLastname($event)" id="last-name-input" type="text" placeholder="Lastname" [value]="tmpUser().lastName"/>
+        </label>
+      </div>
+
+      <div class="flexRow">
+        <label>
+          <span>Date of birth</span>
+          <input (input)="setBirthday($event)" id="DOB-input" type="date" [value]="tmpUser().birthday" [max]="maxBirthDay.toISOString().substring(0,10)"/>
+        </label>
+
+        <label>
+          <span>Location</span>
+          <app-dropdown style="z-index: 4;" #locationInputContainer
+            id="#location-input-container" [inputId]="'location-input'" [placeholder]="'Location'"
+            [values]="userSearchCityListStr()" [value]="userCity()" (onSelected)="setSelectedCity($event)"
+            [searchable]="true" (onSearch)="searchCity()"></app-dropdown>
+        </label>
+      </div>
+
+      <div class="flexRow">
+        <label>
+          <span>Gender</span>
+          <app-dropdown [placeholder]="'Gender'"
+            (onSelected)="setGender($event)" [value]="tmpUser().gender" [values]="['female','male', 'non binary','prefer not to say']"/>
+        </label>
+        <label>
+          <span>Orientation</span>
+          <app-dropdown [placeholder]="'Orientation'"
+            (onSelected)="setOrientation($event)" [value]="tmpUser().orientation" [values]="['female','male', 'non binary','prefer not to say']"/>
+        </label>
+
+      </div>
+
+      <label>
+        <span>Bio</span>
+        <textarea (input)="setBio($event)"  [value]="tmpUser().bio" id="bio-input" placeholder="Bio :" rows="4"  minlength="10"></textarea>
+      </label>
+
+
+      <label>
+        <span>Interest</span>
+        <app-interest-dropdown #interestDropdownContainer
+          style="z-index: 2; position: relative; width: 100%;"
+        ></app-interest-dropdown>
+      </label>
+
+      <profile-image-input #imageContainer></profile-image-input>
+      <button>Save</button>
+    </form>
+  }
+</div>

@@ -1,0 +1,64 @@
+@use '../../utilities/variables.scss' as v;
+
+.container{
+  padding: 2em;
+  background: v.$secondary-bg-color;
+  width: 50vw;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+
+  border-radius: v.$border-radius-default;
+
+  margin: 5em auto;
+}
+
+.container>form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+form app-input{
+  width: 100%;
+}
+
+#header{
+  display: flex;
+  width: 100%;
+}
+
+.selector{
+  text-align: center;
+  width: 100%;
+  font-size: 2em;
+  color: v.$text-color;
+}
+
+.inactive{
+  display: none !important;
+}
+
+button{
+  background: v.$primary-bg-color;
+  width: 100%;
+
+  border: transparent;
+  border-radius: v.$border-radius-default;
+  padding: .5em;
+  box-sizing: border-box;
+
+  color: v.$text-color;;
+  font-size: 2em;
+}
+
+
+.selector{
+  transition: scale 300ms;
+  scale: 1;
+}
+
+.selector:hover{
+  scale: 1.2;
+}

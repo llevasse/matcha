@@ -1,0 +1,12 @@
+<div id="profile-list-container">
+  @if (loading()) {
+    <span>Loading...</span>
+  }
+  @else {
+    @for (item of profiles(); track $index) {
+      <app-profile-preview (onClick)="seeProfile(item)" [user]="item" [id]="$index"></app-profile-preview>
+    }
+  }
+</div>
+
+

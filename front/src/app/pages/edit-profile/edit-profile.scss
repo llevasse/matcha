@@ -1,0 +1,80 @@
+@use '../../utilities/variables.scss' as v;
+
+.container{
+  padding: 2em;
+  background: v.$secondary-bg-color;
+  width: 60vw;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+
+  border-radius: v.$border-radius-default;
+
+  margin: 0em auto;
+}
+
+app-input, app-dropdown{
+  width: 100%;
+}
+
+app-dropdown, app-interest-dropdown{
+  height: 42px;
+}
+
+.flexColumn{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.flexRow{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 25px;
+  align-items: center;
+}
+
+textarea{
+  background: v.$primary-bg-color;
+  width: 100%;
+
+  border: solid 1px;
+  border-color: v.$text-color;
+  border-radius: v.$border-radius-default;
+  padding: 1em;
+  box-sizing: border-box;
+  min-height: 42px;
+
+  outline: none;
+
+  color: v.$text-color;
+}
+
+#location-input-container{
+  position: relative;
+  z-index: 4;
+}
+
+
+textarea::placeholder{
+  color: v.$text-color;
+  font-style: italic;
+  opacity: .7;
+}
+
+profile-image-input{
+  width: 100%;
+}
+
+#profileForm:invalid button{
+  opacity: 50%;
+}
+
+
+#interest-container{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}

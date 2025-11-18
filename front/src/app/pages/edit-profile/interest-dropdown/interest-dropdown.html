@@ -1,0 +1,22 @@
+<div class="{{contentClass()}} container"  (click)="contentClass.set('')">
+  @if (loading() == true) {
+    <span>Loading...</span>
+  }
+  @else {
+    <div class="flexRow" id="input-container" >
+      <input autocomplete="off" form="none" (keyup)="keydown($event)" [placeholder]="placeholder() == '' ? 'Interest' : placeholder()"/>
+    </div>
+    <div id="content" [style]="allInterest().length == 0 ? 'display: none !important;' : ''" class="content-row">
+      @for (item of activeSearchResultInSelectedValues(); track $index) {
+        <div class="options-container-selected" (click)="setSelectedValue(item)">
+          <a>{{item.name}}</a>
+        </div>
+      }
+      @for (item of activeSearchResult(); track $index) {
+        <div class="options-container" (click)="setSelectedValue(item)">
+          <a>{{item.name}}</a>
+        </div>
+      }
+    </div>
+  }
+</div>

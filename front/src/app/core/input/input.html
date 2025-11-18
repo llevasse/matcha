@@ -1,0 +1,3 @@
+<label [style]="'position-anchor: --anchor-' + id() + ';'" [htmlFor]="id()">{{label()}}</label>
+<input [style]="'anchor-name: --anchor-' + id() + ';'"
+  [autocomplete]="autocomplete()" [id]="id()" [type]="type()" [placeholder]="placeholder()" [value]="prefill()" [required]="required()" [minLength]="minInputLength()" [min]="minInputValue()" [max]="maxInputValue()"/>

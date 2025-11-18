@@ -1,0 +1,134 @@
+@use '../utilities/variables.scss' as v;
+
+$--displayed-interest-limit: 4;
+$--padding-width: 1rem;
+
+$--picture-size: 20rem;
+
+
+.picture-preview{
+  height: $--picture-size;
+  width: $--picture-size;
+  position: relative;
+
+
+  border: solid black .5rem;
+  border-radius: .5rem;
+  box-sizing: border-box;
+
+  display: block;
+  background-size: cover;
+  background-position: center;
+}
+
+.container{
+  width: fit-content;
+  color: v.$text-color;
+  background-color: v.$secondary-bg-color;
+  padding: $--padding-width;
+  border: solid black .25rem;
+  border-radius: 1.5rem;
+  box-sizing: border-box;
+
+  gap: .5rem;
+
+  display: flex;
+  flex-direction: column;
+  scale: 100%;
+  transition: scale 300ms;
+
+  position: relative;
+  z-index: 1;
+}
+
+.container:hover{
+  scale: 105%;
+  z-index: 2;
+}
+
+.profile-info{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  user-select: none;
+  gap: .5em;
+}
+
+.profile-name-distance-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 1.5em;
+}
+
+
+.profile-interest-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 20em;
+  white-space-collapse:preserve;
+  color: v.$secondary-text-color;
+  line-height: 1em;
+  span{
+    width: fit-content;
+  }
+}
+.profile-interest-container span:not(span:last-child)::after{
+  content: ", ";
+}
+
+.profile-interest-container span:nth-child(4):not(span:last-child)::after{
+  content: ", ..." !important;
+}
+
+.profile-interest-container span:nth-child(n+5){
+  display: none;
+}
+
+.fame-container{
+  position: absolute;
+  background-color: v.$primary-bg-color;
+  top: -1em;
+  right: -1em;
+  padding: $--padding-width;
+  border: solid black .25rem;
+  border-radius: 1.5rem;
+  box-sizing: border-box;
+}
+
+.profile-interact-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  border-top: solid 1px v.$secondary-text-color;
+}
+
+.interact-button{
+  margin-top: $--padding-width;
+  flex: 1;
+  align-self: center;
+
+  text-align: center;
+  font-size: 2em;
+
+  background: transparent;
+  border: none;
+  outline: none;
+  color: v.$text-color;
+  transition: background-color 300ms;
+  border-radius: .3em;
+}
+
+.interact-button:hover{
+  background-color: v.$primary-bg-color;
+}
+
+#profile-bio{
+  max-height: 2em;
+  line-height: 1em;
+  max-width: $--picture-size;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

@@ -1,0 +1,26 @@
+<div class="container">
+  <div id="header">
+    <login-selector class="selector" (onClick)="activateLoginForm()" [value]="'Login'"/>
+    <login-selector class="selector" (onClick)="activateSigninForm()" [value]="'Sign-in'"/>
+  </div>
+  <form (submit)="loginApiCall($event)" id="loginForm">
+    <app-input [id]="'login-mail-input'" [label]="'Mail :'" [placeholder]="'Mail :'"/>
+    <app-input [type]="'password'" [autocomplete]="'password'"  [label]="'Password :'" [id]="'login-password-input'" [placeholder]="'Password :'"/>
+    <button>Login</button>
+    @if (loginErrorMessage() != null) {
+      <a>{{loginErrorMessage()}}</a>
+    }
+
+  </form>
+  <form (submit)="signInApiCall($event)" id="signinForm" class="inactive">
+    <app-input [id]="'register-username-input'" [label]="'Username :'" [placeholder]="'Username :'"/>
+    <app-input [id]="'register-first-name-input'" [label]="'First name :'" [placeholder]="'First name :'"/>
+    <app-input [id]="'register-last-name-input'" [label]="'Last name :'" [placeholder]="'Last name :'"/>
+    <app-input [id]="'register-mail-input'" [label]="'Mail :'" [placeholder]="'Mail :'"/>
+    <app-input [id]="'register-password-input'" [label]="'Password :'" [type]="'password'" [autocomplete]="'password'"  [placeholder]="'Password :'"/>
+    <button>Sign-in</button>
+    @if (registerErrorMessage() != null) {
+      <a>{{registerErrorMessage()}}</a>
+    }
+  </form>
+</div>

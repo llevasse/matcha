@@ -1,0 +1,34 @@
+@use '../../utilities/variables.scss' as v;
+h1{
+  color: v.$text-color;
+  text-align: center;
+}
+
+#profile-list-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1em;
+
+  padding: 6em;
+
+  justify-content: center;
+
+  app-profile-preview{
+    width: fit-content;
+    display: block;
+  }
+}
+
+#home-buttons-container{
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  gap: 1rem;
+  right: 2rem;
+  bottom: 2rem;
+
+  background: v.$secondary-bg-color;
+  padding: 1rem;
+  border-radius: v.$border-radius-default;
+}

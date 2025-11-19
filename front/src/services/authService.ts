@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private authUrl = 'http://147.93.95.154:3000/api/auth';
+  private authUrl = `http://localhost:3000/api/auth`;
   constructor(private http: HttpClient) {
 
   }

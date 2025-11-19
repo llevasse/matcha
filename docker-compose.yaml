@@ -1,7 +1,57 @@
 
 services:
+  mysql:
+    build: mysql
+    container_name: mysql-database
+    volumes:
+      - db_volume:/var/lib/mysql/
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    networks:
+      - matcha
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
   front-end:
     build: front
     container_name: front-end-container
+    networks:
+      - matcha
     ports:
       - 4242:4242
+    env_file:
+      - '.env'
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+  back-end:
+    env_file:
+      - '.env'
+    build: back
+    container_name: back-end-container
+    networks:
+      - matcha
+    ports:
+      - 3000:3000
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+    
+volumes:
+  db_volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /var/lib/mysql/matcha
+
+networks:
+  matcha:
+    name: matcha
+    driver: bridge

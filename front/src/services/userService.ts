@@ -9,7 +9,7 @@ import { webSocket } from "rxjs/webSocket";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  baseUrl = 'http://147.93.95.154:3000';
+  baseUrl = `http://localhost:3000`;
   private profileUrl = `${this.baseUrl}/api/users`;
   private pictureUrl = `${this.baseUrl}/api/profiles`;
   private interationUrl = `${this.baseUrl}/api/interactions`;
@@ -26,16 +26,12 @@ export class UserService {
       }
       else{
         this.clientUser = await this.userFromResponse(response);
-        this.clientUser.ws = webSocket('ws://147.93.95.154:3000');
+        this.clientUser.ws = webSocket('ws://localhost:3000');
 
         var id = this.clientUser.id;
 
         this.clientUser.ws.subscribe();
         this.clientUser.ws.next({message: `init : ${id}`})
-
-        // this.clientUser.ws.onmessage = function(event) {
-        //     console.log(event);
-        // };
 
         return this.clientUser;
       }

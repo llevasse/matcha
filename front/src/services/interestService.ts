@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 
 @Injectable({ providedIn: 'root' })
 export class InterestService {
-  baseUrl = 'http://147.93.95.154:3000';
+  baseUrl = `http://localhost:3000`;
   private interestUrl = `${this.baseUrl}/api/tags`;
   constructor(private http: HttpClient) {}
   getAllInterest(): Promise<any> {

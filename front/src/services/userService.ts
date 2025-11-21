@@ -30,7 +30,12 @@ export class UserService {
 
         var id = this.clientUser.id;
 
-        this.clientUser.ws.subscribe();
+        this.clientUser.ws.subscribe((obj)=>{
+          if(obj['type'] == "liked"){
+            var fromUserObj = JSON.parse(obj['from']);
+            console.log(fromUserObj);
+          }
+        });
         this.clientUser.ws.next({message: `init : ${id}`})
 
         return this.clientUser;

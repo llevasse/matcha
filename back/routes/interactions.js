@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
+const { sendLikeMessage } = require('../websockets/wsServer');
 
 const router = express.Router();
 
@@ -30,6 +31,8 @@ router.post('/like', authenticateToken, async (req, res) => {
         );
 
         if (existingInteraction.length > 0) {
+            sendLikeMessage(req.user.id, to_user_id);   // TODO remove after test
+          
             return res.status(400).json({ error: 'Already liked this user' });
         }
 
@@ -66,7 +69,7 @@ router.post('/like', authenticateToken, async (req, res) => {
             'UPDATE users SET fame = fame + 3 WHERE id = ?',
             [req.user.id]
         );
-
+        sendLikeMessage(req.user.id, to_user_id);
         res.json({
             message: isMatch ? 'It\'s a match!' : 'Like sent successfully',
             is_match: isMatch

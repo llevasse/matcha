@@ -65,8 +65,8 @@ router.get('/conversation/:user_id', authenticateToken, async (req, res) => {
             JOIN users u ON m.sender_id = u.id
             WHERE (m.sender_id = ? AND m.receiver_id = ?) OR (m.sender_id = ? AND m.receiver_id = ?)
             ORDER BY m.id DESC 
-            LIMIT ? OFFSET ?
-        `, [req.user.id, otherUserId, otherUserId, req.user.id, parseInt(limit), parseInt(offset)]);
+            LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}
+        `, [req.user.id, otherUserId, otherUserId, req.user.id]);
 
         res.json(messages.reverse());
     } catch (error) {

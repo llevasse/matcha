@@ -231,10 +231,9 @@ router.get('/search', authenticateToken, async (req, res) => {
             params.push(`%${city}%`);
         }
 
-        query += ' ORDER BY u.created_at DESC LIMIT ? OFFSET ?';
-        params.push(parseInt(limit), parseInt(offset));
+        query += `ORDER BY u.created_at DESC LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;
 
-        const [users] = await db.execute(query, params);
+        const [users] = await db.execute(query,params);
         res.json(users);
     } catch (error) {
         throw error;

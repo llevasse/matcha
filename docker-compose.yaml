@@ -24,7 +24,7 @@ services:
     ports:
       - 4242:4242
     env_file:
-      - '.env'
+      - .env
     volumes:
       - front_volume:/usr/src/app
     depends_on:
@@ -33,7 +33,7 @@ services:
     restart: on-failure
   back-end:
     env_file:
-      - '.env'
+      - .env
     build: back
     container_name: back-end-container
     networks:

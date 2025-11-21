@@ -5,7 +5,7 @@ import { UserService } from './userService';
   providedIn: 'root'
 })
 export class ChatService {
-  private endpoint = `http://localhost:3000/api/messages`;
+  private endpoint = `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000/api/messages`;
 
   constructor(private userService: UserService){}
 

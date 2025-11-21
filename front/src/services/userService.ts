@@ -9,7 +9,7 @@ import { webSocket } from "rxjs/webSocket";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  baseUrl = `http://localhost:3000`;
+  baseUrl = `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000`;
   private profileUrl = `${this.baseUrl}/api/users`;
   private pictureUrl = `${this.baseUrl}/api/profiles`;
   private interationUrl = `${this.baseUrl}/api/interactions`;
@@ -26,7 +26,7 @@ export class UserService {
       }
       else{
         this.clientUser = await this.userFromResponse(response);
-        this.clientUser.ws = webSocket('ws://localhost:3000');
+        this.clientUser.ws = webSocket(`ws://${import.meta.env.NG_APP_BACKEND_HOST}:3000`);
 
         var id = this.clientUser.id;
 

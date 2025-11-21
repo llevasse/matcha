@@ -1,10 +1,9 @@
 const Joi = require('joi');
 
 const allowedGenders = [
-    'male',
-    'female',
+    'man',
+    'woman',
     'non-binary',
-    'transgender',
     'other',
     'prefer not to say'
 ];

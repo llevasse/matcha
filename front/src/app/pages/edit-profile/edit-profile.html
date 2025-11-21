@@ -40,12 +40,12 @@
         <label>
           <span>Gender</span>
           <app-dropdown [placeholder]="'Gender'"
-            (onSelected)="setGender($event)" [value]="tmpUser().gender" [values]="['female','male', 'non binary','prefer not to say']"/>
+            (onSelected)="setGender($event)" [value]="tmpUser().gender" [values]="['woman','man', 'non binary', 'other','prefer not to say']"/>
         </label>
         <label>
           <span>Orientation</span>
           <app-dropdown [placeholder]="'Orientation'"
-            (onSelected)="setOrientation($event)" [value]="tmpUser().orientation" [values]="['female','male', 'non binary','prefer not to say']"/>
+            (onSelected)="setOrientation($event)" [value]="tmpUser().orientation" [values]="['woman','man', 'non binary', 'other','prefer not to say']"/>
         </label>
 
       </div>

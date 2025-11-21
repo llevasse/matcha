@@ -4,7 +4,7 @@ FROM node:${NODE_VERSION}-alpine
 
 WORKDIR /usr/src/app
 
-COPY . .
+COPY package.json package-lock.json ./
 
 RUN npm install -g @angular/cli
 

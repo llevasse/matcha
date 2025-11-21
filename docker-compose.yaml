@@ -25,6 +25,8 @@ services:
       - 4242:4242
     env_file:
       - '.env'
+    volumes:
+      - front_volume:/usr/src/app
     depends_on:
       mysql:
         condition: service_healthy
@@ -50,6 +52,13 @@ volumes:
       o: bind
       type: none
       device: /var/lib/mysql/matcha
+    
+  front_volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./front
 
 networks:
   matcha:

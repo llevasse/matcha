@@ -40,6 +40,8 @@ services:
       - matcha
     ports:
       - 3000:3000
+    volumes:
+      - back_volume:/usr/src/app/uploads/profiles
     depends_on:
       mysql:
         condition: service_healthy
@@ -59,6 +61,13 @@ volumes:
       o: bind
       type: none
       device: ./front
+  back_volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./back/uploads/profile
+      
 
 networks:
   matcha:

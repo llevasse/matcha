@@ -101,13 +101,14 @@ function handleClientChatMessage(messageText = ""){
 
 function sendLikeMessage(fromUserId, toUserId){
   if (socketMap.get(toUserId)){
+    var sender = socketMap.get(fromUserId)[0];
     socketMap.get(toUserId).forEach((client)=>{
       client.ws.send(JSON.stringify({
         type: "liked",
         from: JSON.stringify({
           id: fromUserId, 
-          username: client.username, 
-          profile_picture: client.pfp_url
+          username: sender.username, 
+          profile_picture: sender.pfp_url
         })
       }))
     })

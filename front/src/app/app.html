@@ -6,6 +6,14 @@
         <li (click)="goProfile()">Profile</li>
         <li (click)="goLikes()">Likes</li>
         <li (click)="goMatches()">Matches</li>
+        <div id="notif-dropdown-container">
+          <li (click)="toggleNotifDropdown()">Notif ({{notifList().length}})</li>
+          <div id="notif-content-container" class="inactive">
+            @for (notif of notifList(); track $index) {
+              <app-notification [message]="notif.message" [profile_picture]="notif.profile_picture"></app-notification>
+            }
+          </div>
+        </div>
         <li (click)="logout()">Log out</li>
       </ul>
     }

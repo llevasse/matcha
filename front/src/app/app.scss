@@ -50,56 +50,15 @@ button{
   transition: opacity 300ms;
 }
 
-#global-dropdown-button{
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
-  padding: 1rem;
-  font-size: 1.5rem;
-
-  background: v.$secondary-bg-color;
-  border-radius: v.$border-radius-default;
-
-  user-select: none;
-
-  button{
-    background: transparent;
-    width: fit-content;
-
-    border: transparent;
-    border-radius: 0;
-    padding: 0;
-    box-sizing: border-box;
-
-    color: v.$text-color;;
-    font-size: 1em;
-    opacity: 100%;
-    transition: opacity 300ms;
-  }
-  a{
-    display: none;
-  }
-}
-
-.inactive#global-dropdown-button{
-  button{
-    display:none;
-  }
-  a{
-    display: block;
-  }
-}
-
 app-image-viewer{
   position: fixed;
   z-index: 10;
 }
 
 #navbar{
+  height: 1em;
   background: v.$secondary-bg-color;
-  overflow: hidden;
+  // overflow: hidden;
   margin: 0;
   padding: 1rem;
   font-size: 1.2rem;
@@ -121,6 +80,26 @@ app-image-viewer{
   li:last-child{
     float: right !important;
   }
+
+  #notif-dropdown-container{
+    height: 0em;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+  }
+
+  #notif-content-container.inactive{
+    display: none !important;
+  }
+
+  #notif-dropdown-container #notif-content-container{
+    padding: 1rem .5rem .5rem;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    background: v.$secondary-bg-color;
+  }
+
 }
 
 

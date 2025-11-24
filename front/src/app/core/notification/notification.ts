@@ -9,10 +9,8 @@ import { MatchaNotification } from '../class/notification';
 export class NotificationComponent{
   notification = input.required<MatchaNotification>();
 
-
   constructor() { }
 
   ngOnInit() {
   }
-
 }

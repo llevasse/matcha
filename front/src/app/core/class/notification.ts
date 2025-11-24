@@ -13,6 +13,7 @@ export class MatchaNotification{
   rawMessage!:string
   profilePicture: string | null = null;
   type: string| null= null;
+  repeated: number = 1;
   action: () => void = ()=>{};
 }
 

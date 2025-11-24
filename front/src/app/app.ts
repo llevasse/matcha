@@ -107,10 +107,23 @@ export class App {
           break;
         }
       }
-
+      console.log("New notif :", notif);
+      // if (this.notifList().length != 0){
+      //   console.log("Last notif :", this.notifList()[this.notifList().length - 1]);
+      // }
       if (notif.message != "" && (notif.senderId == null || notif.senderId! != this.clientUser?.id)){
+        // this.notifList().at()
         this.notifList.update((list)=>{
-          list.push(notif)
+          let needPush = true;
+          list.forEach((currentNotif)=>{
+            if (currentNotif.type == notif.type && currentNotif.senderId == notif.senderId){
+              currentNotif.repeated++;
+              needPush = false;
+            }
+          })
+          if (needPush){
+            list.push(notif)
+          }
           return list;
         })
       }

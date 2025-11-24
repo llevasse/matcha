@@ -2,5 +2,5 @@
   @if (notification().profilePicture) {
     <img [src]="notification().profilePicture" style="width: 42px; height: 42px;">
   }
-  <p>{{notification().message}}</p>
+  <p>{{notification().message + (notification().repeated > 1 ? ` (x${notification().repeated})`:"")}}</p>
 </div>

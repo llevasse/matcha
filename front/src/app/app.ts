@@ -96,6 +96,18 @@ export class App {
     }
   }
 
+  private removeNotif(notif:MatchaNotification){
+    this.notifList.update((list)=>{
+      const index = list.findIndex((currentNotif)=>{
+        return (currentNotif.senderId == notif.senderId && currentNotif.type == notif.type)
+      })
+      if (index != -1){
+        list.splice(index, 1);
+      }
+      return list;
+    })
+  }
+
   private notificationHandler(obj: any) {
     const notif = createNotificationFromWsObject(obj);
     if (notif.message != ""){
@@ -103,8 +115,14 @@ export class App {
         case 'liked':{
           notif.action = ()=>{
             this.seeProfile(notif.senderId!);
+            this.removeNotif(notif);
           }
           break;
+        }
+        default:{
+          notif.action = ()=>{
+            this.removeNotif(notif);
+          }
         }
       }
       console.log("New notif :", notif);

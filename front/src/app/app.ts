@@ -1,10 +1,9 @@
 import { UserService } from './../services/userService';
 import { Component, inject, signal, ViewContainerRef, ViewEncapsulation } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Event, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../services/authService';
 import { User } from './core/class/user';
 import { NotificationComponent } from "./core/notification-component/notification";
-import { ProfileView } from './profile-view/profile-view';
 import { createNotificationFromWsObject, MatchaNotification } from './core/class/notification';
 
 @Component({
@@ -39,20 +38,16 @@ export class App {
     })
   }
 
-  createProfilePopup(userId: number){
-    var profile = this.viewContainer.createComponent(ProfileView);
-    profile.setInput("userId", userId);
-    profile.instance.onClickOutside.subscribe(()=>{
-      profile.destroy();
-      setTimeout(()=>{  // Error in console if not in timeout ??
-        history.pushState('','', `/`);
-      }, 100);
+  ngOnInit(){
+    this.router.events.subscribe((event: Event)=>{
+      if (event instanceof NavigationEnd){  // TODO handle for liked and match notif
+        if (RegExp("^\/matches\/profile\/.*\/chat$").test(event.url)){
+          const profileId: number = Number.parseInt(event.url.split("/")[3])
+          this.removeNotif(new MatchaNotification("","", profileId, null, "message"));
+        }
+        // console.log(event);
+      }
     });
-  }
-
-  seeProfile(userId: number){
-    history.pushState('','', `/profile/${userId}`);
-    this.createProfilePopup(userId);
   }
 
   isAuth(){
@@ -114,7 +109,21 @@ export class App {
       switch(notif.type){
         case 'liked':{
           notif.action = ()=>{
-            this.seeProfile(notif.senderId!);
+            this.router.navigateByUrl(`/likes/profile/${notif.senderId}`);
+            this.removeNotif(notif);
+          }
+          break;
+        }
+        case 'match':{
+          notif.action = ()=>{
+            this.router.navigateByUrl(`/matches/profile/${notif.senderId}`)
+            this.removeNotif(notif);
+          }
+          break;
+        }
+        case 'message':{
+          notif.action = ()=>{
+            this.router.navigateByUrl(`/matches/profile/${notif.senderId}/chat`)
             this.removeNotif(notif);
           }
           break;
@@ -125,12 +134,7 @@ export class App {
           }
         }
       }
-      console.log("New notif :", notif);
-      // if (this.notifList().length != 0){
-      //   console.log("Last notif :", this.notifList()[this.notifList().length - 1]);
-      // }
       if (notif.message != "" && (notif.senderId == null || notif.senderId! != this.clientUser?.id)){
-        // this.notifList().at()
         this.notifList.update((list)=>{
           let needPush = true;
           list.forEach((currentNotif)=>{

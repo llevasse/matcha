@@ -1,6 +1,6 @@
 import { Component, ElementRef, inject, Inject, input, output, signal, ViewContainerRef, ViewRef } from '@angular/core';
 import { User } from '../core/class/user';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ImageViewer } from '../core/image-viewer/image-viewer';
 import { UserService } from '../../services/userService';
 import { Chat } from './chat/chat';
@@ -35,16 +35,13 @@ export class ProfileView {
   private activatedRoute = inject(ActivatedRoute);
   private ref = inject(ElementRef);
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private router: Router) {
     //TODO call API to add profile to user history
     this.ref.nativeElement.addEventListener('click', (e: any)=>{
       if ((e.target as HTMLElement).closest('app-profile-view > .container') == null){
         this.onClickOutside.emit();
       }
     });
-
-    console.log(this.activatedRoute.snapshot.url);
-
   }
 
   viewImage(event: PointerEvent, index: number){
@@ -59,13 +56,15 @@ export class ProfileView {
   }
 
   openChat(){
-    history.pushState('','', `/matches/profile/${this.userId()}/chat`);
+    this.router.navigateByUrl(`/matches/profile/${this.userId()}/chat`);
+    // history.pushState('','', `/matches/profile/${this.userId()}/chat`);
 
     var chat = this.viewContainer.createComponent(Chat);
     chat.setInput("userId", this.userId());
     chat.instance.onClickOutside.subscribe(()=>{
       chat.destroy();
-      history.pushState('','', `/matches/profile/${this.userId()}`);
+      this.router.navigateByUrl(`/matches/profile/${this.userId()}`);
+      // history.pushState('','', `/matches/profile/${this.userId()}`);
     });
   }
 }

@@ -1,6 +1,6 @@
 import { Component, inject, signal, ViewContainerRef } from '@angular/core';
 import { UserService } from '../../../services/userService';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../core/class/user';
 import { ProfileView } from '../../profile-view/profile-view';
 import { ProfilePreview } from "../../profile-preview/profile-preview";
@@ -12,7 +12,7 @@ import { ProfilePreview } from "../../profile-preview/profile-preview";
   styleUrl: './matches.scss'
 })
 export class Matches {
-  constructor(private userService: UserService){
+  constructor(private userService: UserService, private router: Router){
     this.userService.getUserMatches().then((users)=>{
       this.loaded.set(true);
       this.profiles.set(users)
@@ -36,13 +36,15 @@ export class Matches {
     profile.instance.onClickOutside.subscribe(()=>{
       profile.destroy();
       setTimeout(()=>{  // Error in console if not in timeout ??
-        history.pushState('','', `/matches`);
+        this.router.navigateByUrl('/matches');
+        // history.pushState('','', `/matches`);
       }, 100);
     });
   }
 
   seeProfile(user: User){
-    history.pushState('','', `/matches/profile/${user.id}`);
+    this.router.navigateByUrl(`/matches/profile/${user.id}`);
+    // history.pushState('','', `/matches/profile/${user.id}`);
     this.createProfilePopup(user.id);
   }
 }

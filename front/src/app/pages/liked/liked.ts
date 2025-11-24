@@ -1,7 +1,7 @@
 import { Component, inject, signal, ViewContainerRef } from '@angular/core';
 import { User } from '../../core/class/user';
 import { ProfilePreview } from "../../profile-preview/profile-preview";
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileView } from '../../profile-view/profile-view';
 import { UserService } from '../../../services/userService';
 
@@ -18,7 +18,7 @@ export class Liked {
   private activatedRoute = inject(ActivatedRoute);
   private viewContainer = inject(ViewContainerRef);
 
-  constructor(private userService: UserService) {;
+  constructor(private userService: UserService, private router: Router) {;
     this.userService.getUsersWhoLikedClient().then((users)=>{
       this.loaded.set(true);
       this.profiles.set(users)
@@ -35,13 +35,15 @@ export class Liked {
     profile.instance.onClickOutside.subscribe(()=>{
       profile.destroy();
       setTimeout(()=>{  // Error in console if not in timeout ??
-        history.pushState('','', `/liked`);
+        this.router.navigateByUrl(`/liked`)
+        // history.pushState('','', `/liked`);
       }, 100);
     });
   }
 
   seeProfile(user: User){
-    history.pushState('','', `/liked/profile/${user.id}`);
+    this.router.navigateByUrl(`/liked/profile/${user.id}`)
+    // history.pushState('','', );
     this.createProfilePopup(user.id);
   }
 }

@@ -81,11 +81,11 @@ export class Chat {
   }
 
   ngDoCheck(){
-    console.log("check");
+    // console.log("check");
   }
 
   ngOnChanges(){
-    console.log("change");
+    // console.log("change");
   }
 
   addMessageFromNotif(notif: MatchaNotification){

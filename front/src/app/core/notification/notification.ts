@@ -1,4 +1,5 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
+import { MatchaNotification } from '../class/notification';
 
 @Component({
   selector: 'app-notification',
@@ -6,8 +7,8 @@ import { Component, input } from '@angular/core';
   styleUrls: ['./notification.scss']
 })
 export class NotificationComponent{
-  profile_picture = input<string | null>(null);
-  message = input.required<string>();
+  notification = input.required<MatchaNotification>();
+
 
   constructor() { }
 

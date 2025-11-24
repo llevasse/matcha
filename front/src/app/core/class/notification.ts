@@ -5,4 +5,5 @@ export class MatchaNotification{
   }
   message!:string;
   profile_picture: string | null = null;
+  action: () => void = ()=>{};
 }

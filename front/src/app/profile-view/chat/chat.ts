@@ -120,10 +120,7 @@ export class Chat {
         content: inputContent,
       }).then((response)=>{
         if (response.ok){
-          response.json().then((obj)=>{
-            const map = new Map<string, any>(Object.entries(obj));
-            this.needScrolling = true;
-          })
+          this.needScrolling = true;
         }
       });
       (event.target as HTMLInputElement).value = "";

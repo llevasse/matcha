@@ -15,13 +15,7 @@ import { MatchaNotification } from './core/class/notification';
 })
 export class App {
   clientUser: User | null = null;
-  // notifCounter = signal(0)
-  notifList = signal<MatchaNotification[]>([
-    // new MatchaNotification("someone liked you", `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000/uploads/profiles/1-1763728384596-906427462.png`),
-    // new MatchaNotification("someone liked you", `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000/uploads/profiles/1-1763728384596-906427462.png`),
-    // new MatchaNotification("someone liked you", `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000/uploads/profiles/1-1763728384596-906427462.png`),
-    // new MatchaNotification("someone sent you a message", `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000/uploads/profiles/1-1763728384596-906427462.png`)
-  ]);
+  notifList = signal<MatchaNotification[]>([]);
 
   loaded = signal<boolean>(false);
   protected readonly title = signal('matcha-front');
@@ -37,7 +31,11 @@ export class App {
             var fromUserObj = JSON.parse(obj['from']);
             console.log(fromUserObj);
             this.notifList.update((list)=>{
-              list.push(new MatchaNotification(`${fromUserObj['username']} liked you`, `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000${fromUserObj['profile_picture']}`))
+              var notif = new MatchaNotification(`${fromUserObj['username']} liked you`, `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000${fromUserObj['profile_picture']}`);
+              notif.action = ()=>{
+                this.router.navigate([`/profile/${fromUserObj['id']}`]);
+              }
+              list.push(notif)
               return list;
             })
             this.loaded.set(false);

@@ -10,7 +10,7 @@
           <li (click)="toggleNotifDropdown()">Notif ({{notifList().length}})</li>
           <div id="notif-content-container" class="inactive">
             @for (notif of notifList(); track $index) {
-              <app-notification [message]="notif.message" [profile_picture]="notif.profile_picture"></app-notification>
+              <app-notification [notification]="notif"></app-notification>
             }
           </div>
         </div>

@@ -1,6 +1,6 @@
-<div style="display: flex; flex-direction: row; gap: .5rem;">
-  @if (profile_picture() != null) {
-    <img [src]="profile_picture()" style="width: 42px; height: 42px;">
+<div style="display: flex; flex-direction: row; gap: .5rem;" (click)="notification().action()">
+  @if (notification().profile_picture) {
+    <img [src]="notification().profile_picture" style="width: 42px; height: 42px;">
   }
-  <p>{{message()}}</p>
+  <p>{{notification().message}}</p>
 </div>

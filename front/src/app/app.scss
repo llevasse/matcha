@@ -98,6 +98,10 @@ app-image-viewer{
     display: flex;
     flex-direction: column;
     background: v.$secondary-bg-color;
+
+    app-notification{
+      user-select: none;
+    }
   }
 
 }

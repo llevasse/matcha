@@ -122,18 +122,7 @@ export class Chat {
         if (response.ok){
           response.json().then((obj)=>{
             const map = new Map<string, any>(Object.entries(obj));
-            const mess = new Message(
-              map.get('content'),
-              map.get('id'),
-              map.get('sender_id'),
-              map.get('receiver_id'),
-              new Date(map.get('sent_at')),
-              "",
-            );
-            this.messages().push(mess);
             this.needScrolling = true;
-            this.loaded.set(false);
-            this.loaded.set(true);
           })
         }
       });

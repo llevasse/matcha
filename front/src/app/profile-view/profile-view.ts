@@ -65,7 +65,7 @@ export class ProfileView {
     chat.setInput("userId", this.userId());
     chat.instance.onClickOutside.subscribe(()=>{
       chat.destroy();
-      history.pushState('','', `/matches/profile/${this.userId()}`);  
+      history.pushState('','', `/matches/profile/${this.userId()}`);
     });
   }
 }

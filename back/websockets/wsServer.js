@@ -1,6 +1,11 @@
 const db = require('../config/database');
-
 const ws = require('ws')
+
+const messageType = {
+  LIKED: 'liked',
+  MATCH: 'match',
+  MESSAGE_SENT: 'message'
+}
 
 const socketMap = new Map([]);
 
@@ -83,37 +88,35 @@ function handleClientChatMessage(messageText = ""){
     var split = messageText.split(":");
     var info = split[0].split("->");
     var message = split[1];
-    var id = Number.parseInt(info[1]);
+    var receiverId = Number.parseInt(info[1]);
+    var senderId = Number.parseInt(info[0]);
     
-    if (socketMap.get(id) != undefined){
-      socketMap.get(id).forEach((client)=>{
-        client.ws.send(JSON.stringify({message: `${info[0]}:${message}`}));
-      })
-      socketMap.get(Number.parseInt(info[0])).forEach((client)=>{
-        client.ws.send(JSON.stringify({message: `${info[0]}:${message}`}));
-      })
-    }
+    // const content = `${senderId}:${message}`;
+    sendMessage(senderId, receiverId, messageText, messageType.MESSAGE_SENT)
+    sendMessage(senderId, senderId, messageText, messageType.MESSAGE_SENT)
   }
   catch(error){
     console.log(`Error while processing message : ${messageText}\nCause : ${error}`)
   }
 }
 
-function sendLikeMessage(fromUserId, toUserId){
+function sendMessage(fromUserId, toUserId, content = "", type){
   if (socketMap.get(toUserId)){
     var sender = socketMap.get(fromUserId)[0];
     socketMap.get(toUserId).forEach((client)=>{
       client.ws.send(JSON.stringify({
-        type: "liked",
+        type: type,
         from: JSON.stringify({
           id: fromUserId, 
           username: sender.username, 
           profile_picture: sender.pfp_url
-        })
+        }),
+        content: content
       }))
     })
   }
 }
+
 
 function printClientList(){
   Array.from(socketMap).forEach((value)=>{
@@ -122,4 +125,4 @@ function printClientList(){
   })
 }
 
-module.exports = {server, sendLikeMessage};
+module.exports = {server, sendMessage, messageType};

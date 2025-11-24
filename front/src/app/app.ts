@@ -3,9 +3,9 @@ import { Component, inject, signal, ViewContainerRef, ViewEncapsulation } from '
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../services/authService';
 import { User } from './core/class/user';
-import { NotificationComponent } from "./core/notification/notification";
-import { MatchaNotification } from './core/class/notification';
+import { NotificationComponent } from "./core/notification-component/notification";
 import { ProfileView } from './profile-view/profile-view';
+import { createNotificationFromWsObject, MatchaNotification } from './core/class/notification';
 
 @Component({
   selector: 'app-root',
@@ -28,21 +28,11 @@ export class App {
     }
     userService.createClientUser().then((user)=>{
       if (user){
+        this.clientUser = user;
         user.ws?.subscribe((obj)=>{
-          if(obj['type'] == "liked"){
-            var fromUserObj = JSON.parse(obj['from']);
-            console.log(fromUserObj);
-            this.notifList.update((list)=>{
-              var notif = new MatchaNotification(`${fromUserObj['username']} liked you`, `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000${fromUserObj['profile_picture']}`);
-              notif.action = ()=>{
-                this.seeProfile(fromUserObj['id']);
-              }
-              list.push(notif)
-              return list;
-            })
-            this.loaded.set(false);
-            this.loaded.set(true);
-          }
+          this.notificationHandler(obj);
+          this.loaded.set(false);
+          this.loaded.set(true);
         })
       }
       this.loaded.set(true);
@@ -93,7 +83,6 @@ export class App {
     this.router.navigate([`/likes`]);
   }
 
-
   goMatches(){
     this.router.navigate([`/matches`]);
   }
@@ -104,6 +93,27 @@ export class App {
       container?.classList.remove('inactive');
     }else{
       container?.classList.add('inactive');
+    }
+  }
+
+  private notificationHandler(obj: any) {
+    const notif = createNotificationFromWsObject(obj);
+    if (notif.message != ""){
+      switch(notif.type){
+        case 'liked':{
+          notif.action = ()=>{
+            this.seeProfile(notif.senderId!);
+          }
+          break;
+        }
+      }
+
+      if (notif.message != "" && (notif.senderId == null || notif.senderId! != this.clientUser?.id)){
+        this.notifList.update((list)=>{
+          list.push(notif)
+          return list;
+        })
+      }
     }
   }
 }

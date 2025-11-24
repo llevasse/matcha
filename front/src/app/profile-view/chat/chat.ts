@@ -2,6 +2,8 @@ import { afterEveryRender, Component, ElementRef, inject, input, output, signal,
 import { ChatService } from '../../../services/chat-service';
 import { Message } from '../../core/class/message';
 import { UserService } from '../../../services/userService';
+import { createNotificationFromWsObject, MatchaNotification } from '../../core/class/notification';
+
 
 @Component({
   selector: 'app-chat',
@@ -69,14 +71,9 @@ export class Chat {
     this.userService.getClientUser().then((user)=>{
       if (user && user.ws){ // chat received must be in that format : `${sender_id}:${message}`
         user.ws.asObservable().pipe().subscribe((obj) => {
-          var split = obj['message'].split(":");
-          const senderId = Number.parseInt(split[0]);
-          var mess = new Message(split[1], 0, senderId, senderId == this.userId() ? user.id : this.userId(), new Date(Date.now()), "");
-          if (mess.content != undefined && (mess.senderId  == this.userId() || mess.senderId == user.id)){
-            this.needScrolling = true;
-            this.messages().push(mess); //for some reason, this doesn't call the `checkChanges` function of angular at the right time
-            this.loaded.set(false);
-            this.loaded.set(true);
+          const notif = createNotificationFromWsObject(obj)
+          if (notif.type == 'message'){
+            this.addMessageFromNotif(notif);
           }
         })
       }
@@ -89,6 +86,17 @@ export class Chat {
 
   ngOnChanges(){
     console.log("change");
+  }
+
+  addMessageFromNotif(notif: MatchaNotification){
+    const message = notif.rawMessage.split(":")[1];
+    var mess = new Message(message, 0, notif.senderId!, notif.receiverId!, new Date(Date.now()), "");
+    if (mess.content != undefined && (mess.senderId  == this.userId() || mess.receiverId == this.userId())){
+      this.needScrolling = true;
+      this.messages().push(mess); //for some reason, this doesn't call the `checkChanges` function of angular at the right time
+      this.loaded.set(false);
+      this.loaded.set(true);
+    }
   }
 
   private async processReceivedMessageListResponse(response: Response){

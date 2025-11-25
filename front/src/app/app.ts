@@ -1,5 +1,5 @@
 import { UserService } from './../services/userService';
-import { Component, inject, signal, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, inject, signal, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { Event, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../services/authService';
 import { User } from './core/class/user';
@@ -99,6 +99,15 @@ export class App {
       container?.classList.remove('inactive');
     }else{
       container?.classList.add('inactive');
+    }
+  }
+
+  @HostListener('document:mousedown', ['$event']) closeNotifDropdown(event: any){
+    if (event.target.closest("#notif-dropdown-container") == null && event.target.closest("#notif-content-container") == null){
+      var container = document.querySelector("#notif-content-container");
+      if (container && !container?.classList.contains("inactive")){
+        container?.classList.add('inactive');
+      }
     }
   }
 

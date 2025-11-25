@@ -87,7 +87,7 @@ export class App {
 
   toggleNotifDropdown(){
     var container = document.querySelector("#notif-content-container");
-    if (container?.classList.contains('inactive')){
+    if (container?.classList.contains('inactive') && container?.children.length != 0){
       container?.classList.remove('inactive');
     }else{
       container?.classList.add('inactive');

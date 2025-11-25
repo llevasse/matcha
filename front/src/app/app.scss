@@ -95,6 +95,10 @@ app-image-viewer{
     display: none !important;
   }
 
+  #notif-content-container:empty{
+    display: none !important;
+  }
+
   #notif-dropdown-container #notif-content-container{
     padding: .5rem;
     z-index: 2;

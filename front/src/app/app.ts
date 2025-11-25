@@ -16,8 +16,16 @@ import { createNotificationFromWsObject, MatchaNotification } from './core/class
 export class App {
   clientUser: User | null = null;
   notifList = signal<MatchaNotification[]>([
-    // new MatchaNotification("user liked you",""),
-    // new MatchaNotification("user sent you a message",""),
+    new MatchaNotification("user liked you",""),
+    new MatchaNotification("user sent you a message",""),
+    new MatchaNotification("user liked you",""),
+    new MatchaNotification("user sent you a message",""),
+    new MatchaNotification("user liked you",""),
+    new MatchaNotification("user sent you a message",""),
+    new MatchaNotification("user liked you",""),
+    new MatchaNotification("user sent you a message",""),
+    new MatchaNotification("user liked you",""),
+    new MatchaNotification("user sent you a message",""),
   ]);
   private viewContainer = inject(ViewContainerRef);
 

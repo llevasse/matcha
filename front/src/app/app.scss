@@ -64,10 +64,11 @@ app-image-viewer{
   margin: 0;
   padding: 0;
   font-size: 1.2rem;
+  line-height: 1em;
   list-style-type: none;
 
   li{
-    padding: 1rem;
+    padding: 1em;
     display: block;
     user-select: none;
     color: black;
@@ -100,13 +101,18 @@ app-image-viewer{
   }
 
   #notif-dropdown-container #notif-content-container{
-    padding: .5rem;
+    padding: .5em;
     z-index: 2;
     display: flex;
     flex-direction: column;
     background: v.$secondary-bg-color;
     border-radius: 0 0 v.$border-radius-default v.$border-radius-default;
-    gap: .5rem;
+    gap: .5em;
+
+    max-height: 10rem;
+    overflow-y: scroll;
+    position: absolute;
+    top: 3em;
 
     app-notification{
       user-select: none;

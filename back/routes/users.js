@@ -8,8 +8,8 @@ const router = express.Router();
 router.get('/profile', authenticateToken, async (req, res) => {
     try {
         const [users] = await db.execute(
-            `SELECT id, username, firstname, lastname, email, gender_id, bio, birthdate, city, 
-                    is_confirmed, created_at 
+            `SELECT id, username, firstname, lastname, email, gender_id, bio, birthdate,
+                    city, location_latitude, location_longitude, is_confirmed, created_at 
              FROM users WHERE id = ?`,
             [req.user.id]
         );
@@ -39,8 +39,8 @@ router.get('/profile', authenticateToken, async (req, res) => {
 router.get('/profile/:user_id', async (req, res) => {
     try {
         const [users] = await db.execute(
-            `SELECT id, username, firstname, lastname, gender_id, bio, birthdate, city, 
-                    is_confirmed, created_at 
+            `SELECT id, username, firstname, lastname, gender_id, bio, birthdate, 
+                    city, location_latitude, location_longitude, is_confirmed, created_at 
              FROM users WHERE id = ?`,
             [req.params.user_id]
         );
@@ -69,7 +69,7 @@ router.get('/profile/:user_id', async (req, res) => {
 router.post('/profile', authenticateToken, validateProfileUpdate, async (req, res) => {
     const connection = await db.getConnection();
     try {
-        const { username, firstname, lastname, bio, city, gender, preferences, birthdate } = req.body;
+        const { username, firstname, lastname, bio, city, gender, preferences, birthdate, location_latitude, location_longitude } = req.body;
         const userId = req.user.id;
 
         await connection.beginTransaction();
@@ -85,8 +85,8 @@ router.post('/profile', authenticateToken, validateProfileUpdate, async (req, re
         const genderId = genderRows[0].id;
 
         await connection.execute(
-            `UPDATE users SET username = ?, firstname = ?, lastname = ?, bio = ?, city = ?, gender_id = ?, birthdate = ? WHERE id = ?`,
-            [username, firstname, lastname, bio, city, genderId, birthdate, userId]
+            `UPDATE users SET username = ?, firstname = ?, lastname = ?, bio = ?, city = ?, gender_id = ?, birthdate = ?, location_latitude = ?, location_longitude = ? WHERE id = ?`,
+            [username, firstname, lastname, bio, city, genderId, birthdate, location_latitude, location_longitude, userId]
         );
 
         await connection.execute(
@@ -207,7 +207,7 @@ router.get('/search', authenticateToken, async (req, res) => {
         const { age_min, age_max, city, limit = 20, offset = 0 } = req.query;
 
         let query = `
-            SELECT u.id, u.username, u.bio, u.birthdate, u.city, u.gender_id,
+            SELECT u.id, u.username, u.bio, u.birthdate, u.city, u.location_latitude, u.location_longitude, u.gender_id,
                    pp.file_path as profile_picture
             FROM users u
             LEFT JOIN profile_pictures pp ON u.id = pp.user_id AND pp.is_main = TRUE

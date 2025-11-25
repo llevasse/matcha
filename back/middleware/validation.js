@@ -32,7 +32,9 @@ const profileUpdateSchema = Joi.object({
     city: Joi.string().max(100).optional(),
     username: Joi.string().alphanum().min(3).max(50).required(),
     firstname: Joi.string().max(50).required(),
-    lastname: Joi.string().max(50).required()
+    lastname: Joi.string().max(50).required(),
+    location_latitude: Joi.number().precision(9),
+    location_longitude: Joi.number().precision(9),
 });
 
 const userLoginSchema = Joi.object({

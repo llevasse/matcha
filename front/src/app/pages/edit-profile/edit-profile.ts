@@ -89,6 +89,8 @@ export class EditProfile {
 		this.user.bio = this.tmpUser().bio || this.user.bio;
 		this.user.gender = this.tmpUser().gender || this.user.gender;
 		this.user.orientation = this.tmpUser().orientation || this.user.orientation;
+		this.user.cityLat = this.tmpUser().cityLat || this.user.cityLat;
+		this.user.cityLon = this.tmpUser().cityLon || this.user.cityLon;
 
 		this.imagesInput()?.toBeeDeleted.forEach((image)=>{
 			if (image.id){
@@ -139,6 +141,8 @@ export class EditProfile {
 			bio: this.user.bio,
 			birthdate: this.user.birthday,
 			city: this.userCity(),
+			location_latitude: this.user.cityLat,
+			location_longitude: this.user.cityLon,
 			preferences: [this.user.orientation]
 		});
 

@@ -15,19 +15,7 @@ import { createNotificationFromWsObject, MatchaNotification } from './core/class
 })
 export class App {
   clientUser: User | null = null;
-  notifList = signal<MatchaNotification[]>([
-    new MatchaNotification("user liked you",""),
-    new MatchaNotification("user sent you a message",""),
-    new MatchaNotification("user liked you",""),
-    new MatchaNotification("user sent you a message",""),
-    new MatchaNotification("user liked you",""),
-    new MatchaNotification("user sent you a message",""),
-    new MatchaNotification("user liked you",""),
-    new MatchaNotification("user sent you a message",""),
-    new MatchaNotification("user liked you",""),
-    new MatchaNotification("user sent you a message",""),
-  ]);
-  private viewContainer = inject(ViewContainerRef);
+  notifList = signal<MatchaNotification[]>([]);
 
   loaded = signal<boolean>(false);
   protected readonly title = signal('matcha-front');
@@ -52,11 +40,10 @@ export class App {
   ngOnInit(){
     this.router.events.subscribe((event: Event)=>{
       if (event instanceof NavigationEnd){  // TODO handle for liked and match notif
-        if (RegExp("^\/matches\/profile\/.*\/chat$").test(event.url)){
+        if (RegExp("^\/matches\/profile\/.*\/chat$").test(event.url)){  // check if url leads to chat and clear related notif if need be
           const profileId: number = Number.parseInt(event.url.split("/")[3])
           this.removeNotif(new MatchaNotification("","", profileId, null, "message"));
         }
-        // console.log(event);
       }
     });
   }

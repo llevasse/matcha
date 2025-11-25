@@ -1,4 +1,4 @@
-import { Component, inject, signal, viewChildren, ViewContainerRef } from '@angular/core';
+import { Component, inject, signal, viewChildren, ViewContainerRef, afterEveryRender } from '@angular/core';
 import { ProfilePreview } from "../../profile-preview/profile-preview";
 import { User } from "../../core/class/user"
 import { ProfileView } from '../../profile-view/profile-view';
@@ -18,22 +18,29 @@ export class Home {
 
 	loading = signal<boolean>(true)
 
-
-  client: User = new User();
-
   private activatedRoute = inject(ActivatedRoute);
   private viewContainer = inject(ViewContainerRef);
 
-
   previews = viewChildren<ProfilePreview>(ProfilePreview);
-  ngOnInit(){
-  }
+  ngOnInit(){  }
 
   constructor(private userService: UserService) {
     this.getUserProfile();
     if (this.activatedRoute.snapshot.url.length > 0 && this.activatedRoute.snapshot.url[0].path == "profile"){
       this.createProfilePopup(Number.parseInt(this.activatedRoute.snapshot.url[1].path));
     }
+    afterEveryRender(()=>{
+      this.previews().forEach((preview)=>{  // TODO use saved client location
+        preview.distance.set(
+          preview.getDistanceFromLatLonInKm(
+            this.user.cityLat,
+            this.user.cityLon,
+            preview.user().cityLat,
+            preview.user().cityLon,
+          )
+        );
+      });
+    })
   }
 
   async getUserProfile(){
@@ -42,7 +49,7 @@ export class Home {
       return ;
     }
     this.user = tmpUser;
-
+    this.user = await this.getClientCity();
     //TODO api call to get similar user as client
     this.profiles.set(await this.userService.searchProfile());
 		this.loading.set(false)
@@ -64,36 +71,22 @@ export class Home {
     this.createProfilePopup(user.id);
   }
 
-  ngAfterViewInit(){
-    this.getClientCity();
-  }
-
   async getClientCity() {
     const url = "http://ip-api.com/json/";
     try {
-      if (Number.isNaN(this.client.cityLat) || Number.isNaN(this.client.cityLon)){
+      if (Number.isNaN(this.user.cityLat) || Number.isNaN(this.user.cityLon)){
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`Response status: ${response.status}`);
         }
         const result = await response.json();
-        this.client.cityStr = result['city'];
-        this.client.cityLon = result['lon'];
-        this.client.cityLat = result['lat'];
-
-        this.previews().forEach((preview)=>{  // TODO use saved client location
-          preview.distance.set(
-            preview.getDistanceFromLatLonInKm(
-              this.client.cityLat,
-              this.client.cityLon,
-              preview.user().cityLat,
-              preview.user().cityLon,
-            )
-          );
-        });
+        this.user.cityStr = result['city'];
+        this.user.cityLon = result['lon'];
+        this.user.cityLat = result['lat'];
       }
     } catch (error: any) {
       console.error(error.message);
     }
+    return this.user;
   }
 }

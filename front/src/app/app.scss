@@ -56,18 +56,19 @@ app-image-viewer{
 }
 
 #navbar{
-  height: 1em;
+  display: flex;
+
+  // height: 1em;
   background: v.$secondary-bg-color;
   // overflow: hidden;
   margin: 0;
-  padding: 1rem;
+  padding: 0;
   font-size: 1.2rem;
   list-style-type: none;
 
   li{
-    padding: 0 1rem;
+    padding: 1rem;
     display: block;
-    float: left;
     user-select: none;
     color: black;
     transition: color 300ms;
@@ -79,6 +80,8 @@ app-image-viewer{
 
   li:last-child{
     float: right !important;
+    position: absolute;
+    right: 0;
   }
 
   #notif-dropdown-container{
@@ -93,11 +96,13 @@ app-image-viewer{
   }
 
   #notif-dropdown-container #notif-content-container{
-    padding: 1rem .5rem .5rem;
+    padding: .5rem;
     z-index: 2;
     display: flex;
     flex-direction: column;
     background: v.$secondary-bg-color;
+    border-radius: 0 0 v.$border-radius-default v.$border-radius-default;
+    gap: .5rem;
 
     app-notification{
       user-select: none;

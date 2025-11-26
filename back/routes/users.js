@@ -78,10 +78,18 @@ router.get('/profile/:user_id', async (req, res) => {
 router.post('/profile', authenticateToken, validateProfileUpdate, async (req, res) => {
     const connection = await db.getConnection();
     try {
-        const { username, firstname, lastname, bio, city, gender, preferences, birthdate, location_latitude, location_longitude } = req.body;
-        const userId = req.user.id;
-
+      const { username, firstname, lastname, bio, city, gender, preferences, birthdate, location_latitude, location_longitude } = req.body;
+      const userId = req.user.id;
+      
         await connection.beginTransaction();
+        
+        dob = Date.parse(birthdate);
+        
+        maxDob = new Date(Date.parse((new Date()).toDateString()));
+        maxDob.setFullYear(maxDob.getFullYear() - 18);
+        if (dob - maxDob > 0){
+            throw new Error("User must be at least 18 years old.");
+        }
 
         // Trouver l'id du genre principal
         const [genderRows] = await connection.execute(
@@ -156,8 +164,8 @@ router.post('/profile', authenticateToken, validateProfileUpdate, async (req, re
 
     } catch (error) {
       await connection.rollback();
-      console.error(error);
-      res.status(500).json({ error: 'Erreur lors de la mise à jour du profil' });
+      // console.error(error);
+      res.status(400).json({ error: error.message });
     } finally {
       connection.release();
     }

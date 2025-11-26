@@ -24,7 +24,7 @@
       <div class="flexRow">
         <label>
           <span>Date of birth</span>
-          <input (input)="setBirthday($event)" id="DOB-input" type="date" [value]="tmpUser().birthday" [max]="maxBirthDay.toISOString().substring(0,10)"/>
+          <input required (input)="setBirthday($event)" id="DOB-input" type="date" [value]="tmpUser().birthday" [max]="maxBirthDay.toISOString().substring(0,10)"/>
         </label>
 
         <label>

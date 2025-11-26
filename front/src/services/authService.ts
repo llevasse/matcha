@@ -7,7 +7,7 @@ export class AuthService {
   constructor(private http: HttpClient) {
 
   }
-  login(credentials: { email: string; password: string }): Promise<any> {
+  login(credentials: { username: string; password: string }): Promise<any> {
     this.logout();
     return fetch(`${this.authUrl}/login`, {
       method: "POST",
@@ -40,7 +40,7 @@ export class AuthService {
       body: JSON.stringify(credentials),
     }).then(async (value)=>{
       if (value.ok){
-        await this.login({email: credentials.email, password: credentials.password})
+        await this.login({username: credentials.username, password: credentials.password})
       }
       return value;
     })

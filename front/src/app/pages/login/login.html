@@ -4,7 +4,7 @@
     <login-selector class="selector" (onClick)="activateSigninForm()" [value]="'Sign-in'"/>
   </div>
   <form (submit)="loginApiCall($event)" id="loginForm">
-    <app-input [id]="'login-mail-input'" [label]="'Mail :'" [placeholder]="'Mail :'"/>
+    <app-input [id]="'login-username-input'" [label]="'Username :'" [placeholder]="'Username :'"/>
     <app-input [type]="'password'" [autocomplete]="'password'"  [label]="'Password :'" [id]="'login-password-input'" [placeholder]="'Password :'"/>
     <button>Login</button>
     @if (loginErrorMessage() != null) {

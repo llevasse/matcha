@@ -1,7 +1,7 @@
 # registration & sign-in
 - [x] Register with email, username, first and last name, and a password
 - [ ] Send confirmation email to user 
-- [ ] Login with username and a password
+- [x] Login with username and a password
 - [ ] Send email to reset password
 - [ ] Log out in one click from anywhere
 

@@ -65,17 +65,15 @@ export class Login {
 
   async loginApiCall(event: SubmitEvent){
     event.preventDefault();
-    var email = (document.querySelector("#login-mail-input") as HTMLInputElement).value;
+    var username = (document.querySelector("#login-username-input") as HTMLInputElement).value;
     var password = (document.querySelector("#login-password-input") as HTMLInputElement).value;
-    if (email && password){
-      this.authService.login({email, password}).then((value)=>{
+    if (username && password){
+      this.authService.login({username: username, password}).then((value)=>{
         if (value.ok){
           this.userService.createClientUser().then((user)=>{
             if (user == null){
               return ;
             }
-
-            // history.pushState('','', "/profile");
             this.router.navigate([user.isFilled() ? `/` : `/profile`]);
           })
         }

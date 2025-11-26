@@ -57,16 +57,16 @@ router.post('/register', validateRegistration, async (req, res) => {
 router.post('/login', validateLogin, async (req, res) => {
     console.log("Login request received :", req.body);
     try {
-        const { email, password } = req.body;
+        const { username, password } = req.body;
 
         // Trouver l'utilisateur
         const [users] = await db.execute(
-            'SELECT id, username, email, password_hash FROM users WHERE email = ?',
-            [email]
+            'SELECT id, username, email, password_hash FROM users WHERE username = ?',
+            [username]
         );
 
-        console.log("User lookup result for {", email ,"}:", users);
-        if (users.length === 0 || users.length > 1) {
+        console.log("User lookup result for {", username ,"}:", users);
+        if (users.length !== 1) {
             // 401 to protect against user enumeration
             return res.status(401).json({ message: 'Invalid credentials' });
         }

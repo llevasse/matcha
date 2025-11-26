@@ -9,7 +9,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
     try {
         const [users] = await db.execute(
             `SELECT id, username, firstname, lastname, email, gender_id, bio, birthdate,
-                    city, location_latitude, location_longitude, is_confirmed, created_at 
+                    city, location_latitude, location_longitude, fame, is_confirmed, created_at 
              FROM users WHERE id = ?`,
             [req.user.id]
         );
@@ -49,7 +49,7 @@ router.get('/profile/:user_id', async (req, res) => {
     try {
         const [users] = await db.execute(
             `SELECT id, username, firstname, lastname, gender_id, bio, birthdate, 
-                    city, location_latitude, location_longitude, is_confirmed, created_at 
+                    city, location_latitude, location_longitude, fame, is_confirmed, created_at 
              FROM users WHERE id = ?`,
             [req.params.user_id]
         );
@@ -146,7 +146,7 @@ router.post('/profile', authenticateToken, validateProfileUpdate, async (req, re
             'SELECT id FROM profile_pictures WHERE user_id = ? LIMIT 1',
             [userId]
         );
-        if (pictures.length == 0){
+        if (pictures.length == 0){   // bug when pictures are uploaded for the first time, need further checking
             is_confirmed = false;
             console.log("Not enough pictures to be a confirmed user")
         }
@@ -212,7 +212,7 @@ router.get('/search', authenticateToken, async (req, res) => {
         const { age_min, age_max, city, limit = 20, offset = 0 } = req.query;
 
         let query = `
-            SELECT u.id, u.username, u.bio, u.birthdate, u.city, u.location_latitude, u.location_longitude, u.gender_id,
+            SELECT u.id, u.username, u.bio, u.birthdate, u.city, u.location_latitude, u.location_longitude, u.gender_id, u.fame,
                    pp.file_path as profile_picture
             FROM users u
             LEFT JOIN profile_pictures pp ON u.id = pp.user_id AND pp.is_main = TRUE

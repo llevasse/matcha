@@ -10,9 +10,9 @@
 - [ ] Users must be able to modify all their info, including their first and last name, and their email address
 - [ ] The user must be able to check who viewed their profile
 - [x] The user must be able to see who liked their profile
-- [ ] The user must have a public fame rating
+- [x] The user must have a public fame rating
 - [x] The user must be located using their GPS, or IP location, and must be able to modify their position
-- [ ] A user profile is consider complete and okay to display to other user if they have 1 profile picture
+- [x] A user profile is consider complete and okay to display to other user if they have 1 profile picture
 
 # Browsing
 - [ ] Only propose interesting profile (See subject)
@@ -33,7 +33,7 @@
 - [x] the client must be able to like another user profile
 - [ ] the client must be able to unlike another user profile
 - [x] Consider two user connected if they liked each other
-- [ ] see the fame rating of another user
+- [x] see the fame rating of another user
 - [ ] See if a user is online, or the last time they were online
 - [ ] A client must be able to report a profile
 - [ ] A client must be able to block a user

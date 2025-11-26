@@ -91,7 +91,7 @@ export class UserService {
     var user: User;
     await response.json().then((obj)=>{
       user = new User(obj['id'], obj['lastname'], obj['firstname'], obj['username'],
-        obj['birthdate'], obj['city'], obj['location_latitude'], obj['location_longitude'], obj['gender'], 'woman', obj['bio'])
+        obj['birthdate'], obj['city'], obj['location_latitude'], obj['location_longitude'], obj['gender'], 'woman', obj['bio'], [], [], obj['fame'])
     })
     await fetch(`${this.pictureUrl}/${user!.id}`, {
       headers : {
@@ -129,7 +129,7 @@ export class UserService {
       Object.entries(obj).forEach(async (miniObj)=>{
         var obj = new Map(Object.entries(miniObj[1] as Map<string, any>));
         var user = new User(obj.get('id'), obj.get('lastname'), obj.get('firstname'), obj.get('username'),
-          obj.get('birthdate'), obj.get('city'), obj.get('location_latitude'), obj.get('location_longitude'), obj.get('gender'), 'woman', obj.get('bio'))
+          obj.get('birthdate'), obj.get('city'), obj.get('location_latitude'), obj.get('location_longitude'), obj.get('gender'), 'woman', obj.get('bio'), [], [], obj.get('fame'))
         var image = new ProfileImage(`${this.baseUrl}${obj.get('profile_picture')}`);
         image.isNew = false;
         user.photos.push(image)

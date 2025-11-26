@@ -36,6 +36,9 @@ export function createNotificationFromWsObject(obj:any): MatchaNotification{
       case 'liked':
         notif.message = `${username} liked you`
         break;
+      case 'unliked':
+        notif.message = `${username} unliked you`
+        break;
       case 'match':
         notif.message = `It's a match with ${username}!`
         break;

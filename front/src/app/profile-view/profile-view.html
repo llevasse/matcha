@@ -32,6 +32,9 @@
       @if (withChat()) {
         <button (click)="openChat()">chat</button>
       }
+      @if (withUnlike()) {
+        <button (click)="unlikeUser()">unlike</button>
+      }
     </div>
   }
   @else {

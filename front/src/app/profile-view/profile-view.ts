@@ -15,6 +15,7 @@ export class ProfileView {
   loaded = signal(false);
   userId = input.required<number>()
   withChat = input(false)
+  withUnlike = input(false)
   user = signal<User>(new User);
 
   onClickOutside = output();
@@ -66,5 +67,9 @@ export class ProfileView {
       this.router.navigateByUrl(`/matches/profile/${this.userId()}`);
       // history.pushState('','', `/matches/profile/${this.userId()}`);
     });
+  }
+
+  unlikeUser(){
+    this.userService.setUserAsUnliked(this.user().id);
   }
 }

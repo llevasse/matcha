@@ -76,6 +76,7 @@ export class Matches {
     var profile = this.viewContainer.createComponent(ProfileView);
     profile.setInput("userId", userId);
     profile.setInput("withChat", true);
+    profile.setInput("withUnlike", true);
     profile.instance.onClickOutside.subscribe(()=>{
       profile.destroy();
       setTimeout(()=>{  // Error in console if not in timeout ??

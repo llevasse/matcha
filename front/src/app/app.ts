@@ -121,6 +121,12 @@ export class App {
           }
           break;
         }
+        case 'unliked':{
+          notif.action = ()=>{
+            this.removeNotif(notif);
+          }
+          break;
+        }
         case 'match':{
           notif.action = ()=>{
             this.router.navigateByUrl(`/matches/profile/${notif.senderId}`)

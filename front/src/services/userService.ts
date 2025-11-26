@@ -178,6 +178,17 @@ export class UserService {
     });
   }
 
+  setUserAsUnliked(userIdToUnlike:number){
+    return fetch(`${this.interationUrl}/unlike`, {
+    method: 'POST',
+      headers : {
+        "Authorization":"Bearer " + localStorage.getItem('token'),
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({to_user_id:userIdToUnlike})
+    });
+  }
+
   getUsersWhoLikedClient(){
     return fetch(`${this.interationUrl}/likes-received`, {
       headers : {

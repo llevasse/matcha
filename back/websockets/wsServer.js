@@ -3,6 +3,7 @@ const ws = require('ws')
 
 const messageType = {
   LIKED: 'liked',
+  UNLIKED: 'unliked',
   MATCH: 'match',
   MESSAGE_SENT: 'message'
 }
@@ -87,7 +88,6 @@ function handleClientChatMessage(messageText = ""){
   try{
     var split = messageText.split(":");
     var info = split[0].split("->");
-    var message = split[1];
     var receiverId = Number.parseInt(info[1]);
     var senderId = Number.parseInt(info[0]);
     

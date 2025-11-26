@@ -9,7 +9,7 @@ export class User{
     this.firstName = "Jane"
     this.username = "anon"
     this.birthday = '2000-01-01'
-    this.gender = 'Woman'
+    this.gender = 'Prefer not to say'
     this.orientation = 'bisexual'
     this.bio = `Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\r\n
 Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\r\n
@@ -66,7 +66,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
   cityLat: number = NaN;
   cityLon: number = NaN;
 
-  gender: string = "";
+  gender: string | null = null;
   orientation: string = "";
 
   bio: string = "";
@@ -79,7 +79,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
   ws: WebSocketSubject<any> | null = null;
 
   isFilled(){
-    return !(this.birthday == "" || this.cityStr == "" || this.gender == "" || this.orientation == "" || this.bio == "" || this.interest.length == 0 || this.photos.length == 0)
+    return !(this.birthday == "" || this.gender == "" || this.orientation == "" || this.photos.length == 0)
   }
 }
 

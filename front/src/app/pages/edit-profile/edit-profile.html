@@ -40,7 +40,7 @@
         <label>
           <span>Gender</span>
           <app-dropdown [placeholder]="'Gender'"
-            (onSelected)="setGender($event)" [value]="tmpUser().gender" [values]="['woman','man', 'non binary', 'other','prefer not to say']"/>
+            (onSelected)="setGender($event)" [value]="tmpUser().gender ?? 'prefer not to say'" [values]="['woman','man', 'non binary', 'other','prefer not to say']"/>
         </label>
         <label>
           <span>Orientation</span>

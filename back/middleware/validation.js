@@ -26,15 +26,14 @@ const profileUpdateSchema = Joi.object({
         .min(1)
         .required(),
 
-    birthdate: Joi.date().less('now').greater('1900-01-01').required(),
-
-    bio: Joi.string().max(500).optional(),
-    city: Joi.string().max(100).optional(),
+    birthdate: Joi.date().less('now').greater('1900-01-01').required(), //TODO add check that date is at least 18 years old
+    bio: Joi.string().max(500).optional().allow(null),
+    city: Joi.string().max(100).optional().allow(null),
     username: Joi.string().alphanum().min(3).max(50).required(),
     firstname: Joi.string().max(50).required(),
     lastname: Joi.string().max(50).required(),
-    location_latitude: Joi.number().precision(9),
-    location_longitude: Joi.number().precision(9),
+    location_latitude: Joi.number().precision(9).optional().allow(null),
+    location_longitude: Joi.number().precision(9).optional().allow(null),
 });
 
 const userLoginSchema = Joi.object({

@@ -49,7 +49,7 @@ router.get('/profile/:user_id', async (req, res) => {
     try {
         const [users] = await db.execute(
             `SELECT id, username, firstname, lastname, gender_id, bio, birthdate, 
-                    city, location_latitude, location_longitude, fame, is_confirmed, created_at 
+                    city, location_latitude, location_longitude, fame, last_connection_date, is_confirmed, created_at 
              FROM users WHERE id = ?`,
             [req.params.user_id]
         );
@@ -68,6 +68,15 @@ router.get('/profile/:user_id', async (req, res) => {
             [req.params.user_id]
         );
         users[0].preferences = rows.map(r => r.label);
+
+        const [gender] = await db.execute(
+            `SELECT label FROM genders WHERE id = ?`,
+            [users[0].gender_id]
+        );
+        if (gender.length == 0)
+          users[0].gender = null;
+        else
+          users[0].gender = gender[0].label;
 
         res.json(users[0]);
     } catch (error) {

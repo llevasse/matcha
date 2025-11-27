@@ -60,17 +60,24 @@ server.on('connection', function connection(clientWs) {
   clientWs.on('close', function close() {
     socketMap.forEach((value, key)=>{
       socketMap.set(key, value.filter((socket)=>{
-        return socket.readyState != ws.CLOSED;
+        // console.log(socket);
+        // console.log(key, socket.ws.readyState);
+        if (socket.ws.readyState == ws.CLOSED){
+          console.log(`Update connect date of user with id : ${key}`);
+          db.execute("UPDATE users SET last_connection_date = ? WHERE id = ?", [new Date(), key]);  
+        }
+        return socket.ws.readyState != ws.CLOSED;
       }));
     })
-    // console.log('Client disconnected');
+    // console.log("Clients after disconnection")
+    // printClientList();
   });
 });
 
 async function initClientWebSocketConnection(messageText = "", clientWs){
   try{
     id = Number.parseInt(messageText.split(":")[1]);
-    if(socketMap.get(id) == undefined){
+    if(socketMap.get(id) == undefined || socketMap.get(id).length == 0){
       var client = await createWsClient(id, clientWs)
       socketMap.set(id, [client])
     }
@@ -121,7 +128,9 @@ function sendMessage(fromUserId, toUserId, content = "", type){
 function printClientList(){
   Array.from(socketMap).forEach((value)=>{
     console.log(`id : ${value[0]}, number of clients connected : ${value[1].length}`);
-    console.log(`\tUsername : ${value[1][0].username} | pfp : ${value[1][0].pfp_url}`)
+    if (value[1].length > 0){
+      console.log(`\tUsername : ${value[1][0].username} | pfp : ${value[1][0].pfp_url}`)
+    }
   })
 }
 

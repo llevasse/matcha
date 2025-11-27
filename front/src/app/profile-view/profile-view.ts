@@ -16,12 +16,13 @@ export class ProfileView {
   userId = input.required<number>()
   withChat = input(false)
   withUnlike = input(false)
-  user = signal<User>(new User);
+  user = signal<User>(new User());
 
   onClickOutside = output();
 
   ngOnInit(){
     this.userService.getProfileById(this.userId()).then((user)=>{
+      console.log(user);
       if (user){
         this.user.set(user);
       }

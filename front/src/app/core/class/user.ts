@@ -38,21 +38,57 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
     }
     return hash;
   }
-  constructor(id: number = NaN,lastName: string = "",firstName: string = "",username: string = "",birthday: string = "",cityStr: string = "",cityLat: number = NaN,cityLon: number = NaN,gender: string = "",orientation: string = "",bio: string = "",interest: Interest[] = [],photos: ProfileImage[] = [],fame: number = NaN){
-    this.id = id;
-    this.lastName = lastName;
-    this.firstName = firstName;
-    this.username = username;
-    this.birthday = birthday;
-    this.cityStr = cityStr;
-    this.cityLat = cityLat;
-    this.cityLon = cityLon;
-    this.gender = gender;
-    this.orientation = orientation;
-    this.bio = bio;
-    this.interest = interest;
-    this.photos = photos;
-    this.fame = fame;
+
+  constructor(
+    obj : {
+      id: number,
+      lastname: string,
+      firstname: string,
+      username: string,
+      birthdate: string,
+      city: string,
+      location_latitude: number,
+      location_longitude: number,
+      gender: string|null,
+      orientation: string,
+      bio: string,
+      interest: Interest[],
+      photos: ProfileImage[],
+      fame: number,
+      last_connection_date: string | null;
+    } = {
+      id: NaN,
+      lastname: "",
+      firstname: "",
+      username: "",
+      birthdate: "",
+      last_connection_date: null,
+      city: "",
+      location_latitude: NaN,
+      location_longitude: NaN,
+      gender: null,
+      orientation: "",
+      bio: "",
+      interest: [],
+      photos: [],
+      fame: NaN,
+    }
+  ){
+    this.id = obj.id ?? NaN;
+    this.lastName = obj.lastname ?? "";
+    this.firstName = obj.firstname ?? "";
+    this.username = obj.username ?? "";
+    this.birthday = obj.birthdate ?? "";
+    this.cityStr = obj.city ?? "";
+    this.cityLat = obj.location_latitude ?? NaN;
+    this.cityLon = obj.location_longitude ?? NaN;
+    this.gender = obj.gender ?? "";
+    this.orientation = obj.orientation ?? "";
+    this.bio = obj.bio ?? "";
+    this.interest = obj.interest ?? [];
+    this.photos = obj.photos ?? [];
+    this.fame = obj.fame ?? NaN;
+    this.lastConectionDate = obj.last_connection_date == null ? null : new Date(Date.parse(obj.last_connection_date));
   }
 
   id: number = NaN;
@@ -61,6 +97,8 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
   username: string = "";
 
   birthday: string = "";
+
+  lastConectionDate: Date | null = null;
 
   cityStr: string = "";
   cityLat: number = NaN;

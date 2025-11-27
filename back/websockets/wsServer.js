@@ -63,7 +63,7 @@ server.on('connection', function connection(clientWs) {
         return socket.readyState != ws.CLOSED;
       }));
     })
-    console.log('Client disconnected');
+    // console.log('Client disconnected');
   });
 });
 

@@ -163,7 +163,7 @@ router.post('/unlike', authenticateToken, async (req, res) => {
 router.get('/matches', authenticateToken, async (req, res) => {
     try {
         const [matches] = await db.execute(`
-            SELECT u.id, u.username, u.bio, u.location_latitude, u.location_longitude, pp.file_path as profile_picture,
+            SELECT u.id, u.username, u.bio, u.location_latitude, u.location_longitude, u.fame, pp.file_path as profile_picture,
                    i.created_at as matched_at
             FROM interactions i
             JOIN users u ON u.id = i.to_user_id
@@ -182,7 +182,7 @@ router.get('/matches', authenticateToken, async (req, res) => {
 router.get('/likes-received', authenticateToken, async (req, res) => {
     try {
         const [likes] = await db.execute(`
-            SELECT u.id, u.username, u.bio, u.location_latitude, u.location_longitude, pp.file_path as profile_picture,
+            SELECT u.id, u.username, u.bio, u.location_latitude, u.location_longitude, u.fame, pp.file_path as profile_picture,
                    i.created_at as liked_at
             FROM interactions i
             JOIN users u ON u.id = i.from_user_id

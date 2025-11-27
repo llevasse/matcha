@@ -31,7 +31,7 @@
 - [x] The client must be able to see the profile of other user and see all their (non-sensitive) info
 - [ ] When a user view a profile, it must be added to their view history
 - [x] the client must be able to like another user profile
-- [ ] the client must be able to unlike another user profile
+- [x] the client must be able to unlike another user profile
 - [x] Consider two user connected if they liked each other
 - [x] see the fame rating of another user
 - [ ] See if a user is online, or the last time they were online
@@ -45,6 +45,6 @@
 - [] A client must receive a notification in real time when :
   - [x] They receive a like
   - [ ] Their profile has been viewed
-  - [ ] They received a message
-  - [ ] They had a match
-  - [ ] They are unliked
+  - [x] They received a message
+  - [x] They had a match
+  - [x] They are unliked

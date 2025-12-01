@@ -3,7 +3,7 @@
 - [ ] Send confirmation email to user 
 - [x] Login with username and a password
 - [ ] Send email to reset password
-- [ ] Log out in one click from anywhere
+- [x] Log out in one click from anywhere
 
 # User profile
 - [x] Users must provide : their gender, sexual preferences, biography, interest, 5 picture at most

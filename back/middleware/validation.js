@@ -27,8 +27,8 @@ const profileUpdateSchema = Joi.object({
         .required(),
 
     birthdate: Joi.date().greater('1900-01-01').required(),
-    bio: Joi.string().max(500).optional().allow(null),
-    city: Joi.string().max(100).optional().allow(null),
+    bio: Joi.string().max(500).optional().allow(null).empty(""),
+    city: Joi.string().max(100).optional().allow(null).empty(""),
     username: Joi.string().alphanum().min(3).max(50).required(),
     firstname: Joi.string().max(50).required(),
     lastname: Joi.string().max(50).required(),

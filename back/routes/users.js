@@ -135,38 +135,8 @@ router.post('/profile', authenticateToken, validateProfileUpdate, async (req, re
                 [userId, prefId]
             );
         }
-
-        // profile must have each of it's field filled, at least one interest and one image to be considered valid
-        var is_confirmed = true;	
-        const [users] = await connection.execute(
-            `SELECT id, username, firstname, lastname, birthdate
-              FROM users WHERE id = ?`,
-            [userId]
-        );
-        if (users.length != 0){
-          Object.values(users[0]).forEach((value)=>{
-            if (value == null || value == undefined){
-              is_confirmed = false;
-            }
-          });
-        }
-
-        const [pictures] = await db.execute(
-            'SELECT id FROM profile_pictures WHERE user_id = ? LIMIT 1',
-            [userId]
-        );
-        if (pictures.length == 0){   // bug when pictures are uploaded for the first time, need further checking
-            is_confirmed = false;
-            console.log("Not enough pictures to be a confirmed user")
-        }
+        checkProfileValidity(userId);
         
-        if (is_confirmed){
-            await connection.execute(
-                      `UPDATE users SET is_confirmed = ? WHERE id = ?`,
-                [is_confirmed, userId]
-            );
-            console.log("User confirmation is updated!");
-        }
 
         await connection.commit();
         res.json({ message: 'Profile updated successfully' });
@@ -180,6 +150,37 @@ router.post('/profile', authenticateToken, validateProfileUpdate, async (req, re
     }
 });
 
+async function checkProfileValidity(userId){
+  var is_confirmed = true;	
+  const connection = await db.getConnection();  
+  const [users] = await connection.execute(
+      `SELECT id, username, firstname, lastname, birthdate
+        FROM users WHERE id = ?`,
+      [userId]
+  );
+  if (users.length != 0){
+    Object.values(users[0]).forEach((value)=>{
+      if (value == null || value == undefined){
+        is_confirmed = false;
+      }
+    });
+  }
+
+  const [pictures] = await db.execute(
+      'SELECT id FROM profile_pictures WHERE user_id = ? LIMIT 1',
+      [userId]
+  );
+  if (pictures.length == 0){   // bug when pictures are uploaded for the first time, need further checking
+      is_confirmed = false;
+      console.log("User need at least one picture to be confirmed")
+  }
+  
+  await connection.execute(
+            `UPDATE users SET is_confirmed = ? WHERE id = ?`,
+      [is_confirmed, userId]
+  );
+  console.log(`User with id = ${userId} is confirmed status is now : ${is_confirmed}!`);
+}
 
 // Changer le mot de passe
 router.put('/password', authenticateToken, async (req, res) => {
@@ -254,4 +255,4 @@ router.get('/search', authenticateToken, async (req, res) => {
     }
 });
 
-module.exports = router;
+module.exports = {router, checkProfileValidity};

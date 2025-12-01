@@ -44,7 +44,7 @@
 - [x] If two user matched, they must be able to chat in real time
 
 # Notifications 
-- [] A client must receive a notification in real time when :
+- [ ] A client must receive a notification in real time when :
   - [x] They receive a like
   - [ ] Their profile has been viewed
   - [x] They received a message

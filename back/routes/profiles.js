@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const db = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
+const { checkProfileValidity } = require('./users');
 
 const router = express.Router();
 
@@ -86,7 +87,8 @@ router.post('/upload', authenticateToken, upload.single('photo'), async (req, re
             'INSERT INTO profile_pictures (user_id, file_path, is_main) VALUES (?, ?, ?)',
             [req.user.id, filePath, isMain]
         );
-
+        checkProfileValidity(req.user.id)
+        
         res.status(201).json({
             id: result.insertId,
             file_path: filePath,

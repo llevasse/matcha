@@ -3,7 +3,7 @@
 - [ ] Send confirmation email to user 
 - [x] Login with username and a password
 - [ ] Send email to reset password
-- [ ] Log out in one click from anywhere
+- [x] Log out in one click from anywhere
 
 # User profile
 - [x] Users must provide : their gender, sexual preferences, biography, interest, 5 picture at most
@@ -44,7 +44,7 @@
 - [x] If two user matched, they must be able to chat in real time
 
 # Notifications 
-- [] A client must receive a notification in real time when :
+- [ ] A client must receive a notification in real time when :
   - [x] They receive a like
   - [ ] Their profile has been viewed
   - [x] They received a message

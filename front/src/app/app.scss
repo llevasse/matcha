@@ -66,6 +66,8 @@ app-image-viewer{
   font-size: 1.2rem;
   line-height: 1em;
   list-style-type: none;
+  position: relative;
+  z-index: 12;
 
   li{
     padding: 1em;

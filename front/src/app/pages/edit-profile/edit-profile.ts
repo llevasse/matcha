@@ -103,15 +103,14 @@ export class EditProfile {
       this.imagesInput()!.images().at(0)!.isMain = true;
       this.imagesInput()!.images().forEach((file)=>{
         if (file.isNew){
-          console.log(file);
-          if (!file.isMain)
+          if (!file.isMain){
             this.userService.uploadPhotos(file.file!);
+          }
           else{
-            this.userService.uploadPhotos(file.file!).then((value)=>{
-              (value as Response).json().then((obj)=>{
-                var map = new Map<String, any>(Object.entries(obj));
-                this.userService.setPhotosAsMain(Number.parseInt(map.get('id')));
-              })
+            this.userService.uploadPhotos(file.file!).then(async (value)=>{
+              var obj = await (value as Response).json()
+              var map = new Map<String, any>(Object.entries(obj));
+              return await  this.userService.setPhotosAsMain(Number.parseInt(map.get('id')));
             });
           }
         }

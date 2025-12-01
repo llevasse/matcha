@@ -6,7 +6,7 @@ services:
     volumes:
       - db_volume:/var/lib/mysql/
     ports:
-      - "3306:3306"
+      - "3336:3306"
     env_file:
       - .env
     networks:
@@ -53,7 +53,7 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: /var/lib/mysql/matcha
+      device: /var/lib/mysql/matcha_docker
     
   front_volume:
     driver: local

@@ -1,4 +1,4 @@
-.PHONY: all clean fclean re down restart
+.PHONY: all clean fclean re down restart back front
 # .SILENT:
 
 # **************************************************************************** #
@@ -15,7 +15,22 @@ DC		= docker compose
 all: $(NAME)
 
 $(NAME):
+	if [ ! -f .env ]; then gpg .env.gpg ; fi # todo test this
+	mkdir -p back/uploads/profile
+	mkdir -p /var/lib/mysql/matcha_docker # bien verif lors du passage au machine 42
+	npm install --prefix ./front
 	$(DC) up --build
+
+# Start backend without docker
+back:
+	sudo systemctl start mysql
+	cd back && npm install
+	cd back && npm start
+
+# Start frontend without docker
+front:
+	cd front && npm install
+	cd front && npm start
 
 down:
 	$(DC) down

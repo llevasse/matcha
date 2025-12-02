@@ -46,7 +46,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
       firstname: string,
       username: string,
       birthdate: string,
-      city: string,
+      city: string | null,
       location_latitude: number,
       location_longitude: number,
       gender: string|null,
@@ -63,7 +63,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
       username: "",
       birthdate: "",
       last_connection_date: null,
-      city: "",
+      city: null,
       location_latitude: NaN,
       location_longitude: NaN,
       gender: null,
@@ -79,9 +79,9 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
     this.firstName = obj.firstname ?? "";
     this.username = obj.username ?? "";
     this.birthday = obj.birthdate ?? "";
-    this.cityStr = obj.city ?? "";
-    this.cityLat = obj.location_latitude ?? NaN;
-    this.cityLon = obj.location_longitude ?? NaN;
+    this.cityStr = obj.city;
+    this.cityLat = obj.location_latitude;
+    this.cityLon = obj.location_longitude;
     this.gender = obj.gender ?? "";
     this.orientation = obj.orientation ?? "";
     this.bio = obj.bio ?? "";
@@ -100,7 +100,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
 
   lastConectionDate: Date | null = null;
 
-  cityStr: string = "";
+  cityStr: string | null = null;
   cityLat: number = NaN;
   cityLon: number = NaN;
 

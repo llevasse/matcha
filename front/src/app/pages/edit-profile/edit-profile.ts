@@ -42,24 +42,22 @@ export class EditProfile {
 
 		this.maxBirthDay.setFullYear(this.maxBirthDay.getFullYear() - 18);
 
-		this.tmpUser.update((user)=>{
-      user.gender = this.user.gender;
-      user.orientation = this.user.orientation;
-      user.firstName = this.user.firstName;
-      user.lastName = this.user.lastName;
-      user.username = this.user.username;
-      user.birthday = this.user.birthday;
-      user.bio = this.user.bio;
-      return user;
-		})
+    this.tmpUser.set(tmpUser);
 
+		if (tmpUser.cityStr == null){
+  		this.getUserCity();
+		}
+		else{ // call if city was not set by user last time
+      this.userCity.set(tmpUser.cityStr);
+		}
 		this.loading.set(false)
+
 	}
 
 	constructor(
 	  private userService: UserService,
 	  private interestService: InterestService,){
-		this.user.createDummy();
+		// this.user.createDummy();
 		this.user.photos = [];
 		this.getUserProfile();
 
@@ -76,7 +74,6 @@ export class EditProfile {
     });
 	}
 	ngOnInit(){
-		this.getUserCity();
 	}
 
 	processForm(event: SubmitEvent) {
@@ -190,8 +187,8 @@ export class EditProfile {
 				this.user.cityStr = result['city'];
 				this.user.cityLon = result['lon'];
 				this.user.cityLat = result['lat'];
+        this.userCity.set(this.user.cityStr!);
 			}
-			this.userCity.set(this.user.cityStr);
 		} catch (error: any) {
 			console.error(error.message);
 		}

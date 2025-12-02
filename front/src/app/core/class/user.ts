@@ -10,7 +10,7 @@ export class User{
     this.username = "anon"
     this.birthday = '2000-01-01'
     this.gender = 'Prefer not to say'
-    this.orientation = 'bisexual'
+    this.preferences = ['woman', 'man']
     this.bio = `Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\r\n
 Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\r\n
 Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.`
@@ -50,7 +50,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
       location_latitude: number,
       location_longitude: number,
       gender: string|null,
-      orientation: string,
+      preferences: string[],
       bio: string,
       interest: Interest[],
       photos: ProfileImage[],
@@ -67,7 +67,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
       location_latitude: NaN,
       location_longitude: NaN,
       gender: null,
-      orientation: "",
+      preferences: [],
       bio: "",
       interest: [],
       photos: [],
@@ -83,12 +83,13 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
     this.cityLat = obj.location_latitude;
     this.cityLon = obj.location_longitude;
     this.gender = obj.gender ?? "";
-    this.orientation = obj.orientation ?? "";
+    this.preferences = obj.preferences ?? [];
     this.bio = obj.bio ?? "";
     this.interest = obj.interest ?? [];
     this.photos = obj.photos ?? [];
     this.fame = obj.fame ?? NaN;
     this.lastConectionDate = obj.last_connection_date == null ? null : new Date(Date.parse(obj.last_connection_date));
+    // console.log(this);
   }
 
   id: number = NaN;
@@ -105,7 +106,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
   cityLon: number = NaN;
 
   gender: string | null = null;
-  orientation: string = "";
+  preferences: string[] = [];
 
   bio: string = "";
   interest: Interest[] = [];
@@ -117,7 +118,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
   ws: WebSocketSubject<any> | null = null;
 
   isFilled(){
-    return !(this.birthday == "" || this.gender == "" || this.orientation == "" || this.photos.length == 0)
+    return !(this.birthday == "" || this.gender == "" || this.preferences.length == 0 || this.photos.length == 0)
   }
 }
 
@@ -131,7 +132,7 @@ User.prototype.toString = function(){
   cityLat : ${this.cityLat}
   cityLon : ${this.cityLon}
   gender : ${this.gender}
-  orientation : ${this.orientation}
+  orientation : ${this.preferences}
   bio : ${this.bio}
   interest : ${this.interest}
   photosUrls : ${this.photos}

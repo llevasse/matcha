@@ -33,7 +33,7 @@ CREATE TABLE users (
     gender_id INT,
     bio TEXT,
     birthdate DATE,
-    last_connection_date DATETIME,
+    last_connection_date DATETIME ,
     city VARCHAR(100),
     location_latitude DECIMAL(9,6),
     location_longitude DECIMAL(9,6),

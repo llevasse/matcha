@@ -8,47 +8,50 @@ import { Component, ElementRef, HostListener, input, output, signal, forwardRef,
 })
 export class Dropdown {
   constructor(private ref: ElementRef){ref = inject(ElementRef);}
-  
+
   ngOnInit(){
     this.e = this.ref.nativeElement;
+    this.selectedValues = this.values() ?? [];
+    this.selectedValue = this.value() ?? "";
   }
-  
+
   e:any = HTMLElement;
-  
-  value = input<string>("")  
-  inputId = input<string>("")  
-  values = input<string[]>([]);
-  
+
+  value = input<string | null>(null)
+  values = input<string[] | null>(null)
+  inputId = input<string>("")
+  options = input<string[]>([]);
+
   placeholder = input.required<string>();
-  
+
   multiChoice = input(false);
   searchable = input(false);
   required = input(false);
   contentDirection = input('column');
-  
+
   selectedValue: string = "";
   selectedValueIndex: number = 0;
   selectedValues: string[] = [];
-  
+
   contentClass = signal("inactive");
-  
+
   AutoSearchTimeout:number = 1000;
   AutoSearchId: NodeJS.Timeout | undefined;
-  
+
   onSearch = output<void>();
   onSelected = output<Map<string, any>>();
-  
+
   toggleDropDown(){
-    if (this.contentClass() == ""  || this.values().length == 0){
+    if (this.contentClass() == ""  || this.options().length == 0){
       this.contentClass.set("inactive");
     }
     else{
       this.contentClass.set("");
     }
   }
-  
+
   search(){
-    this.values().length = 0;
+    this.options().length = 0;
     this.toggleDropDown();
     if (this.AutoSearchId != undefined){
       clearTimeout(this.AutoSearchId);
@@ -59,7 +62,7 @@ export class Dropdown {
       this.AutoSearchId = undefined;
     }, this.AutoSearchTimeout);
   }
-  
+
   setSelectedValue(str: string, index: number){
     if (this.multiChoice() == false){
       this.selectedValue = str;
@@ -73,16 +76,16 @@ export class Dropdown {
       else {
         this.selectedValues.splice(index, 1);
       }
-      this.selectedValue = this.selectedValues.join(', ');
+      // this.selectedValue = this.selectedValues.join(', ');
       this.onSelected.emit(new Map<string, any>([['value', this.selectedValue], ['list', this.selectedValues]]));
       this.selectedValueIndex = index;
       this.contentClass.set("");
     }
   }
-  
+
   onClick(event: any) {
     if(this.searchable()){
-      if (this.values().length == 0 || event.target.closest("dropdown-selector") != null){
+      if (this.options().length == 0 || event.target.closest("dropdown-selector") != null){
         this.contentClass.set("inactive");
       }
       else{
@@ -93,13 +96,13 @@ export class Dropdown {
     if ((this.multiChoice() == true && event.target.classList.contains('container')) || this.multiChoice() == false){
       this.toggleDropDown();
     }
-  }  
-  
+  }
+
   @HostListener('document:mousedown', ['$event']) closeDropdown(event: any){
     var closest: HTMLElement = event.target.closest("app-dropdown");
     if (closest == null || (this.e != closest)){
       this.contentClass.set("inactive");
-    } 
+    }
   }
 }
 

@@ -31,6 +31,8 @@ export class EditProfile {
 
 	maxBirthDay = new Date();
 
+	allowedGenders = ['woman','man', 'non-binary', 'other','prefer not to say'];
+
 	async getUserProfile(){
     var tmpUser: User|null = await this.userService.getClientUser().then((value)=>{return value});
     if (tmpUser == null){
@@ -50,6 +52,7 @@ export class EditProfile {
 		else{ // call if city was not set by user last time
       this.userCity.set(tmpUser.cityStr);
 		}
+		console.log(tmpUser);
 		this.loading.set(false)
 
 	}
@@ -85,7 +88,7 @@ export class EditProfile {
 		this.user.birthday = this.tmpUser().birthday || this.user.birthday;
 		this.user.bio = this.tmpUser().bio || this.user.bio;
 		this.user.gender = this.tmpUser().gender || this.user.gender;
-		this.user.orientation = this.tmpUser().orientation || this.user.orientation;
+		this.user.preferences = this.tmpUser().preferences || this.user.preferences;
 		this.user.cityLat = this.tmpUser().cityLat || this.user.cityLat;
 		this.user.cityLon = this.tmpUser().cityLon || this.user.cityLon;
 
@@ -139,7 +142,7 @@ export class EditProfile {
 			city: this.userCity(),
 			location_latitude: this.user.cityLat,
 			location_longitude: this.user.cityLon,
-			preferences: [this.user.orientation]
+			preferences: this.user.preferences
 		});
 
 		// this.router.navigate([`/`]);
@@ -152,7 +155,7 @@ export class EditProfile {
 
 
 	setOrientation(map: Map<string, any>){
-		this.tmpUser.update((user)=>{user.orientation = map.get('value'); return user});
+		this.tmpUser.update((user)=>{user.preferences = map.get('list'); return user});
 	}
 
 	setUsername(event: Event){

@@ -7,10 +7,10 @@
       </div>
     }
     @else {
-      <a>{{value() == "" ? placeholder() : value()}}</a>
+      <a>{{value() == null ? values() == null ? placeholder() : values()!.join(', ') : value()}}</a>
     }
-    <div id="content" [style]="values().length == 0 ? 'display: none !important;' : ''" class="{{`content-`.concat(contentDirection())}}">
-      @for (item of values(); track $index) {
+    <div id="content" [style]="options().length == 0 ? 'display: none !important;' : ''" class="{{`content-`.concat(contentDirection())}}">
+      @for (item of options(); track $index) {
         <dropdown-selector [value]="item" (onClick)="setSelectedValue(item, $index)"/>
       }
     </div>

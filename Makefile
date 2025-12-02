@@ -17,7 +17,7 @@ all: $(NAME)
 $(NAME):
 	if [ ! -f .env ]; then gpg .env.gpg ; fi # todo test this
 	mkdir -p back/uploads/profile
-	mkdir -p /var/lib/mysql/matcha_docker # bien verif lors du passage au machine 42
+	mkdir --mode=777 -p db/ # bien verif lors du passage au machine 42
 	npm install --prefix ./front
 	$(DC) up --build
 

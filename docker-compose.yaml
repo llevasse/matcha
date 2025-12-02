@@ -53,7 +53,7 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: /var/lib/mysql/matcha_docker
+      device: ./db
     
   front_volume:
     driver: local

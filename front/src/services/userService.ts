@@ -158,7 +158,7 @@ export class UserService {
   }
 
   updateProfile(values:
-    {username: string, firstname: string, lastname: string, gender: string|null, bio: string, birthdate: string, city: string, location_latitude: number, location_longitude:number, preferences: string[]}): Promise<any> {
+    {username: string, firstname: string, lastname: string, email: string, gender: string|null, bio: string, birthdate: string, city: string, location_latitude: number, location_longitude:number, preferences: string[]}): Promise<any> {
     return fetch(`${this.profileUrl}/profile`, {
       method: 'POST',
       headers : {

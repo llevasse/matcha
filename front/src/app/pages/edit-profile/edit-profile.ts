@@ -53,7 +53,7 @@ export class EditProfile {
 		else{ // call if city was not set by user last time
       this.userCity.set(tmpUser.cityStr);
 		}
-		// console.log(tmpUser);
+		console.log(tmpUser);
 		this.loading.set(false)
 
 	}
@@ -128,6 +128,7 @@ export class EditProfile {
       username: this.tmpUser().username || this.user.username,
       firstname: this.tmpUser().firstName || this.user.firstName,
       lastname: this.tmpUser().lastName || this.user.lastName,
+      email: this.tmpUser().email || this.user.email,
 			gender: this.tmpUser().gender || this.user.gender,
 			bio: this.tmpUser().bio || this.user.bio,
 			birthdate: this.tmpUser().birthday || this.user.birthday,
@@ -160,6 +161,10 @@ export class EditProfile {
 
 	setFirstname(event: Event){
 		this.tmpUser.update((user)=>{user.firstName = ((event as InputEvent).target as HTMLInputElement).value; return user});
+	}
+
+	setEmail(event: Event){
+		this.tmpUser.update((user)=>{user.email = ((event as InputEvent).target as HTMLInputElement).value; return user});
 	}
 
   setBirthday(event: Event){

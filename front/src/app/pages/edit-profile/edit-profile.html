@@ -21,6 +21,11 @@
         </label>
       </div>
 
+      <label>
+          <span>Email</span>
+          <input (input)="setEmail($event)" id="email-input" type="email" placeholder="Email" [value]="tmpUser().email"/>
+        </label>
+
       <div class="flexRow">
         <label>
           <span>Date of birth</span>

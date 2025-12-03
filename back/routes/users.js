@@ -87,7 +87,7 @@ router.get('/profile/:user_id', async (req, res) => {
 router.post('/profile', authenticateToken, validateProfileUpdate, async (req, res) => {
     const connection = await db.getConnection();
     try {
-      const { username, firstname, lastname, bio, city, gender, preferences, birthdate, location_latitude, location_longitude } = req.body;
+      const { username, firstname, lastname, email, bio, city, gender, preferences, birthdate, location_latitude, location_longitude } = req.body;
       const userId = req.user.id;
       
         await connection.beginTransaction();
@@ -111,8 +111,8 @@ router.post('/profile', authenticateToken, validateProfileUpdate, async (req, re
         const genderId = genderRows[0].id;
 
         await connection.execute(
-            `UPDATE users SET username = ?, firstname = ?, lastname = ?, bio = ?, city = ?, gender_id = ?, birthdate = ?, location_latitude = ?, location_longitude = ? WHERE id = ?`,
-            [username, firstname, lastname, bio, city, genderId, birthdate, location_latitude, location_longitude, userId]
+            `UPDATE users SET username = ?, firstname = ?, lastname = ?, email = ?, bio = ?, city = ?, gender_id = ?, birthdate = ?, location_latitude = ?, location_longitude = ? WHERE id = ?`,
+            [username, firstname, lastname, email, bio, city, genderId, birthdate, location_latitude, location_longitude, userId]
         );
 
         await connection.execute(

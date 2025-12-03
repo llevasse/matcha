@@ -32,6 +32,7 @@ const profileUpdateSchema = Joi.object({
     username: Joi.string().alphanum().min(3).max(50).required(),
     firstname: Joi.string().max(50).required(),
     lastname: Joi.string().max(50).required(),
+    email: Joi.string().email().required(),
     location_latitude: Joi.number().precision(9).optional().allow(null),
     location_longitude: Joi.number().precision(9).optional().allow(null),
 });

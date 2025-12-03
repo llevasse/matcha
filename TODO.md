@@ -7,7 +7,7 @@
 
 # User profile
 - [x] Users must provide : their gender, sexual preferences, biography, interest, 5 picture at most
-- [ ] Users must be able to modify all their info, including their first and last name, and their email address
+- [x] Users must be able to modify all their info, including their first and last name, and their email address
 - [ ] The user must be able to check who viewed their profile
 - [x] The user must be able to see who liked their profile
 - [x] The user must have a public fame rating

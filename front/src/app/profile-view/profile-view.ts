@@ -22,7 +22,6 @@ export class ProfileView {
 
   ngOnInit(){
     this.userService.getProfileById(this.userId()).then((user)=>{
-      console.log(user);
       if (user){
         this.user.set(user);
       }

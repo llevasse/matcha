@@ -5,13 +5,7 @@ import { AuthService } from '../services/authService';
 import { User } from './core/class/user';
 import { NotificationComponent } from "./core/notification-component/notification";
 import { createNotificationFromWsObject, MatchaNotification } from './core/class/notification';
-
-const messageType = {
-  LIKED: 'liked',
-  UNLIKED: 'unliked',
-  MATCH: 'match',
-  MESSAGE_SENT: 'message'
-}
+import { notifType } from './utilities/utils';
 
 @Component({
   selector: 'app-root',
@@ -23,13 +17,13 @@ const messageType = {
 export class App {
   clientUser: User | null = null;
   notifList = signal<MatchaNotification[]>([
-    // new MatchaNotification("New match", "", null, null, messageType.MATCH),
-    // new MatchaNotification("New like", "", null, null, messageType.LIKED),
-    // new MatchaNotification("New message", "", null, null, messageType.MESSAGE_SENT),
-    // new MatchaNotification("Unliked", "", null, null, messageType.UNLIKED),
-    // new MatchaNotification("New match", "", null, null, messageType.MATCH),
-    // new MatchaNotification("New message", "", null, null, messageType.MESSAGE_SENT),
-    // new MatchaNotification("New message", "", null, null, messageType.MESSAGE_SENT),
+    // new MatchaNotification("New match", "", null, null, notifType.MATCH),
+    // new MatchaNotification("New like", "", null, null, notifType.LIKED),
+    // new MatchaNotification("New message", "", null, null, notifType.MESSAGE_SENT),
+    // new MatchaNotification("Unliked", "", null, null, notifType.UNLIKED),
+    // new MatchaNotification("New match", "", null, null, notifType.MATCH),
+    // new MatchaNotification("New message", "", null, null, notifType.MESSAGE_SENT),
+    // new MatchaNotification("New message", "", null, null, notifType.MESSAGE_SENT),
 
   ]);
 
@@ -59,19 +53,19 @@ export class App {
         console.log(event.url);
         if (RegExp("^\/matches\/profile\/.*\/chat$").test(event.url)){  // check if url leads to chat and clear related notif if need be
           const profileId: number = Number.parseInt(event.url.split("/")[3])
-          this.removeNotif(new MatchaNotification("","", profileId, null, messageType.MESSAGE_SENT));
+          this.removeNotif(new MatchaNotification("","", profileId, null, notifType.MESSAGE_SENT));
         }
         if (RegExp("^\/matches.*$").test(event.url)){
           this.notifList.set(
             this.notifList().filter((notif)=>{
-              return notif.type != messageType.MATCH;
+              return notif.type != notifType.MATCH;
             })
           );
         }
         if (RegExp("^\/likes.*$").test(event.url)){
           this.notifList.set(
             this.notifList().filter((notif)=>{
-              return notif.type != messageType.LIKED && notif.type != messageType.UNLIKED;
+              return notif.type != notifType.LIKED && notif.type != notifType.UNLIKED;
             })
           );
         }
@@ -88,18 +82,15 @@ export class App {
   }
 
   goHome(){
-    // history.pushState('','', "/");
     this.router.navigate([`/`]);
   }
 
   goProfile(){
-    // history.pushState('','', "/profile");
     this.router.navigate([`/profile`]);
   }
 
   logout(){
     this.authService.logout();
-    // history.pushState('','', "/login");
     this.router.navigate([`/login`]);
   }
 
@@ -145,27 +136,30 @@ export class App {
     const notif = createNotificationFromWsObject(obj);
     if (notif.message != ""){
       switch(notif.type){
-        case messageType.LIKED:{
+        case notifType.LIKED:{
           notif.action = ()=>{
             this.router.navigateByUrl(`/likes/profile/${notif.senderId}`);
             this.removeNotif(notif);
           }
           break;
         }
-        case messageType.UNLIKED:{
+        case notifType.UNLIKED:{
           notif.action = ()=>{
             this.removeNotif(notif);
           }
           break;
         }
-        case messageType.MATCH:{
+        case notifType.MATCH:{
+          if (RegExp("^\/matches.*$").test(this.router.url)){
+            return ;
+          }
           notif.action = ()=>{
             this.router.navigateByUrl(`/matches/profile/${notif.senderId}`)
             this.removeNotif(notif);
           }
           break;
         }
-        case messageType.MESSAGE_SENT:{
+        case notifType.MESSAGE_SENT:{
           notif.action = ()=>{
             this.router.navigateByUrl(`/matches/profile/${notif.senderId}/chat`)
             this.removeNotif(notif);

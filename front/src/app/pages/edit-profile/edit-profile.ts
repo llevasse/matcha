@@ -26,6 +26,8 @@ export class EditProfile {
 	userSearchCityList =	signal<Map<string, any>[]>([]);
 	userSearchCityListStr =  signal<string[]>([]);
 
+	errorMessages = signal<string[]>([]);
+
 	locationInputContainer = viewChild<Dropdown>('locationInputContainer');
 	interestDropdown = viewChild<InterestDropdown>('interestDropdownContainer');
 	imagesInput = viewChild<ProfileImageInput>('imageContainer');
@@ -81,8 +83,10 @@ export class EditProfile {
 	ngOnInit(){
 	}
 
-	processForm(event: SubmitEvent) {
+	async processForm(event: SubmitEvent) {
 		event.preventDefault();
+
+		this.errorMessages.set([]);
 
 		this.imagesInput()?.toBeeDeleted.forEach((image)=>{
 			if (image.id){
@@ -95,16 +99,28 @@ export class EditProfile {
       this.imagesInput()!.images().at(0)!.isMain = true;
       this.imagesInput()!.images().forEach((file)=>{
         if (file.isNew){
-          if (!file.isMain){
-            this.userService.uploadPhotos(file.file!);
-          }
-          else{
-            this.userService.uploadPhotos(file.file!).then(async (value)=>{
-              var obj = await (value as Response).json()
-              var map = new Map<String, any>(Object.entries(obj));
-              return await  this.userService.setPhotosAsMain(Number.parseInt(map.get('id')));
-            });
-          }
+          this.userService.uploadPhotos(file.file!).then(async (value)=>{
+            const res = value as Response;
+            if (!res.ok){
+              this.errorMessages.update((list)=>{
+                list.push("Error while uploading image");
+                return list;
+              });
+            }
+            else{
+              if (file.isMain){
+                var obj = await res.json()
+                var map = new Map<String, any>(Object.entries(obj));
+                const res2: Response = await this.userService.setPhotosAsMain(Number.parseInt(map.get('id')));
+                if (!res2.ok){
+                  this.errorMessages.update((list)=>{
+                    list.push("Error while setting image as main");
+                    return list;
+                  });
+                }
+              }
+            }
+          });
         }
       })
     }
@@ -117,14 +133,26 @@ export class EditProfile {
 			return this.interestDropdown()!.selectedValues().find((interestToTest)=>{return interest == interestToTest}) == undefined
 		});
 
-		interestToAdd.forEach((interest)=>{
-			this.interestService.assignUserAnInterest(interest.id);
+		interestToAdd.forEach(async (interest)=>{
+			const res: Response = await this.interestService.assignUserAnInterest(interest.id);
+			if (!res.ok){
+        this.errorMessages.update((list)=>{
+          list.push("Error while assigning interest");
+          return list;
+        });
+      }
 		});
-		interestToRemove.forEach((interest)=>{
-			this.interestService.unassignUserAnInterest(interest.id);
+		interestToRemove.forEach(async (interest)=>{
+		  const res: Response = await this.interestService.unassignUserAnInterest(interest.id);
+			if (!res.ok){
+        this.errorMessages.update((list)=>{
+          list.push("Error while assigning interest");
+          return list;
+        });
+      }
 		});
 
-		this.userService.updateProfile({
+		const res: Response = await this.userService.updateProfile({
       username: this.tmpUser().username || this.user.username,
       firstname: this.tmpUser().firstName || this.user.firstName,
       lastname: this.tmpUser().lastName || this.user.lastName,
@@ -137,8 +165,18 @@ export class EditProfile {
 			location_longitude: this.tmpUser().cityLon || this.user.cityLon,
 			preferences: this.tmpUser().preferences || this.user.preferences
 		});
-
-		this.router.navigate([`/`]);
+    if (!res.ok){
+      const obj = await res.json();
+      this.errorMessages.update((list)=>{
+        list.push(`Error while updating value : ${obj['error']}`);
+        return list;
+      });
+      this.loading.set(true);
+      this.loading.set(false);
+    }
+    if (this.errorMessages().length === 0){
+      this.router.navigate([`/`]);
+    }
 		return false;
 	}
 

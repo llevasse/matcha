@@ -71,5 +71,8 @@
       <profile-image-input #imageContainer></profile-image-input>
       <button>Save</button>
     </form>
+    @for (errors of errorMessages(); track $index) {
+      <span>{{errors}}</span>
+    }
   }
 </div>

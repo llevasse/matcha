@@ -53,6 +53,12 @@
             (onSelected)="setOrientation($event)" [multiChoice]="true" [values]="tmpUser().preferences" [options]="allowedGenders"/>
         </label>
 
+        <label>
+          <span>Interest</span>
+          <app-interest-dropdown #interestDropdownContainer
+            style="z-index: 2; position: relative; width: 100%;"
+          ></app-interest-dropdown>
+        </label>
       </div>
 
       <label>
@@ -61,12 +67,6 @@
       </label>
 
 
-      <label>
-        <span>Interest</span>
-        <app-interest-dropdown #interestDropdownContainer
-          style="z-index: 2; position: relative; width: 100%;"
-        ></app-interest-dropdown>
-      </label>
 
       <profile-image-input #imageContainer></profile-image-input>
       <button>Save</button>

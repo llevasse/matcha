@@ -1,6 +1,8 @@
 const db = require('../config/database');
 const ws = require('ws')
 
+const debug_ws = true;
+
 const messageType = {
   LIKED: 'liked',
   UNLIKED: 'unliked',
@@ -49,6 +51,8 @@ server.on('connection', function connection(clientWs) {
     const messageJSON = JSON.parse(data.toString());
     const messageText = messageJSON['message'];
     if (messageText != undefined){
+      if (debug_ws)
+        console.log(messageText);
       if (messageText.startsWith('init')){
         initClientWebSocketConnection(messageText, clientWs);
       }else{  // chat message need be sent in this format : `{sender_id}->{receiver_id}:${message}`
@@ -69,8 +73,11 @@ server.on('connection', function connection(clientWs) {
         return socket.ws.readyState != ws.CLOSED;
       }));
     })
-    // console.log("Clients after disconnection")
-    // printClientList();
+    if (debug_ws){
+      console.log("Clients after disconnection")
+      printClientList();
+      console.log("")
+    }
   });
 });
 
@@ -84,7 +91,10 @@ async function initClientWebSocketConnection(messageText = "", clientWs){
     else{
       socketMap.get(id).push(socketMap.get(id)[0].duplicateWithNewWs(clientWs));
     }
-    // printClientList();
+    if (debug_ws){
+      console.log("Clients after connection")
+      printClientList();
+    }
   }
   catch(error){
     console.log("Error while saving ws in map, cause : ", error);
@@ -110,16 +120,20 @@ function handleClientChatMessage(messageText = ""){
 function sendMessage(fromUserId, toUserId, content = "", type){
   if (socketMap.get(toUserId)){
     var sender = socketMap.get(fromUserId)[0];
+    const obj = JSON.stringify({
+      type: type,
+      from: JSON.stringify({
+        id: fromUserId, 
+        username: sender.username, 
+        profile_picture: sender.pfp_url
+      }),
+      content: content
+    });
     socketMap.get(toUserId).forEach((client)=>{
-      client.ws.send(JSON.stringify({
-        type: type,
-        from: JSON.stringify({
-          id: fromUserId, 
-          username: sender.username, 
-          profile_picture: sender.pfp_url
-        }),
-        content: content
-      }))
+      if (debug_ws){
+        console.log(`Send ${obj} to ${client.id}`)
+      }
+      client.ws.send(obj)
     })
   }
 }

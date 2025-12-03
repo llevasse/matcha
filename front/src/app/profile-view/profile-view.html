@@ -22,7 +22,7 @@
       <div id="detail-container">
         <span>Birthday : {{user().birthday}}</span>
         <span>Gender : {{user().gender}}</span>
-        <span>Orientation : {{user().orientation}}</span>
+        <span>Orientation : {{user().preferences.join(", ")}}</span>
         <span>City : {{user().cityStr}}</span>
         <span id="interest-container">Interest : @for (item of user().interest; track $index) {
           <span class="interest-span">{{item}}</span>

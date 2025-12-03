@@ -6,6 +6,7 @@ import { ProfileImageInput } from "../../profile-image-input/profile-image-input
 import { User } from '../../core/class/user';
 import { InterestDropdown } from "./interest-dropdown/interest-dropdown";
 import { Interest } from '../../core/class/interest';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-edit-profile',
@@ -52,14 +53,15 @@ export class EditProfile {
 		else{ // call if city was not set by user last time
       this.userCity.set(tmpUser.cityStr);
 		}
-		console.log(tmpUser);
+		// console.log(tmpUser);
 		this.loading.set(false)
 
 	}
 
 	constructor(
 	  private userService: UserService,
-	  private interestService: InterestService,){
+	  private interestService: InterestService,
+	  private router: Router){
 		// this.user.createDummy();
 		this.user.photos = [];
 		this.getUserProfile();
@@ -81,16 +83,6 @@ export class EditProfile {
 
 	processForm(event: SubmitEvent) {
 		event.preventDefault();
-
-		this.user.firstName = this.tmpUser().firstName || this.user.firstName;
-		this.user.lastName = this.tmpUser().lastName || this.user.lastName;
-		this.user.username = this.tmpUser().username || this.user.birthday;
-		this.user.birthday = this.tmpUser().birthday || this.user.birthday;
-		this.user.bio = this.tmpUser().bio || this.user.bio;
-		this.user.gender = this.tmpUser().gender || this.user.gender;
-		this.user.preferences = this.tmpUser().preferences || this.user.preferences;
-		this.user.cityLat = this.tmpUser().cityLat || this.user.cityLat;
-		this.user.cityLon = this.tmpUser().cityLon || this.user.cityLon;
 
 		this.imagesInput()?.toBeeDeleted.forEach((image)=>{
 			if (image.id){
@@ -133,19 +125,19 @@ export class EditProfile {
 		});
 
 		this.userService.updateProfile({
-      username: this.user.username,
-      firstname: this.user.firstName,
-      lastname: this.user.lastName,
-			gender: this.user.gender,
-			bio: this.user.bio,
-			birthdate: this.user.birthday,
+      username: this.tmpUser().username || this.user.username,
+      firstname: this.tmpUser().firstName || this.user.firstName,
+      lastname: this.tmpUser().lastName || this.user.lastName,
+			gender: this.tmpUser().gender || this.user.gender,
+			bio: this.tmpUser().bio || this.user.bio,
+			birthdate: this.tmpUser().birthday || this.user.birthday,
 			city: this.userCity(),
-			location_latitude: this.user.cityLat,
-			location_longitude: this.user.cityLon,
-			preferences: this.user.preferences
+			location_latitude: this.tmpUser().cityLat || this.user.cityLat,
+			location_longitude: this.tmpUser().cityLon || this.user.cityLon,
+			preferences: this.tmpUser().preferences || this.user.preferences
 		});
 
-		// this.router.navigate([`/`]);
+		this.router.navigate([`/`]);
 		return false;
 	}
 

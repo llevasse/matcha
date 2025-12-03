@@ -72,5 +72,6 @@ export class ProfileView {
 
   unlikeUser(){
     this.userService.setUserAsUnliked(this.user().id);
+    this.onClickOutside.emit();
   }
 }

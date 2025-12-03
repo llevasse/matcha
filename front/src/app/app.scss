@@ -6,12 +6,8 @@
   width: fit-content;
 }
 
-#title {
-  margin: 0;
-  text-align: center;
-  font-size: 6em;
+#navbar-title {
   font-style: italic;
-  color: v.$text-color;
 }
 
 app-dropdown, app-interest-dropdown{

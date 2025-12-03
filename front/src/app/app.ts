@@ -50,7 +50,6 @@ export class App {
   ngOnInit(){
     this.router.events.subscribe((event: Event)=>{
       if (event instanceof NavigationEnd){  // TODO handle for liked and match notif
-        console.log(event.url);
         if (RegExp("^\/matches\/profile\/.*\/chat$").test(event.url)){  // check if url leads to chat and clear related notif if need be
           const profileId: number = Number.parseInt(event.url.split("/")[3])
           this.removeNotif(new MatchaNotification("","", profileId, null, notifType.MESSAGE_SENT));
@@ -137,6 +136,9 @@ export class App {
     if (notif.message != ""){
       switch(notif.type){
         case notifType.LIKED:{
+          if (RegExp("^\/likes.*$").test(this.router.url)){
+            return ;
+          }
           notif.action = ()=>{
             this.router.navigateByUrl(`/likes/profile/${notif.senderId}`);
             this.removeNotif(notif);
@@ -144,6 +146,9 @@ export class App {
           break;
         }
         case notifType.UNLIKED:{
+          if (RegExp("^\/(likes|matches).*$").test(this.router.url)){
+            return ;
+          }
           notif.action = ()=>{
             this.removeNotif(notif);
           }
@@ -160,6 +165,9 @@ export class App {
           break;
         }
         case notifType.MESSAGE_SENT:{
+          if (RegExp(`^\/matches\/profile\/${notif.senderId}\/chat$`).test(this.router.url)){  // Don't add notif if already on chat page with sender
+            return
+          }
           notif.action = ()=>{
             this.router.navigateByUrl(`/matches/profile/${notif.senderId}/chat`)
             this.removeNotif(notif);

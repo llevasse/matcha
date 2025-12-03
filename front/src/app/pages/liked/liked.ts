@@ -4,6 +4,8 @@ import { ProfilePreview } from "../../profile-preview/profile-preview";
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileView } from '../../profile-view/profile-view';
 import { UserService } from '../../../services/userService';
+import { getClientCity, notifType } from '../../utilities/utils';
+import { createNotificationFromWsObject } from '../../core/class/notification';
 
 @Component({
   selector: 'app-liked',
@@ -47,30 +49,19 @@ export class Liked {
       return ;
     }
     this.user = tmpUser;
-    this.user = await this.getClientCity();
-    //TODO api call to get similar user as client
+    this.user = await getClientCity(this.user);
     this.profiles.set(await this.userService.getUsersWhoLikedClient());
+    // Update liked list on new match or got unliked
+    this.user.ws?.asObservable().pipe().subscribe(async (obj) => {
+      const notif = createNotificationFromWsObject(obj)
+      if (notif.type == notifType.LIKED || notif.type == notifType.UNLIKED){
+        this.profiles.set(await this.userService.getUsersWhoLikedClient());
+        this.loaded.set(false)
+        this.loaded.set(true)
+      }
+    })
 		this.loaded.set(true)
 	}
-
-	async getClientCity() {
-    const url = "http://ip-api.com/json/";
-    try {
-      if (Number.isNaN(this.user.cityLat) || Number.isNaN(this.user.cityLon)){
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`Response status: ${response.status}`);
-        }
-        const result = await response.json();
-        this.user.cityStr = result['city'];
-        this.user.cityLon = result['lon'];
-        this.user.cityLat = result['lat'];
-      }
-    } catch (error: any) {
-      console.error(error.message);
-    }
-    return this.user;
-  }
 
   createProfilePopup(userId: number){
     var profile = this.viewContainer.createComponent(ProfileView);

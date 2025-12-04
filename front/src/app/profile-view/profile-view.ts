@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ImageViewer } from '../core/image-viewer/image-viewer';
 import { UserService } from '../../services/userService';
 import { Chat } from './chat/chat';
+import { createNotificationFromWsObject } from '../core/class/notification';
+import { notifType } from '../utilities/utils';
 
 @Component({
   selector: 'app-profile-view',
@@ -17,6 +19,8 @@ export class ProfileView {
   withChat = input(false)
   withUnlike = input(false)
   user = signal<User>(new User());
+  clientUser:User|null = null;
+  isOnline = signal(false);
 
   onClickOutside = output();
 
@@ -38,8 +42,30 @@ export class ProfileView {
 
   constructor(private userService: UserService, private router: Router) {
     //TODO call API to add profile to user history
+    userService.getClientUser().then((user)=>{
+      if (user){
+        this.clientUser = user;
+        this.clientUser.ws?.next({message: `watch : ${user.id}->${this.userId()}`})
+        this.clientUser.ws?.subscribe((obj)=>{
+          const notif = createNotificationFromWsObject(obj);
+          if (notif.senderId == this.userId()){
+            if (notif.type == notifType.ONLINE){
+              this.isOnline.set(true);
+            }
+            else if (notif.type == notifType.OFFLINE){
+              this.isOnline.set(false);
+            }
+            this.loaded.set(false);
+            this.loaded.set(true);
+          }
+        })
+      }
+
+    })
     this.ref.nativeElement.addEventListener('click', (e: any)=>{
       if ((e.target as HTMLElement).closest('app-profile-view > .container') == null){
+        this.clientUser?.ws?.next({message: `unwatch : ${this.clientUser.id}->${this.userId()}`})
+
         this.onClickOutside.emit();
       }
     });

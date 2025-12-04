@@ -4,7 +4,9 @@ export const notifType = {
   LIKED: 'liked',
   UNLIKED: 'unliked',
   MATCH: 'match',
-  MESSAGE_SENT: 'message'
+  MESSAGE_SENT: 'message',
+  ONLINE: 'online',
+  OFFLINE: 'offline',
 }
 
 export async function getClientCity(clientUser: User) {

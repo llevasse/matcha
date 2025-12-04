@@ -32,6 +32,7 @@ export class UserService {
 
         this.clientUser.ws.subscribe();
         this.clientUser.ws.next({message: `init : ${id}`})
+        
 
         return this.clientUser;
       }

@@ -18,6 +18,7 @@ $(NAME):
 	if [ ! -f .env ]; then gpg .env.gpg ; fi # todo test this
 	mkdir -p back/uploads/profile
 	mkdir --mode=777 -p db/ # bien verif lors du passage au machine 42
+	rm -f db/mysql.sock
 	npm install --prefix ./front
 	$(DC) up --build
 

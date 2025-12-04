@@ -26,7 +26,8 @@ export function createNotificationFromWsObject(obj:any): MatchaNotification{
 
     notif.type = type;
     notif.senderId = fromUserObj['id'];
-    notif.rawMessage = obj['content'];
+    notif.rawMessage = obj['content'] ?? "";
+    notif.message = "";
 
     if (fromUserObj['profile_picture']){
       notif.profilePicture = `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000${fromUserObj['profile_picture']}`

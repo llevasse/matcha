@@ -34,8 +34,8 @@
 - [x] the client must be able to unlike another user profile
 - [x] Consider two user connected if they liked each other
 - [x] see the fame rating of another user
-- [ ] See if a user is online, or the last time they were online
-  - [ ] User online status
+- [x] See if a user is online, or the last time they were online
+  - [x] User online status
   - [x] User last connection time
 - [ ] A client must be able to report a profile
 - [ ] A client must be able to block a user

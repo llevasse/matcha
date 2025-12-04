@@ -5,7 +5,12 @@
       <span>'{{user().username}}'</span>
       <span>{{user().lastName}}</span>
     </div>
-    <span style="text-align: center;">Last connection : {{user().lastConectionDate?.toDateString()}} - {{user().lastConectionDate?.toLocaleTimeString() }}</span>
+    @if (isOnline()) {
+      <span style="text-align: center;">Online</span>
+    }
+    @else {
+      <span style="text-align: center;">Last connection : {{user().lastConectionDate?.toDateString()}} - {{user().lastConectionDate?.toLocaleTimeString() }}</span>
+    }
 
     <div id="picture-container">
       @for (item of user().photos; track $index) {

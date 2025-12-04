@@ -18,7 +18,15 @@
 - [ ] Only propose interesting profile (See subject)
 - [ ] The list must be :
   - [ ] Sortable by age|location|fame|tags
+    - [ ] age
+    - [ ] location (radius)
+    - [ ] fame
+    - [ ] tags
   - [ ] Filterable by age|location|fame|tags
+    - [ ] age
+    - [ ] location
+    - [ ] fame
+    - [ ] tags
 
 # Research
 - [ ] The user must be able to search profile with criteria such as :

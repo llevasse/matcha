@@ -32,7 +32,7 @@ export class UserService {
 
         this.clientUser.ws.subscribe();
         this.clientUser.ws.next({message: `init : ${id}`})
-        
+
 
         return this.clientUser;
       }
@@ -76,9 +76,9 @@ export class UserService {
     })
   }
 
-  searchProfile(){
+  searchProfile(radius = 42){
     var users: User[] = [];
-    return fetch(`${this.profileUrl}/search`, {
+    return fetch(`${this.profileUrl}/search?radius=${radius}`, {
       headers : {
         "Authorization":"Bearer " + localStorage.getItem('token'),
       }

@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal, viewChildren, ViewContainerRef, afterEveryRender } from '@angular/core';
 import { ProfilePreview } from "../../profile-preview/profile-preview";
 import { User } from "../../core/class/user"
@@ -15,6 +16,9 @@ export class Home {
   profiles = signal<User[]>([]);
   nbFakeUser: number = 50;
 	user: User = new User();
+	radius: number | null = 42;
+	minAge: number | null = null;
+	maxAge: number | null = null;
 
 	loading = signal<boolean>(true)
 
@@ -38,10 +42,15 @@ export class Home {
     }
     this.user = tmpUser;
     this.user = await this.getClientCity();
-    //TODO api call to get similar user as client
-    this.profiles.set(await this.userService.searchProfile());
-		this.loading.set(false)
+    //TODO api call to get similar user as HttpClient
+    await this.searchForProfile();
 	}
+
+  async searchForProfile(){
+		this.loading.set(true)
+    this.profiles.set(await this.userService.searchProfile(this.radius, this.minAge, this.maxAge));
+		this.loading.set(false)
+  }
 
   createProfilePopup(userId: number){
     var profile = this.viewContainer.createComponent(ProfileView);
@@ -57,6 +66,18 @@ export class Home {
   seeProfile(user: User){
     history.pushState('','', `/profile/${user.id}`);
     this.createProfilePopup(user.id);
+  }
+
+  setRadius(event: Event){
+    this.radius = Number.parseFloat(((event as InputEvent).target as HTMLInputElement).value);
+  }
+
+  setMinAge(event: Event){
+    this.minAge = Number.parseFloat(((event as InputEvent).target as HTMLInputElement).value);
+  }
+
+  setMaxAge(event: Event){
+    this.maxAge = Number.parseFloat(((event as InputEvent).target as HTMLInputElement).value);
   }
 
   async getClientCity() {

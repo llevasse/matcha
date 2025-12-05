@@ -6,7 +6,7 @@
     </div>
     <div class="profile-info">
       <div class="profile-name-distance-container">
-        <a>{{user().username}}</a>
+        <a>{{user().username}}{{user().age ? `, ${user().age} years old` : ""}}</a>
         <a>~{{user().distance.toFixed(0)}}km away</a>
       </div>
       <a id="profile-bio">{{user().bio}}</a>

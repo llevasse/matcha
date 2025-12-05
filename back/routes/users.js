@@ -226,6 +226,10 @@ router.get('/search', authenticateToken, async (req, res) => {
         if (userLocation.length == 0 || userLocation[0][0].location_latitude == undefined || userLocation[0][0].location_longitude == undefined){
           throw ("could not get user location")
         }
+        if (age_min && parseInt(age_min) < 18){
+          throw ("There is no underage user allowed in this site.")
+        }
+        
         userLat = userLocation[0][0].location_latitude;
         userLng = userLocation[0][0].location_longitude;
 
@@ -234,7 +238,8 @@ router.get('/search', authenticateToken, async (req, res) => {
               (6371 * acos ( cos ( radians( ? ) ) * cos( radians( location_latitude ) ) 
                             * cos( radians( location_longitude ) - radians( ? ) ) 
                               + sin ( radians( ? ) ) * sin( radians( location_latitude ) ) ) ) AS distance,
-                   pp.file_path as profile_picture
+              TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) as age,
+              pp.file_path as profile_picture
             FROM users u LEFT JOIN profile_pictures pp ON u.id = pp.user_id AND pp.is_main = TRUE
             WHERE u.id != ? AND u.is_confirmed=true
         `;
@@ -242,11 +247,11 @@ router.get('/search', authenticateToken, async (req, res) => {
         
         if (age_min || age_max) {
             if (age_min) {
-                query += ' AND TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) >= ?';
+                query += ' AND age >= ?';
                 params.push(age_min);
             }
             if (age_max) {
-                query += ' AND TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) <= ?';
+                query += ' AND age <= ?';
                 params.push(age_max);
             }
         }
@@ -256,7 +261,7 @@ router.get('/search', authenticateToken, async (req, res) => {
             params.push(`%${city}%`);
         }
 
-        query += `HAVING distance < ${radius} ORDER BY u.created_at DESC LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;
+        query += ` HAVING distance < ${radius} ORDER BY u.created_at DESC LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;
 
         const [users] = await db.execute(query,params);
         res.json(users);

@@ -47,6 +47,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
       username: string,
       email: string,
       birthdate: string,
+      age: number | null,
       city: string | null,
       location_latitude: number,
       location_longitude: number,
@@ -65,6 +66,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
       username: "",
       email: "",
       birthdate: "",
+      age: null,
       last_connection_date: null,
       city: null,
       location_latitude: NaN,
@@ -84,6 +86,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
     this.username = obj.username ?? "";
     this.email = obj.email;
     this.birthday = obj.birthdate ?? "";
+    this.age = obj.age;
     this.cityStr = obj.city;
     this.cityLat = obj.location_latitude;
     this.cityLon = obj.location_longitude;
@@ -106,6 +109,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
   email: string = "";
 
   birthday: string = "";
+  age: number | null = null;
 
   lastConectionDate: Date | null = null;
 

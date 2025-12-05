@@ -76,9 +76,22 @@ export class UserService {
     })
   }
 
-  searchProfile(radius = 42){
+
+  searchProfile(radius:number|null = 42, minAge:number | null = null, maxAge:number | null = null){
     var users: User[] = [];
-    return fetch(`${this.profileUrl}/search?radius=${radius}`, {
+    var params = "";
+
+    if (radius){
+      params = `&radius=${radius}`;
+    }
+    if (minAge){
+      params += `&age_min=${minAge}`;
+    }
+    if (maxAge){
+      params += `&age_max=${maxAge}`;
+    }
+
+    return fetch(`${this.profileUrl}/search?${params}`, {
       headers : {
         "Authorization":"Bearer " + localStorage.getItem('token'),
       }

@@ -3,6 +3,9 @@
   <input [value]="radius" (change)="setRadius($event)" type="number" placeholder="Radius"/>
   <input [value]="minAge" (change)="setMinAge($event)" type="number" min="18" placeholder="min age"/>
   <input [value]="maxAge" (change)="setMaxAge($event)" type="number" min="18" placeholder="max age"/>
+
+  <input [value]="minFame" (change)="setMinFame($event)" type="number" min="0" placeholder="min fame"/>
+  <input [value]="maxFame" (change)="setMaxFame($event)" type="number" min="0" placeholder="max fame"/>
   <button (click)="searchForProfile()">Search</button>
 </div>
 <div id="profile-list-container">

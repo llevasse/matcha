@@ -19,6 +19,8 @@ export class Home {
 	radius: number | null = 42;
 	minAge: number | null = null;
 	maxAge: number | null = null;
+	minFame: number | null = null;
+	maxFame: number | null = null;
 
 	loading = signal<boolean>(true)
 
@@ -48,7 +50,7 @@ export class Home {
 
   async searchForProfile(){
 		this.loading.set(true)
-    this.profiles.set(await this.userService.searchProfile(this.radius, this.minAge, this.maxAge));
+    this.profiles.set(await this.userService.searchProfile(this.radius, this.minAge, this.maxAge, this.minFame, this.maxFame));
 		this.loading.set(false)
   }
 
@@ -78,6 +80,14 @@ export class Home {
 
   setMaxAge(event: Event){
     this.maxAge = Number.parseFloat(((event as InputEvent).target as HTMLInputElement).value);
+  }
+
+  setMinFame(event: Event){
+    this.minFame = Number.parseFloat(((event as InputEvent).target as HTMLInputElement).value);
+  }
+
+  setMaxFame(event: Event){
+    this.maxFame = Number.parseFloat(((event as InputEvent).target as HTMLInputElement).value);
   }
 
   async getClientCity() {

@@ -219,7 +219,7 @@ router.put('/password', authenticateToken, async (req, res) => {
 // Rechercher des utilisateurs
 router.get('/search', authenticateToken, async (req, res) => {
     try {
-        const { age_min, age_max, radius = 42, city, limit = 20, offset = 0 } = req.query;
+        const { age_min, age_max, fame_min, fame_max, radius = 42, city, limit = 20, offset = 0 } = req.query;
 
         userLocation = await db.execute(`SELECT id, location_latitude, location_longitude FROM users WHERE id = ?`,
           [req.user.id]);
@@ -245,16 +245,24 @@ router.get('/search', authenticateToken, async (req, res) => {
         `;
         const params = [userLat, userLng, userLat, req.user.id];
         
-        if (age_min || age_max) {
-            if (age_min) {
-                query += ' AND age >= ?';
-                params.push(age_min);
-            }
-            if (age_max) {
-                query += ' AND age <= ?';
-                params.push(age_max);
-            }
+        if (age_min) {
+            query += ' AND age >= ?';
+            params.push(age_min);
         }
+        if (age_max) {
+            query += ' AND age <= ?';
+            params.push(age_max);
+        }
+        
+        if (fame_min) {
+            query += ' AND u.fame >= ?';
+            params.push(fame_min);
+        }
+        if (fame_max) {
+            query += ' AND u.fame <= ?';
+            params.push(fame_max);
+        }
+        
 
         if (city) {
             query += ' AND u.city LIKE ?';

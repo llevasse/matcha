@@ -19,19 +19,19 @@
 - [ ] The list must be :
   - [ ] Sortable by age|location|fame|tags
     - [ ] age
-    - [ ] location (radius)
+    - [ ] location
     - [ ] fame
     - [ ] tags
   - [ ] Filterable by age|location|fame|tags
-    - [ ] age
-    - [ ] location
-    - [ ] fame
+    - [x] age
+    - [x] location
+    - [x] fame
     - [ ] tags
 
 # Research
 - [ ] The user must be able to search profile with criteria such as :
-  - [ ] Age gap
-  - [ ] Fame rating
+  - [x] Age gap
+  - [x] Fame rating
   - [ ] Location
   - [ ] One or multiple tags
 

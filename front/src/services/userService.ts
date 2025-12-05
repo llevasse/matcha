@@ -77,7 +77,7 @@ export class UserService {
   }
 
 
-  searchProfile(radius:number|null = 42, minAge:number | null = null, maxAge:number | null = null){
+  searchProfile(radius:number|null = 42, minAge:number | null = null, maxAge:number | null = null, minFame:number | null = null, maxFame:number | null = null){
     var users: User[] = [];
     var params = "";
 
@@ -89,6 +89,12 @@ export class UserService {
     }
     if (maxAge){
       params += `&age_max=${maxAge}`;
+    }
+    if (minFame){
+      params += `&fame_min=${minFame}`;
+    }
+    if (maxFame){
+      params += `&fame_max=${maxFame}`;
     }
 
     return fetch(`${this.profileUrl}/search?${params}`, {

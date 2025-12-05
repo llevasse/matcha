@@ -162,15 +162,26 @@ router.post('/unlike', authenticateToken, async (req, res) => {
 // Obtenir la liste des matchs
 router.get('/matches', authenticateToken, async (req, res) => {
     try {
+        userLocation = await db.execute(`SELECT id, location_latitude, location_longitude FROM users WHERE id = ?`,
+          [req.user.id]);
+        if (userLocation.length == 0 || userLocation[0][0].location_latitude == undefined || userLocation[0][0].location_longitude == undefined){
+          throw ("could not get user location")
+        }
+        userLat = userLocation[0][0].location_latitude;
+        userLng = userLocation[0][0].location_longitude;
+        
         const [matches] = await db.execute(`
             SELECT u.id, u.username, u.bio, u.location_latitude, u.location_longitude, u.fame, pp.file_path as profile_picture,
-                   i.created_at as matched_at
+                   i.created_at as matched_at,
+                   (6371 * acos ( cos ( radians( ? ) ) * cos( radians( location_latitude ) ) 
+                            * cos( radians( location_longitude ) - radians( ? ) ) 
+                              + sin ( radians( ? ) ) * sin( radians( location_latitude ) ) ) ) AS distance
             FROM interactions i
             JOIN users u ON u.id = i.to_user_id
             LEFT JOIN profile_pictures pp ON u.id = pp.user_id AND pp.is_main = TRUE
             WHERE i.from_user_id = ? AND i.is_match = TRUE
             ORDER BY i.created_at DESC
-        `, [req.user.id]);
+        `, [userLat, userLng, userLat, req.user.id]);
 
         res.json(matches);
     } catch (error) {
@@ -181,15 +192,26 @@ router.get('/matches', authenticateToken, async (req, res) => {
 // Obtenir les likes reçus
 router.get('/likes-received', authenticateToken, async (req, res) => {
     try {
+        userLocation = await db.execute(`SELECT id, location_latitude, location_longitude FROM users WHERE id = ?`,
+          [req.user.id]);
+        if (userLocation.length == 0 || userLocation[0][0].location_latitude == undefined || userLocation[0][0].location_longitude == undefined){
+          throw ("could not get user location")
+        }
+        userLat = userLocation[0][0].location_latitude;
+        userLng = userLocation[0][0].location_longitude;
+
         const [likes] = await db.execute(`
             SELECT u.id, u.username, u.bio, u.location_latitude, u.location_longitude, u.fame, pp.file_path as profile_picture,
-                   i.created_at as liked_at
+                   i.created_at as liked_at,
+                   (6371 * acos ( cos ( radians( ? ) ) * cos( radians( location_latitude ) ) 
+                            * cos( radians( location_longitude ) - radians( ? ) ) 
+                              + sin ( radians( ? ) ) * sin( radians( location_latitude ) ) ) ) AS distance
             FROM interactions i
             JOIN users u ON u.id = i.from_user_id
             LEFT JOIN profile_pictures pp ON u.id = pp.user_id AND pp.is_main = TRUE
             WHERE i.to_user_id = ? AND i.is_match = FALSE
             ORDER BY i.created_at DESC
-        `, [req.user.id]);
+        `, [userLat, userLng, userLat, req.user.id]);
 
         res.json(likes);
     } catch (error) {

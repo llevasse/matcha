@@ -28,19 +28,6 @@ export class Liked {
     if (this.activatedRoute.snapshot.url.length > 1 && this.activatedRoute.snapshot.url[1].path == "profile"){
       this.createProfilePopup(Number.parseInt(this.activatedRoute.snapshot.url[2].path));
     }
-
-    afterEveryRender(()=>{
-      this.previews().forEach((preview)=>{  // TODO use saved client location
-        preview.distance.set(
-          preview.getDistanceFromLatLonInKm(
-            this.user.cityLat,
-            this.user.cityLon,
-            preview.user().cityLat,
-            preview.user().cityLon,
-          )
-        );
-      });
-    })
   }
 
   async getUserProfile(){

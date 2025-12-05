@@ -50,6 +50,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
       city: string | null,
       location_latitude: number,
       location_longitude: number,
+      distance: number,
       gender: string|null,
       preferences: string[],
       bio: string,
@@ -68,6 +69,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
       city: null,
       location_latitude: NaN,
       location_longitude: NaN,
+      distance : NaN,
       gender: null,
       preferences: [],
       bio: "",
@@ -85,6 +87,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
     this.cityStr = obj.city;
     this.cityLat = obj.location_latitude;
     this.cityLon = obj.location_longitude;
+    this.distance = obj.distance;
     this.gender = obj.gender ?? "";
     this.preferences = obj.preferences ?? [];
     this.bio = obj.bio ?? "";
@@ -109,6 +112,8 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
   cityStr: string | null = null;
   cityLat: number = NaN;
   cityLon: number = NaN;
+
+  distance: number = NaN;
 
   gender: string | null = null;
   preferences: string[] = [];

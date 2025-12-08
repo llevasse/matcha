@@ -10,12 +10,22 @@
     <button (click)="searchForProfile()">Search</button>
   </div>
 
-  <label>
-    <span>Interest</span>
-    <app-interest-dropdown #interestDropdownContainer
-      style="z-index: 2; position: relative; width: 100%;"
-    ></app-interest-dropdown>
-  </label>
+  <div style="display: flex; flex-direction: row;">
+    <label>
+      <span>Interest whitelist</span>
+      <app-interest-dropdown #interestWhitelistDropdownContainer
+        style="z-index: 2; position: relative; width: 100%;"
+      ></app-interest-dropdown>
+    </label>
+    <label>
+      <span>Interest blacklist</span>
+      <app-interest-dropdown #interestBlacklistDropdownContainer
+        style="z-index: 2; position: relative; width: 100%;"
+      ></app-interest-dropdown>
+    </label>
+  </div>
+
+
 </div>
 <div id="profile-list-container">
   @if (loading()) {

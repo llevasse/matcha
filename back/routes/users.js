@@ -216,32 +216,67 @@ router.put('/password', authenticateToken, async (req, res) => {
     }
 });
 
+async function _getInterestBlackWhiteList(whitelist_interest, blacklist_interest, user_id){
+  var interest_whitelist_user_id_list = [];
+  var interest_blacklist_user_id_list = [];
+  var whitelist_interest_list = [];
+  var blacklist_interest_list = [];
+  if (whitelist_interest){
+    whitelist_interest_list = whitelist_interest.split(",");
+  }
+  if (blacklist_interest){
+    blacklist_interest_list = blacklist_interest.split(",");
+  }
+  
+  if (whitelist_interest && blacklist_interest){
+    var common_interest_list = blacklist_interest_list.filter((element)=>{
+      return whitelist_interest_list.includes(element);
+    });
+    whitelist_interest_list = whitelist_interest_list.filter((element)=>{return !common_interest_list.includes(element)});
+    blacklist_interest_list = blacklist_interest_list.filter((element)=>{return !common_interest_list.includes(element)});
+  }
+  
+  if (whitelist_interest_list.length > 0){
+    whitelist_interest_list.forEach((value, index)=>{whitelist_interest_list[index] = Number.parseInt(value)});
+    var tokens = new Array(whitelist_interest_list.length).fill('?').join(',');
+    whitelist_interest_list.push(user_id);
+    interest_query = `SELECT DISTINCT user_id FROM user_tags WHERE tag_id IN (${tokens}) AND user_id != ?`
+    result = await db.execute(interest_query, whitelist_interest_list);
+    
+    result[0].forEach((element)=>{
+      interest_whitelist_user_id_list.push(element['user_id']);
+    });
+  }
+  
+  if (blacklist_interest_list.length > 0){
+    blacklist_interest_list.forEach((value, index)=>{blacklist_interest_list[index] = Number.parseInt(value)});
+    var tokens = new Array(blacklist_interest_list.length).fill('?').join(',');
+    blacklist_interest_list.push(user_id);
+    interest_query = `SELECT DISTINCT user_id FROM user_tags WHERE tag_id IN (${tokens}) AND user_id != ?`
+    result = await db.execute(interest_query, blacklist_interest_list);
+    
+    result[0].forEach((element)=>{
+      interest_blacklist_user_id_list.push(element['user_id']);
+    });
+  }
+  
+  if (whitelist_interest && blacklist_interest){
+    var common_interest_list = interest_blacklist_user_id_list.filter((element)=>{
+      return interest_whitelist_user_id_list.includes(element);
+    });
+    interest_whitelist_user_id_list = interest_whitelist_user_id_list.filter((element)=>{return !common_interest_list.includes(element)});
+    interest_blacklist_user_id_list = interest_blacklist_user_id_list.filter((element)=>{return !common_interest_list.includes(element)});
+  }
+  return [interest_whitelist_user_id_list, interest_blacklist_user_id_list];
+}
+
 // Rechercher des utilisateurs
 router.get('/search', authenticateToken, async (req, res) => {
     try {
-        const { age_min, age_max, fame_min, fame_max, whitelist_interest, radius = 42, city, limit = 20, offset = 0 } = req.query;
-            
-        var interest_user_id_list = [];
-        if (whitelist_interest){
-          var whitelist_interest_list = whitelist_interest.split(",");
-          if (whitelist_interest_list.length > 0){
-            whitelist_interest_list.forEach((value, index)=>{whitelist_interest_list[index] = Number.parseInt(value)});
-            var tokens = new Array(whitelist_interest_list.length).fill('?').join(',');
-            whitelist_interest_list.push(req.user.id);
-            interest_query = `SELECT DISTINCT user_id FROM user_tags WHERE tag_id IN (${tokens}) AND user_id != ?`
-            result = await db.execute(interest_query, whitelist_interest_list);
-            
-            if (result[0].length === 0){
-              res.status(400).json({message : "Could not get any user with those interest", users : []}).end();
-              return ;
-            }
-            result[0].forEach((element)=>{
-              interest_user_id_list.push(element['user_id']);
-            });
-            
-          }
-        }
+        const { age_min, age_max, fame_min, fame_max, whitelist_interest, blacklist_interest, radius = 42, city, limit = 20, offset = 0 } = req.query;
 
+        [interest_whitelist_user_id_list, interest_blacklist_user_id_list] = await _getInterestBlackWhiteList(whitelist_interest, blacklist_interest, req.user.id)
+      
         userLocation = await db.execute(`SELECT id, location_latitude, location_longitude FROM users WHERE id = ?`,
           [req.user.id]);
         
@@ -269,11 +304,20 @@ router.get('/search', authenticateToken, async (req, res) => {
         `;
         const params = [userLat, userLng, userLat, req.user.id];
         
-        if (interest_user_id_list.length > 0){
-          var tokens = new Array(interest_user_id_list.length).fill('?').join(',');
+        if (interest_whitelist_user_id_list.length > 0){
+          var tokens = new Array(interest_whitelist_user_id_list.length).fill('?').join(',');
         
           query += ` AND u.id IN (${tokens})`;
-          interest_user_id_list.forEach((element)=>{
+          interest_whitelist_user_id_list.forEach((element)=>{
+            params.push(element);
+          });
+        }
+        
+        if (interest_blacklist_user_id_list.length > 0){
+          var tokens = new Array(interest_blacklist_user_id_list.length).fill('?').join(',');
+        
+          query += ` AND u.id NOT IN (${tokens})`;
+          interest_blacklist_user_id_list.forEach((element)=>{
             params.push(element);
           });
         }

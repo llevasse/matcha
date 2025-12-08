@@ -28,8 +28,8 @@ export class Home {
   private activatedRoute = inject(ActivatedRoute);
   private viewContainer = inject(ViewContainerRef);
 
-	interestDropdown = viewChild<InterestDropdown>('interestDropdownContainer');
-
+	interestWhitelistDropdown = viewChild<InterestDropdown>('interestWhitelistDropdownContainer');
+	interestBlacklistDropdown = viewChild<InterestDropdown>('interestBlacklistDropdownContainer');
 
   previews = viewChildren<ProfilePreview>(ProfilePreview);
   ngOnInit(){  }
@@ -55,14 +55,24 @@ export class Home {
   async searchForProfile(){
 		this.loading.set(true)
 		var whiteListInterestId: number[] = [];
-
-		this.interestDropdown()!.selectedValues().forEach((interest)=>{
+		this.interestWhitelistDropdown()!.selectedValues().forEach((interest)=>{
       whiteListInterestId.push(interest.id);
 		});
 
+		var blackListInterestId: number[] = [];
+		this.interestBlacklistDropdown()!.selectedValues().forEach((interest)=>{
+      blackListInterestId.push(interest.id);
+		});
 
     try{
-      this.profiles.set(await this.userService.searchProfile(this.radius, this.minAge, this.maxAge, this.minFame, this.maxFame, whiteListInterestId));
+      this.profiles.set(await this.userService.searchProfile(
+        this.radius,
+        this.minAge,
+        this.maxAge,
+        this.minFame,
+        this.maxFame,
+        whiteListInterestId,
+        blackListInterestId));
     }
     catch(e){
       console.error(e);

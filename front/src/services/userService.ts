@@ -77,7 +77,7 @@ export class UserService {
   }
 
 
-  searchProfile(radius: number | null = 42, minAge: number | null = null, maxAge: number | null = null, minFame: number | null = null, maxFame: number | null = null, whiteListInterestId: number[] | null){
+  searchProfile(radius: number | null = 42, minAge: number | null = null, maxAge: number | null = null, minFame: number | null = null, maxFame: number | null = null, whiteListInterestId: number[] | null, blackListInterestId: number[] | null){
     var users: User[] = [];
     var params = "";
 
@@ -102,6 +102,10 @@ export class UserService {
     if (whiteListInterestId){
       params += `&whitelist_interest=${whiteListInterestId}`;
     }
+    if (blackListInterestId){
+      params += `&blacklist_interest=${blackListInterestId}`;
+    }
+
 
     return fetch(`${this.profileUrl}/search?${params}`, {
       headers : {
@@ -109,9 +113,10 @@ export class UserService {
       }
     }).then(async (value)=>{
       if (!value.ok){
-        await value.json().then((obj)=>{
-          throw obj['message'];
-        })
+        return [];
+        // await value.json().then((obj)=>{
+        //   throw obj['message'];
+        // })
       }
       users = await this.userListFromResponse(value);
       return users;

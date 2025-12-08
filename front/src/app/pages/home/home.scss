@@ -34,7 +34,8 @@ h1{
 }
 
 #search-option-container{
-  display: flex; flex-direction: row;
+  display: flex;
+  flex-direction: column;
   padding: 0 6em;
   gap: 1rem;
 

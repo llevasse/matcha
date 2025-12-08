@@ -1,14 +1,15 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject, signal, viewChildren, ViewContainerRef, afterEveryRender } from '@angular/core';
+import { Component, inject, signal, viewChildren, ViewContainerRef, afterEveryRender, viewChild } from '@angular/core';
 import { ProfilePreview } from "../../profile-preview/profile-preview";
 import { User } from "../../core/class/user"
 import { ProfileView } from '../../profile-view/profile-view';
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from '../../../services/userService';
+import { InterestDropdown } from "../edit-profile/interest-dropdown/interest-dropdown";
 
 @Component({
   selector: 'app-home',
-  imports: [ProfilePreview],
+  imports: [ProfilePreview, InterestDropdown],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
@@ -26,6 +27,9 @@ export class Home {
 
   private activatedRoute = inject(ActivatedRoute);
   private viewContainer = inject(ViewContainerRef);
+
+	interestDropdown = viewChild<InterestDropdown>('interestDropdownContainer');
+
 
   previews = viewChildren<ProfilePreview>(ProfilePreview);
   ngOnInit(){  }
@@ -50,7 +54,19 @@ export class Home {
 
   async searchForProfile(){
 		this.loading.set(true)
-    this.profiles.set(await this.userService.searchProfile(this.radius, this.minAge, this.maxAge, this.minFame, this.maxFame));
+		var whiteListInterestId: number[] = [];
+
+		this.interestDropdown()!.selectedValues().forEach((interest)=>{
+      whiteListInterestId.push(interest.id);
+		});
+
+
+    try{
+      this.profiles.set(await this.userService.searchProfile(this.radius, this.minAge, this.maxAge, this.minFame, this.maxFame, whiteListInterestId));
+    }
+    catch(e){
+      console.error(e);
+    }
 		this.loading.set(false)
   }
 

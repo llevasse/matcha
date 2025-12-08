@@ -219,15 +219,39 @@ router.put('/password', authenticateToken, async (req, res) => {
 // Rechercher des utilisateurs
 router.get('/search', authenticateToken, async (req, res) => {
     try {
-        const { age_min, age_max, fame_min, fame_max, radius = 42, city, limit = 20, offset = 0 } = req.query;
+        const { age_min, age_max, fame_min, fame_max, whitelist_interest, radius = 42, city, limit = 20, offset = 0 } = req.query;
+            
+        var interest_user_id_list = [];
+        if (whitelist_interest){
+          var whitelist_interest_list = whitelist_interest.split(",");
+          if (whitelist_interest_list.length > 0){
+            whitelist_interest_list.forEach((value, index)=>{whitelist_interest_list[index] = Number.parseInt(value)});
+            var tokens = new Array(whitelist_interest_list.length).fill('?').join(',');
+            whitelist_interest_list.push(req.user.id);
+            interest_query = `SELECT DISTINCT user_id FROM user_tags WHERE tag_id IN (${tokens}) AND user_id != ?`
+            result = await db.execute(interest_query, whitelist_interest_list);
+            
+            if (result[0].length === 0){
+              res.status(400).json({message : "Could not get any user with those interest", users : []}).end();
+              return ;
+            }
+            result[0].forEach((element)=>{
+              interest_user_id_list.push(element['user_id']);
+            });
+            
+          }
+        }
 
         userLocation = await db.execute(`SELECT id, location_latitude, location_longitude FROM users WHERE id = ?`,
           [req.user.id]);
+        
         if (userLocation.length == 0 || userLocation[0][0].location_latitude == undefined || userLocation[0][0].location_longitude == undefined){
-          throw ("could not get user location")
+          res.status(400).json({message : "could not get user location",users : []}).end();
+          return ;
         }
         if (age_min && parseInt(age_min) < 18){
-          throw ("There is no underage user allowed in this site.")
+          res.status(400).json({message : "There is no underage user allowed in this site.", users : []}).end();
+          return ;
         }
         
         userLat = userLocation[0][0].location_latitude;
@@ -244,6 +268,15 @@ router.get('/search', authenticateToken, async (req, res) => {
             WHERE u.id != ? AND u.is_confirmed=true
         `;
         const params = [userLat, userLng, userLat, req.user.id];
+        
+        if (interest_user_id_list.length > 0){
+          var tokens = new Array(interest_user_id_list.length).fill('?').join(',');
+        
+          query += ` AND u.id IN (${tokens})`;
+          interest_user_id_list.forEach((element)=>{
+            params.push(element);
+          });
+        }
         
         if (age_min) {
             query += ' AND age >= ?';
@@ -263,7 +296,6 @@ router.get('/search', authenticateToken, async (req, res) => {
             params.push(fame_max);
         }
         
-
         if (city) {
             query += ' AND u.city LIKE ?';
             params.push(`%${city}%`);

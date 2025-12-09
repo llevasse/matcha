@@ -16,12 +16,12 @@
 
 # Browsing
 - [ ] Only propose interesting profile (See subject)
-- [ ] The list must be :
-  - [ ] Sortable by age|location|fame|tags
-    - [ ] age
-    - [ ] location
-    - [ ] fame
-    - [ ] tags
+- [x] The list must be :
+  - [x] Sortable by age|location|fame|tags
+    - [x] age
+    - [x] location
+    - [x] fame
+    - [x] tags
   - [x] Filterable by age|location|fame|tags
     - [x] age
     - [x] location

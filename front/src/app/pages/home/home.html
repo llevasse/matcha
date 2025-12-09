@@ -1,5 +1,20 @@
 <h1>{{profiles().length}} {{profiles().length < 2 ? "profile" : "profiles"}} found</h1>
 <div id="search-option-container">
+  <label>
+      <span>Sort by</span>
+      <div style="display: flex; flex-direction: row;">
+        <button (click)="setSortBy('age_ascending')">Age ascending</button>
+        <button (click)="setSortBy('age_descending')">Age descending</button>
+        <button (click)="setSortBy('distance_ascending')">Distance ascending</button>
+        <button (click)="setSortBy('distance_descending')">Distance descending</button>
+        <button (click)="setSortBy('interest_ascending')">Interest in common ascending</button>
+        <button (click)="setSortBy('interest_descending')">Interest in common descending</button>
+        <button (click)="setSortBy('fame_ascending')">Fame ascending</button>
+        <button (click)="setSortBy('fame_descending')">Fame descending</button>
+      </div>
+
+  </label>
+
   <div style="display: flex; flex-direction: row;">
     <input [value]="radius" (change)="setRadius($event)" type="number" placeholder="Radius"/>
     <input [value]="minAge" (change)="setMinAge($event)" type="number" min="18" placeholder="min age"/>

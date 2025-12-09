@@ -77,7 +77,7 @@ export class UserService {
   }
 
 
-  searchProfile(radius: number | null = 42, minAge: number | null = null, maxAge: number | null = null, minFame: number | null = null, maxFame: number | null = null, whiteListInterestId: number[] | null, blackListInterestId: number[] | null){
+  searchProfile(radius: number | null = 42, minAge: number | null = null, maxAge: number | null = null, minFame: number | null = null, maxFame: number | null = null, whiteListInterestId: number[] | null, blackListInterestId: number[] | null, sortBy:string){
     var users: User[] = [];
     var params = "";
 
@@ -105,6 +105,9 @@ export class UserService {
     if (blackListInterestId){
       params += `&blacklist_interest=${blackListInterestId}`;
     }
+
+    params += `&sort_by=${sortBy}`;
+
 
 
     return fetch(`${this.profileUrl}/search?${params}`, {

@@ -270,13 +270,70 @@ async function _getInterestBlackWhiteList(whitelist_interest, blacklist_interest
   return [interest_whitelist_user_id_list, interest_blacklist_user_id_list];
 }
 
+const allowed_sort_value = [
+  "age_ascending",
+  "age_descending",
+  "distance_ascending",
+  "distance_descending",
+  "interest_ascending",
+  "interest_descending",
+  "fame_ascending",
+  "fame_descending",
+]
+
 // Rechercher des utilisateurs
 router.get('/search', authenticateToken, async (req, res) => {
     try {
-        const { age_min, age_max, fame_min, fame_max, whitelist_interest, blacklist_interest, radius = 42, city, limit = 20, offset = 0 } = req.query;
+        const { age_min, age_max, fame_min, fame_max, whitelist_interest, blacklist_interest, radius = 42, city, sort_by, limit = 20, offset = 0 } = req.query;
 
         [interest_whitelist_user_id_list, interest_blacklist_user_id_list] = await _getInterestBlackWhiteList(whitelist_interest, blacklist_interest, req.user.id)
       
+        let order = "ASC";
+        let order_by = "u.created_at";
+        
+        switch(sort_by){
+          case "age_ascending": {
+            order_by = "age";
+            break;
+          }
+          case "distance_ascending": {
+            order_by = "distance";
+            break;
+          }
+          case "interest_ascending": {
+            order_by = "nb_tag_in_common";
+            break;
+          }
+          case "fame_ascending": {
+            order_by = "u.fame";
+            break;
+          }
+          case "age_descending": {
+            order = "DESC";
+            order_by = "age";
+            break;
+          }
+          case "distance_descending": {
+            order = "DESC";
+            order_by = "distance";
+            break;
+          }
+          case "interest_descending": {
+            order = "DESC";
+            order_by = "nb_tag_in_common";
+            break;
+          }
+          case "fame_descending": {
+            order = "DESC";
+            order_by = "u.fame";
+            break;
+          }
+          default:{
+            order = "DESC";
+            order_by = "u.created_at";
+          }
+        }
+            
         userLocation = await db.execute(`SELECT id, location_latitude, location_longitude FROM users WHERE id = ?`,
           [req.user.id]);
         
@@ -297,7 +354,7 @@ router.get('/search', authenticateToken, async (req, res) => {
               (6371 * acos ( cos ( radians( ? ) ) * cos( radians( location_latitude ) ) 
                             * cos( radians( location_longitude ) - radians( ? ) ) 
                               + sin ( radians( ? ) ) * sin( radians( location_latitude ) ) ) ) AS distance,
-              (select COUNT(ut.tag_id) FROM user_tags ut WHERE ut.user_id = u.id AND ut.tag_id IN (SELECT ut.tag_id FROM user_tags ut WHERE ut.user_id = ?)) as nb_tag_in_common,
+              (SELECT COUNT(ut.tag_id) FROM user_tags ut WHERE ut.user_id = u.id AND ut.tag_id IN (SELECT ut.tag_id FROM user_tags ut WHERE ut.user_id = ?)) AS nb_tag_in_common,
               TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) as age,
               pp.file_path as profile_picture
             FROM users u LEFT JOIN profile_pictures pp ON u.id = pp.user_id AND pp.is_main = TRUE
@@ -346,8 +403,7 @@ router.get('/search', authenticateToken, async (req, res) => {
             params.push(`%${city}%`);
         }
 
-        query += ` HAVING distance < ${radius} ORDER BY u.created_at DESC LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;
-
+        query += ` HAVING distance < ${radius} ORDER BY ${order_by} ${order} LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;
         const [users] = await db.execute(query,params);
         res.json(users);
     } catch (error) {

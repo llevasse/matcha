@@ -22,6 +22,7 @@ export class Home {
 	maxAge: number | null = null;
 	minFame: number | null = null;
 	maxFame: number | null = null;
+	sortBy: string = "distance_ascending";
 
 	loading = signal<boolean>(true)
 
@@ -72,7 +73,8 @@ export class Home {
         this.minFame,
         this.maxFame,
         whiteListInterestId,
-        blackListInterestId));
+        blackListInterestId,
+        this.sortBy));
     }
     catch(e){
       console.error(e);
@@ -114,6 +116,11 @@ export class Home {
 
   setMaxFame(event: Event){
     this.maxFame = Number.parseFloat(((event as InputEvent).target as HTMLInputElement).value);
+  }
+
+  setSortBy(value: string){
+    this.sortBy = value;
+    this.searchForProfile()
   }
 
   async getClientCity() {

@@ -297,12 +297,13 @@ router.get('/search', authenticateToken, async (req, res) => {
               (6371 * acos ( cos ( radians( ? ) ) * cos( radians( location_latitude ) ) 
                             * cos( radians( location_longitude ) - radians( ? ) ) 
                               + sin ( radians( ? ) ) * sin( radians( location_latitude ) ) ) ) AS distance,
+              (select COUNT(ut.tag_id) FROM user_tags ut WHERE ut.user_id = u.id AND ut.tag_id IN (SELECT ut.tag_id FROM user_tags ut WHERE ut.user_id = ?)) as nb_tag_in_common,
               TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) as age,
               pp.file_path as profile_picture
             FROM users u LEFT JOIN profile_pictures pp ON u.id = pp.user_id AND pp.is_main = TRUE
             WHERE u.id != ? AND u.is_confirmed=true
         `;
-        const params = [userLat, userLng, userLat, req.user.id];
+        const params = [userLat, userLng, userLat, req.user.id, req.user.id];
         
         if (interest_whitelist_user_id_list.length > 0){
           var tokens = new Array(interest_whitelist_user_id_list.length).fill('?').join(',');

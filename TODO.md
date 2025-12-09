@@ -22,18 +22,18 @@
     - [ ] location
     - [ ] fame
     - [ ] tags
-  - [ ] Filterable by age|location|fame|tags
+  - [x] Filterable by age|location|fame|tags
     - [x] age
     - [x] location
     - [x] fame
-    - [ ] tags
+    - [x] tags
 
 # Research
 - [ ] The user must be able to search profile with criteria such as :
   - [x] Age gap
   - [x] Fame rating
   - [ ] Location
-  - [ ] One or multiple tags
+  - [x] One or multiple tags
 
 # Profile of other user
 - [x] The client must be able to see the profile of other user and see all their (non-sensitive) info

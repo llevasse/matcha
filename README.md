@@ -28,7 +28,12 @@ Matcha is a post-common-core 42 project. The goal of this project is to create a
 # Launching
 ## With docker
 `make`
+
+The website is now available on `http://localhost:4242/`.
+
 ## Without docker
 `make back`
 
 (In anoter terminal) `sudo make front`
+
+The website is now available on `http://localhost:4242/`.

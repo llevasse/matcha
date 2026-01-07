@@ -137,14 +137,16 @@ async function unsetUserAsWatched(messageText = ""){ // "unwatch : $watcherId->$
   if (debug_ws){
     console.log(`${ws_print_color}Unset user(${watchedId}) as watched`);
   }
-  clients = socketMap.get(watcherId)
   if (watchedUserMap.get(watchedId) == undefined || watchedUserMap.get(watchedId).length == 0 || clients.length == 0){
     return
   }
   else{
-    if (socketMap.get(watchedId)){
-      socketMap.get(watchedId).filter((curClient) => {curClient.id != clients[0].id});
+    if (watchedUserMap.get(watchedId)){
+      watchedUserMap.set(watchedId, watchedUserMap.get(watchedId).filter((curClient) => {
+        return curClient.id != watcherId;
+      }));
     }
+    
   }
   if (debug_ws){
     printWatchedList();
@@ -236,8 +238,8 @@ function printWatchedList(){
     value[1].forEach((client)=>{
       console.log(`${ws_print_color}\tUsername : ${client.username}`)
     })
-    console.log("");
   })
+  console.log("");
 }
 
 module.exports = {server, sendMessage, messageType};

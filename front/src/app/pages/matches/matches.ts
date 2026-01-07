@@ -69,7 +69,5 @@ export class Matches {
 
   seeProfile(user: User){
     this.router.navigateByUrl(`/matches/profile/${user.id}`);
-    // history.pushState('','', `/matches/profile/${user.id}`);
-    this.createProfilePopup(user.id);
   }
 }

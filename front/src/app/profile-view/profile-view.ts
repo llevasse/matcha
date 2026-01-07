@@ -46,26 +46,27 @@ export class ProfileView {
       if (user){
         this.clientUser = user;
         this.clientUser.ws?.next({message: `watch : ${user.id}->${this.userId()}`})
-        this.clientUser.ws?.subscribe((obj)=>{
-          const notif = createNotificationFromWsObject(obj);
-          if (notif.senderId == this.userId()){
-            if (notif.type == notifType.ONLINE){
-              this.isOnline.set(true);
+        this.clientUser.ws?.asObservable().pipe().subscribe({
+          next: (msg)=>{
+            const notif = createNotificationFromWsObject(msg);
+            if (notif.senderId == this.userId()){
+              if (notif.type == notifType.ONLINE){
+                this.isOnline.set(true);
+              }
+              else if (notif.type == notifType.OFFLINE){
+                this.isOnline.set(false);
+              }
+              this.loaded.set(false);
+              this.loaded.set(true);
             }
-            else if (notif.type == notifType.OFFLINE){
-              this.isOnline.set(false);
-            }
-            this.loaded.set(false);
-            this.loaded.set(true);
           }
-        })
+        });
       }
 
     })
     this.ref.nativeElement.addEventListener('click', (e: any)=>{
       if ((e.target as HTMLElement).closest('app-profile-view > .container') == null){
         this.clientUser?.ws?.next({message: `unwatch : ${this.clientUser.id}->${this.userId()}`})
-
         this.onClickOutside.emit();
       }
     });
@@ -90,6 +91,7 @@ export class ProfileView {
     chat.setInput("userId", this.userId());
     chat.instance.onClickOutside.subscribe(()=>{
       chat.destroy();
+      this.clientUser?.ws?.next({message: `unwatch : ${this.clientUser.id}->${this.userId()}`});
       this.router.navigateByUrl(`/matches/profile/${this.userId()}`);
       // history.pushState('','', `/matches/profile/${this.userId()}`);
     });

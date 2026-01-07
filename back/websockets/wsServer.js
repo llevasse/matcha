@@ -62,7 +62,7 @@ server.on('connection', function connection(clientWs) {
       if (debug_ws)
         console.log(ws_print_color+messageText);
       if (messageText.startsWith('init')){
-        initClientWebSocketConnection(messageText, clientWs);
+        await initClientWebSocketConnection(messageText, clientWs);
       }
       else if (messageText.startsWith('watch')){
         setUserAsWatch(messageText);
@@ -73,10 +73,10 @@ server.on('connection', function connection(clientWs) {
       else{  // chat message need be sent in this format : `{sender_id}->{receiver_id}:${message}`
         handleClientChatMessage(messageText);
       }
-      console.log("")
+      // console.log("")
       
-      if (debug_ws)
-        printWatchedList();
+      // if (debug_ws)
+      //   printWatchedList();
     }
   });
 
@@ -108,17 +108,25 @@ async function setUserAsWatch(messageText = ""){ // "watch : $watcherId->$watche
   ids = messageText.split(":")[1].split("->");
   watcherId = Number.parseInt(ids[0]);
   watchedId = Number.parseInt(ids[1]);
+  if (debug_ws){
+    console.log(`${ws_print_color}Set user(${watchedId}) as watched`);
+  }
   clients = socketMap.get(watcherId)
   if (watchedUserMap.get(watchedId) == undefined || watchedUserMap.get(watchedId).length == 0){
     watchedUserMap.set(watchedId, clients);
   }
   else{
     clients.forEach((client)=>{
-      socketMap.get(watchedId).push(client);
+      if (socketMap.get(watchedId)){
+        socketMap.get(watchedId).push(client);
+      }
     })
   }
   if (socketMap.get(watchedId) != undefined && socketMap.get(watchedId).length != 0){
     sendMessage(watchedId, watcherId, "", messageType.ONLINE);
+  }
+  if (debug_ws){
+    printWatchedList();
   }
 }
 
@@ -126,12 +134,20 @@ async function unsetUserAsWatched(messageText = ""){ // "unwatch : $watcherId->$
   ids = messageText.split(":")[1].split("->");
   watcherId = Number.parseInt(ids[0]);
   watchedId = Number.parseInt(ids[1]);
+  if (debug_ws){
+    console.log(`${ws_print_color}Unset user(${watchedId}) as watched`);
+  }
   clients = socketMap.get(watcherId)
   if (watchedUserMap.get(watchedId) == undefined || watchedUserMap.get(watchedId).length == 0 || clients.length == 0){
     return
   }
   else{
-    socketMap.get(watchedId).filter((curClient) => {curClient.id != clients[0].id});
+    if (socketMap.get(watchedId)){
+      socketMap.get(watchedId).filter((curClient) => {curClient.id != clients[0].id});
+    }
+  }
+  if (debug_ws){
+    printWatchedList();
   }
 }
 
@@ -173,6 +189,7 @@ function handleClientChatMessage(messageText = ""){
     // const content = `${senderId}:${message}`;
     sendMessage(senderId, receiverId, messageText, messageType.MESSAGE_SENT)
     sendMessage(senderId, senderId, messageText, messageType.MESSAGE_SENT)
+    console.log("")
   }
   catch(error){
     console.log(`${ws_print_color}Error while processing message : ${messageText}\nCause : ${error}`)
@@ -207,17 +224,19 @@ function printClientList(){
     if (value[1].length > 0){
       console.log(`${ws_print_color}\tUsername : ${value[1][0].username} | pfp : ${value[1][0].pfp_url}`)
     }
+    console.log("");
   })
 }
 
 function printWatchedList(){
   Array.from(watchedUserMap).forEach((value)=>{
-    console.log(ws_print_color+value);
+    // console.log(ws_print_color+value);
     if (value[1] == null) return;
     console.log(`${ws_print_color}id : ${value[0]}, number of clients watching : ${value[1].length}`);
     value[1].forEach((client)=>{
       console.log(`${ws_print_color}\tUsername : ${client.username}`)
     })
+    console.log("");
   })
 }
 

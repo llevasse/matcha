@@ -1,6 +1,7 @@
 import { WebSocketSubject } from "rxjs/webSocket";
 import { Interest } from "./interest";
 import { ProfileImage } from "./profile-image";
+import { Subscription } from "rxjs";
 
 export class User{
   createDummy(){

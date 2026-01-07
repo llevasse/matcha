@@ -12,7 +12,6 @@ import { UserService } from '../../../services/userService';
 })
 export class Login {
   constructor(private authService: AuthService, private router: Router, private userService: UserService){
-    userService.deleteClient();
     authService.logout();
   }
 

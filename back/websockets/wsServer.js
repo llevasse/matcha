@@ -2,6 +2,8 @@ const db = require('../config/database');
 const ws = require('ws')
 
 const debug_ws = true;
+const ws_print_color = `\x1b[36m`;
+console.log(`Ws debug print color : ${ws_print_color}cyan`);
 
 const messageType = {
   LIKED: 'liked',
@@ -58,7 +60,7 @@ server.on('connection', function connection(clientWs) {
     const messageText = messageJSON['message'];
     if (messageText != undefined){
       if (debug_ws)
-        console.log(messageText);
+        console.log(ws_print_color+messageText);
       if (messageText.startsWith('init')){
         initClientWebSocketConnection(messageText, clientWs);
       }
@@ -71,6 +73,8 @@ server.on('connection', function connection(clientWs) {
       else{  // chat message need be sent in this format : `{sender_id}->{receiver_id}:${message}`
         handleClientChatMessage(messageText);
       }
+      console.log("")
+      
       if (debug_ws)
         printWatchedList();
     }
@@ -79,10 +83,8 @@ server.on('connection', function connection(clientWs) {
   clientWs.on('close', function close() {
     socketMap.forEach((value, key)=>{
       socketMap.set(key, value.filter((client)=>{
-        // console.log(socket);
-        // console.log(key, socket.ws.readyState);
         if (client.ws.readyState == ws.CLOSED){
-          console.log(`Update connect date of user with id : ${key}`);
+          console.log(`${ws_print_color}Update connect date of user with id : ${key}`);
           db.execute("UPDATE users SET last_connection_date = ? WHERE id = ?", [new Date(), key]);  
           if (watchedUserMap.get(client.id) != undefined && watchedUserMap.get(client.id).length != 0){
             watchedUserMap.get(client.id).forEach((curClient)=>{
@@ -94,7 +96,7 @@ server.on('connection', function connection(clientWs) {
       }));
     })
     if (debug_ws){
-      console.log("Clients after disconnection")
+      console.log(`${ws_print_color}Clients after disconnection`)
       printClientList();
       console.log("")
     }
@@ -151,12 +153,12 @@ async function initClientWebSocketConnection(messageText = "", clientWs){
       })
     }
     if (debug_ws){
-      console.log("Clients after connection")
+      console.log(`${ws_print_color}Clients after connection`)
       printClientList();
     }
   }
   catch(error){
-    console.log("Error while saving ws in map, cause : ", error);
+    console.log(`${ws_print_color}Error while saving ws in map, cause : ${error}`);
   }
   return client;
 }
@@ -173,7 +175,7 @@ function handleClientChatMessage(messageText = ""){
     sendMessage(senderId, senderId, messageText, messageType.MESSAGE_SENT)
   }
   catch(error){
-    console.log(`Error while processing message : ${messageText}\nCause : ${error}`)
+    console.log(`${ws_print_color}Error while processing message : ${messageText}\nCause : ${error}`)
   }
 }
 
@@ -191,7 +193,7 @@ function sendMessage(fromUserId, toUserId, content = "", type){
     });
     socketMap.get(toUserId).forEach((client)=>{
       if (debug_ws){
-        console.log(`Send ${obj} to ${client.id}`)
+        console.log(`${ws_print_color}Send ${obj} to ${client.id}`)
       }
       client.ws.send(obj)
     })
@@ -201,20 +203,20 @@ function sendMessage(fromUserId, toUserId, content = "", type){
 
 function printClientList(){
   Array.from(socketMap).forEach((value)=>{
-    console.log(`id : ${value[0]}, number of clients connected : ${value[1].length}`);
+    console.log(`${ws_print_color}id : ${value[0]}, number of clients connected : ${value[1].length}`);
     if (value[1].length > 0){
-      console.log(`\tUsername : ${value[1][0].username} | pfp : ${value[1][0].pfp_url}`)
+      console.log(`${ws_print_color}\tUsername : ${value[1][0].username} | pfp : ${value[1][0].pfp_url}`)
     }
   })
 }
 
 function printWatchedList(){
   Array.from(watchedUserMap).forEach((value)=>{
-    console.log(value);
+    console.log(ws_print_color+value);
     if (value[1] == null) return;
-    console.log(`id : ${value[0]}, number of clients watching : ${value[1].length}`);
+    console.log(`${ws_print_color}id : ${value[0]}, number of clients watching : ${value[1].length}`);
     value[1].forEach((client)=>{
-      console.log(`\tUsername : ${client.username}`)
+      console.log(`${ws_print_color}\tUsername : ${client.username}`)
     })
   })
 }

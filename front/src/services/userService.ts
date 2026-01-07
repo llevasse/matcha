@@ -45,6 +45,9 @@ export class UserService {
   }
 
   deleteClient(){
+    if (this.clientUser?.ws){
+      this.clientUser.ws.complete();
+    }
     this.clientUser = null;
   }
 

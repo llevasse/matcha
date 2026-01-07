@@ -1,10 +1,11 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { UserService } from "./userService";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private authUrl = `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000/api/auth`;
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private userService: UserService) {
 
   }
   login(credentials: { username: string; password: string }): Promise<any> {
@@ -47,8 +48,10 @@ export class AuthService {
   }
 
   logout(): void {
+    this.userService.deleteClient();
     localStorage.removeItem('token');
   }
+
   getToken(): string | null {
     return localStorage.getItem('token');
   }

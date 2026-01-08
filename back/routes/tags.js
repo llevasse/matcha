@@ -53,7 +53,7 @@ router.get('/user/:user_id', async (req, res) => {
             WHERE ut.user_id = ?
             ORDER BY t.name
         `, [userId]);
-
+        // (SELECT JSON_ARRAYAGG(t.id, t.name) FROM user_tags ut JOIN tags t ON ut.tag_id = t.id WHERE ut.user_id = ? GROUP BY ut.user_id) as tags
         res.json(userTags);
     } catch (error) {
         throw error;

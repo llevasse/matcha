@@ -2,6 +2,7 @@ const express = require('express');
 const db = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
 const { sendMessage, messageType } = require('../websockets/wsServer');
+const { getUserPublicInfoByIdSqlStatement } = require('../utils/users');
 
 const router = express.Router();
 
@@ -202,35 +203,13 @@ router.get('/matches/:user_id', authenticateToken, async (req, res) => {
     
     
     const [users] = await db.execute(
-      `SELECT id, username, firstname, lastname, gender_id, bio, birthdate, 
-              city, location_latitude, location_longitude, fame, last_connection_date, is_confirmed, created_at 
-       FROM users WHERE id = ?`,
+      getUserPublicInfoByIdSqlStatement,
       [req.params.user_id]
     );
 
     if (users.length === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
-
-    users[0].birthdate = users[0].birthdate ? users[0].birthdate.toISOString().split('T')[0] : null;
-
-    const [rows] = await db.execute(
-      `SELECT g.label
-      FROM user_preferences up
-      JOIN genders g ON up.gender_id = g.id
-      WHERE up.user_id = ?`,
-      [req.params.user_id]
-    );
-    users[0].preferences = rows.map(r => r.label);
-
-    const [gender] = await db.execute(
-      `SELECT label FROM genders WHERE id = ?`,
-      [users[0].gender_id]
-    );
-    if (gender.length == 0)
-      users[0].gender = null;
-    else
-      users[0].gender = gender[0].label;
 
     res.json(users[0]);
   } catch (error) {
@@ -281,35 +260,13 @@ router.get('/likes-received/:user_id', authenticateToken, async (req, res) => {
     
     
     const [users] = await db.execute(
-      `SELECT id, username, firstname, lastname, gender_id, bio, birthdate, 
-              city, location_latitude, location_longitude, fame, last_connection_date, is_confirmed, created_at 
-       FROM users WHERE id = ?`,
+      getUserPublicInfoByIdSqlStatement,
       [req.params.user_id]
     );
 
     if (users.length === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
-
-    users[0].birthdate = users[0].birthdate ? users[0].birthdate.toISOString().split('T')[0] : null;
-
-    const [rows] = await db.execute(
-      `SELECT g.label
-      FROM user_preferences up
-      JOIN genders g ON up.gender_id = g.id
-      WHERE up.user_id = ?`,
-      [req.params.user_id]
-    );
-    users[0].preferences = rows.map(r => r.label);
-
-    const [gender] = await db.execute(
-      `SELECT label FROM genders WHERE id = ?`,
-      [users[0].gender_id]
-    );
-    if (gender.length == 0)
-      users[0].gender = null;
-    else
-      users[0].gender = gender[0].label;
 
     res.json(users[0]);
   } catch (error) {

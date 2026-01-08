@@ -1,4 +1,5 @@
-import { afterEveryRender, Component, inject, signal, viewChildren, ViewContainerRef } from '@angular/core';
+import { MatchesService } from './../../../services/matchesService';
+import { Component, inject, signal, viewChildren, ViewContainerRef } from '@angular/core';
 import { UserService } from '../../../services/userService';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../core/class/user';
@@ -16,7 +17,7 @@ import { createNotificationFromWsObject } from '../../core/class/notification';
 export class Matches {
   previews = viewChildren<ProfilePreview>(ProfilePreview);
   user!: User;
-  constructor(private userService: UserService, private router: Router){
+  constructor(private userService: UserService, private matchesService: MatchesService, private router: Router){
     this.getUserProfile();
 
     if (this.activatedRoute.snapshot.url.length > 1 && this.activatedRoute.snapshot.url[1].path == "profile"){
@@ -54,17 +55,22 @@ export class Matches {
   private viewContainer = inject(ViewContainerRef);
 
   createProfilePopup(userId: number){
-    var profile = this.viewContainer.createComponent(ProfileView);
-    profile.setInput("userId", userId);
-    profile.setInput("withChat", true);
-    profile.setInput("withUnlike", true);
-    profile.instance.onClickOutside.subscribe(()=>{
-      profile.destroy();
-      setTimeout(()=>{  // Error in console if not in timeout ??
+    this.matchesService.getProfileById(userId).then((returnedUser)=>{
+      if (returnedUser){
+        var profile = this.viewContainer.createComponent(ProfileView);
+        profile.setInput("userId", userId);
+        profile.setInput("withChat", true);
+        profile.setInput("withUnlike", true);
+        profile.instance.user.set(returnedUser);
+        profile.instance.loaded.set(true);
+        profile.instance.onClickOutside.subscribe(()=>{
+          this.router.navigateByUrl('/matches');
+        });
+      }
+      else{
         this.router.navigateByUrl('/matches');
-        // history.pushState('','', `/matches`);
-      }, 100);
-    });
+      }
+    })
   }
 
   seeProfile(user: User){

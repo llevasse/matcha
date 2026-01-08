@@ -4,11 +4,12 @@ import { Login } from './pages/login/login';
 import { Home } from './pages/home/home';
 import { EditProfile } from './pages/edit-profile/edit-profile';
 import { Error404Page, Error503Page} from './pages/error-pages/error-page';
-import { Liked } from './pages/liked/liked';
+import { Likes } from './pages/likes/likes';
 
 export const routes: Routes = [
   {path: '', component: Home},
-  {path: 'likes', component: Liked},
+  {path: 'likes', component: Likes},
+  {path: 'likes/profile/:id', component: Likes},
   {path: 'matches', component: Matches},
   {path: 'matches/profile/:id', component: Matches},
   {path: 'matches/profile/:id/chat', component: Matches},

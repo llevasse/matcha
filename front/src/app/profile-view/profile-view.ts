@@ -18,22 +18,26 @@ export class ProfileView {
   userId = input.required<number>()
   withChat = input(false)
   withUnlike = input(false)
-  user = signal<User>(new User());
+  user = signal<User>(new User());  // user should be set in parent for now !
   clientUser:User|null = null;
   isOnline = signal(false);
 
   onClickOutside = output();
 
   ngOnInit(){
-    this.userService.getProfileById(this.userId()).then((user)=>{
-      if (user){
-        this.user.set(user);
-      }
-      this.loaded.set(true);
-    });
+    // this.userService.getProfileById(this.userId()).then((user)=>{
+    //   if (user){
+    //     this.user.set(user);
+    //   }
+    //   this.loaded.set(true);
+    // });
     if (this.activatedRoute.snapshot.url.length > 3 && this.activatedRoute.snapshot.url[3].path == "chat"){
       this.openChat();
     }
+  }
+
+  ngOnDestroy(){
+    this.clientUser?.ws?.next({message: `unwatch : ${this.clientUser.id}->${this.userId()}`})
   }
 
   private viewContainer = inject(ViewContainerRef);
@@ -66,7 +70,6 @@ export class ProfileView {
     })
     this.ref.nativeElement.addEventListener('click', (e: any)=>{
       if ((e.target as HTMLElement).closest('app-profile-view > .container') == null){
-        this.clientUser?.ws?.next({message: `unwatch : ${this.clientUser.id}->${this.userId()}`})
         this.onClickOutside.emit();
       }
     });

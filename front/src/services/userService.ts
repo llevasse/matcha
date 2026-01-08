@@ -132,34 +132,14 @@ export class UserService {
   }
 
   private async userListFromResponse(response: Response){
-    var users: User[] = [];
-    await response.json().then((obj)=>{
+    let users: User[] = [];
+    return await response.json().then((obj)=>{
       Object.entries(obj).forEach(async (miniObj)=>{
-        var obj = new Map(Object.entries(miniObj[1] as Map<string, any>));
-        var user = new User(miniObj[1] as any);
-        var image = new ProfileImage(`${this.baseUrl}${obj.get('profile_picture')}`);
-        image.isNew = false;
-        user.photos.push(image)
-
-
-        users.push(user);
+        users.push(new User(miniObj[1] as any));
         return users;
       });
       return users;
     })
-
-    for (var user of users){
-      await this.interestService.getUserInterest(user!.id).then(async (tmp)=>{
-        var response: Response = tmp;
-        const obj = await response.json();
-        Array.from(obj).forEach((tag) => {
-          var map: Map<string, any> = new Map(Object.entries(tag as Map<string, any>));
-          user!.interest.push(new Interest(map.get("name"), map.get("id")));
-        });
-        return user;
-      });
-    }
-    return users;
   }
 
   updateProfile(values:

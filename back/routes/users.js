@@ -307,9 +307,12 @@ router.get('/search', authenticateToken, async (req, res) => {
                             * cos( radians( location_longitude ) - radians( ? ) ) 
                               + sin ( radians( ? ) ) * sin( radians( location_latitude ) ) ) ) AS distance,
               (SELECT COUNT(ut.tag_id) FROM user_tags ut WHERE ut.user_id = u.id AND ut.tag_id IN (SELECT ut.tag_id FROM user_tags ut WHERE ut.user_id = ?)) AS nb_tag_in_common,
-              TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) as age,
-              pp.file_path as profile_picture
-            FROM users u LEFT JOIN profile_pictures pp ON u.id = pp.user_id AND pp.is_main = TRUE
+              (SELECT g.label FROM genders g WHERE g.id = u.gender_id) as gender,
+              (SELECT JSON_ARRAYAGG(g.label) FROM user_preferences up JOIN genders g ON up.gender_id = g.id WHERE up.user_id = u.id GROUP BY up.user_id) as preferences,
+              (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', t.id, 'name', t.name)) FROM user_tags ut JOIN tags t ON ut.tag_id = t.id WHERE ut.user_id = u.id GROUP BY ut.user_id) as tags,
+              (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', pp.id, 'file_path', pp.file_path, 'is_main', pp.is_main, 'uploaded_at', pp.uploaded_at)) FROM profile_pictures pp WHERE pp.user_id = u.id GROUP BY pp.user_id) as pictures,
+              TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) as age
+            FROM users u 
             WHERE u.id != ? AND u.is_confirmed=true
         `;
         const params = [userLat, userLng, userLat, req.user.id, req.user.id];

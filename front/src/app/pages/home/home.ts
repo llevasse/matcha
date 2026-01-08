@@ -1,9 +1,8 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, inject, signal, viewChildren, ViewContainerRef, afterEveryRender, viewChild } from '@angular/core';
+import { Component, inject, signal, viewChildren, ViewContainerRef, viewChild } from '@angular/core';
 import { ProfilePreview } from "../../profile-preview/profile-preview";
 import { User } from "../../core/class/user"
 import { ProfileView } from '../../profile-view/profile-view';
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from '../../../services/userService';
 import { InterestDropdown } from "../edit-profile/interest-dropdown/interest-dropdown";
 
@@ -35,7 +34,7 @@ export class Home {
   previews = viewChildren<ProfilePreview>(ProfilePreview);
   ngOnInit(){  }
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private router: Router) {
     this.getUserProfile();
     if (this.activatedRoute.snapshot.url.length > 0 && this.activatedRoute.snapshot.url[0].path == "profile"){
       this.createProfilePopup(Number.parseInt(this.activatedRoute.snapshot.url[1].path));
@@ -83,19 +82,25 @@ export class Home {
   }
 
   createProfilePopup(userId: number){
-    var profile = this.viewContainer.createComponent(ProfileView);
-    profile.setInput("userId", userId);
-    profile.instance.onClickOutside.subscribe(()=>{
-      profile.destroy();
-      setTimeout(()=>{  // Error in console if not in timeout ??
-        history.pushState('','', `/`);
-      }, 100);
+    this.userService.getProfileById(userId).then((returnedUser)=>{
+      if (returnedUser){
+        var profile = this.viewContainer.createComponent(ProfileView);
+        profile.setInput("userId", userId);
+        profile.instance.user.set(returnedUser);
+        profile.instance.loaded.set(true);
+
+        profile.instance.onClickOutside.subscribe(()=>{
+          this.router.navigateByUrl('/');
+        });
+      }
+      else{
+        this.router.navigateByUrl('/');
+      }
     });
   }
 
   seeProfile(user: User){
-    history.pushState('','', `/profile/${user.id}`);
-    this.createProfilePopup(user.id);
+    this.router.navigateByUrl(`/profile/${user.id}`);
   }
 
   setRadius(event: Event){

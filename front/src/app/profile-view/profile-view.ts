@@ -25,12 +25,6 @@ export class ProfileView {
   onClickOutside = output();
 
   ngOnInit(){
-    // this.userService.getProfileById(this.userId()).then((user)=>{
-    //   if (user){
-    //     this.user.set(user);
-    //   }
-    //   this.loaded.set(true);
-    // });
     if (this.activatedRoute.snapshot.url.length > 3 && this.activatedRoute.snapshot.url[3].path == "chat"){
       this.openChat();
     }

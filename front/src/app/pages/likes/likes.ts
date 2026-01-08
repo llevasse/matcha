@@ -74,4 +74,10 @@ export class Likes {
   seeProfile(user: User){
     this.router.navigateByUrl(`/likes/profile/${user.id}`)
   }
+
+  removeProfile(user: User){
+    this.profiles.update((list)=>{
+      return list.filter((checkedUser)=>{return checkedUser.id != user.id});
+    })
+  }
 }

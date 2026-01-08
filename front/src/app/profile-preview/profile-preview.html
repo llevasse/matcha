@@ -19,7 +19,7 @@
   </div>
   @if (allowInteraction()) {
     <div class="profile-interact-container">
-      <button class="interact-button" id="dislike-button">X</button>
+      <button class="interact-button" (click)="dislikeUser()" id="dislike-button">X</button>
       <button class="interact-button" (click)="likeUser()" id="like-button"><3</button>
     </div>
   }

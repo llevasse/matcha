@@ -1,5 +1,5 @@
 import { UserService } from './../../services/userService';
-import { Component, input, output, signal } from '@angular/core';
+import { Component, ElementRef, inject, input, output, signal, ViewRef } from '@angular/core';
 import { User } from '../core/class/user';
 
 
@@ -16,6 +16,7 @@ export class ProfilePreview {
   distance = signal<number>(0);
 
   onClick = output<User>()
+  onDestroy = output<void>()
 
   allowInteraction = input(true);
 
@@ -26,6 +27,10 @@ export class ProfilePreview {
 
   likeUser(){
     this.userService.setUserAsLiked(this.user().id);
+    this.onDestroy.emit();
   }
 
+  dislikeUser(){
+    this.onDestroy.emit();
+  }
 }

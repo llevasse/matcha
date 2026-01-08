@@ -103,6 +103,12 @@ export class Home {
     this.router.navigateByUrl(`/profile/${user.id}`);
   }
 
+  removeProfile(user: User){
+    this.profiles.update((list)=>{
+      return list.filter((checkedUser)=>{return checkedUser.id != user.id});
+    })
+  }
+
   setRadius(event: Event){
     this.radius = Number.parseFloat(((event as InputEvent).target as HTMLInputElement).value);
   }

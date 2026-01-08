@@ -200,22 +200,27 @@ function handleClientChatMessage(messageText = ""){
 
 function sendMessage(fromUserId, toUserId, content = "", type){
   if (socketMap.get(toUserId)){
-    var sender = socketMap.get(fromUserId)[0];
-    const obj = JSON.stringify({
-      type: type,
-      from: JSON.stringify({
-        id: fromUserId, 
-        username: sender.username, 
-        profile_picture: sender.pfp_url
-      }),
-      content: content
-    });
-    socketMap.get(toUserId).forEach((client)=>{
-      if (debug_ws){
-        console.log(`${ws_print_color}Send ${obj} to ${client.id}`)
-      }
-      client.ws.send(obj)
-    })
+    try {
+      var sender = socketMap.get(fromUserId)[0];
+      const obj = JSON.stringify({
+        type: type,
+        from: JSON.stringify({
+          id: fromUserId, 
+          username: sender.username, 
+          profile_picture: sender.pfp_url
+        }),
+        content: content
+      });
+      socketMap.get(toUserId).forEach((client)=>{
+        if (debug_ws){
+          console.log(`${ws_print_color}Send ${obj} to ${client.id}`)
+        }
+        client.ws.send(obj)
+      })
+    }
+    catch(e){
+      console.error("Could not send message : ", e);
+    }
   }
 }
 

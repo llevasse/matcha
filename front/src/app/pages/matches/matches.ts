@@ -1,5 +1,5 @@
 import { MatchesService } from './../../../services/matchesService';
-import { Component, inject, signal, viewChildren, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, inject, signal, viewChildren, ViewContainerRef } from '@angular/core';
 import { UserService } from '../../../services/userService';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../core/class/user';
@@ -17,6 +17,7 @@ import { createNotificationFromWsObject } from '../../core/class/notification';
 export class Matches {
   previews = viewChildren<ProfilePreview>(ProfilePreview);
   user!: User;
+  profileView: ComponentRef<ProfileView> | null = null;
   constructor(private userService: UserService, private matchesService: MatchesService, private router: Router){
     this.getUserProfile();
 
@@ -39,9 +40,14 @@ export class Matches {
     this.user.ws?.asObservable().pipe().subscribe(async (obj) => {
       const notif = createNotificationFromWsObject(obj)
       if (notif.type == notifType.MATCH || notif.type == notifType.UNLIKED){
-        this.profiles.set(await this.userService.getUserMatches());
-		    this.loaded.set(false)
-		    this.loaded.set(true)
+        if (notif.type == notifType.UNLIKED && this.profileView){
+          this.router.navigateByUrl('/matches');
+        }
+        else{
+          this.profiles.set(await this.userService.getUserMatches());
+          this.loaded.set(false)
+          this.loaded.set(true)
+        }
       }
     })
 		this.loaded.set(true)
@@ -57,14 +63,15 @@ export class Matches {
   createProfilePopup(userId: number){
     this.matchesService.getProfileById(userId).then((returnedUser)=>{
       if (returnedUser){
-        var profile = this.viewContainer.createComponent(ProfileView);
-        profile.setInput("userId", userId);
-        profile.setInput("withChat", true);
-        profile.setInput("withUnlike", true);
-        profile.instance.user.set(returnedUser);
-        profile.instance.loaded.set(true);
-        profile.instance.onClickOutside.subscribe(()=>{
+        this.profileView = this.viewContainer.createComponent(ProfileView);
+        this.profileView.setInput("userId", userId);
+        this.profileView.setInput("withChat", true);
+        this.profileView.setInput("withUnlike", true);
+        this.profileView.instance.user.set(returnedUser);
+        this.profileView.instance.loaded.set(true);
+        this.profileView.instance.onClickOutside.subscribe(()=>{
           this.router.navigateByUrl('/matches');
+          this.profileView = null;
         });
       }
       else{

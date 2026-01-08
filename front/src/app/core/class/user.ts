@@ -4,6 +4,8 @@ import { ProfileImage } from "./profile-image";
 import { Subscription } from "rxjs";
 
 export class User{
+  private baseImgUrl = `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000`;
+
   createDummy(){
     this.id = 42;
     this.lastName = "Doe"
@@ -59,7 +61,9 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
       interest: Interest[],
       photos: ProfileImage[],
       fame: number,
-      last_connection_date: string | null;
+      last_connection_date: string | null,
+      tags: {id: number, name: string}[],
+      pictures: {id: number, file_path: string, is_main: number, uploaded_at: string}[];
     } = {
       id: NaN,
       lastname: "",
@@ -72,13 +76,15 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
       city: null,
       location_latitude: NaN,
       location_longitude: NaN,
-      distance : NaN,
+      distance: NaN,
       gender: null,
       preferences: [],
       bio: "",
       interest: [],
       photos: [],
       fame: NaN,
+      tags: [],
+      pictures: []
     }
   ){
     this.id = obj.id ?? NaN;
@@ -99,6 +105,23 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
     this.photos = obj.photos ?? [];
     this.fame = obj.fame ?? NaN;
     this.lastConectionDate = obj.last_connection_date == null ? null : new Date(Date.parse(obj.last_connection_date));
+    if (obj.tags && obj.tags.length > 0){
+      obj.tags.forEach(({id, name})=>{
+        this.interest.push(new Interest(name, id));
+      });
+    }
+    if (obj.pictures && obj.pictures.length > 0){
+      obj.pictures.forEach(({id, file_path, is_main, uploaded_at})=>{
+        let image = new ProfileImage(`${this.baseImgUrl}${file_path}`);
+        image.id = id;
+        image.isMain = is_main == 1;
+        image.isNew = false;
+        this.photos.push(image);
+      });
+    }
+    this.photos.length = 5;
+    this.photos.fill(new ProfileImage(), this.photos.length);
+
     // console.log(this);
   }
 

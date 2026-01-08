@@ -28,38 +28,9 @@ export class MatchesService {
   }
 
   private async userFromResponse(response: Response): Promise<User>{
-    var user: User;
-    await response.json().then((obj)=>{
-      user = new User(obj)
+    return await response.json().then((obj)=>{
+      return new User(obj)
     })
-    await fetch(`${this.pictureUrl}/${user!.id}`, {
-      headers : {
-        "Authorization":"Bearer " + localStorage.getItem('token'),
-      }
-    }).then(async (response)=>{
-      return await response.json().then((data)=>{
-        (data as []).forEach((value)=>{
-          var image = new ProfileImage(`${this.baseUrl}${value['file_path']}`);
-          image.isNew = false;
-          image.id = value['id'];
-          user!.photos.push(image)
-        })
-        user!.photos.length = 5;
-        user!.photos.fill(new ProfileImage(), user!.photos.length);
-      })
-    })
-    await this.interestService.getUserInterest(user!.id).then(async (tmp)=>{
-      var response: Response = tmp;
-      if (response.ok){
-        await response.json().then((obj)=>{
-          Array.from(obj).forEach((tag)=>{
-            var map: Map<string, any> = new Map(Object.entries(tag as Map<string, any>));
-            user!.interest.push(new Interest(map.get("name"), map.get("id")));
-          })
-        });
-      }
-    });
-    return user!;
   }
 
   private async userListFromResponse(response: Response){

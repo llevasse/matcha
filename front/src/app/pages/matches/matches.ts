@@ -69,6 +69,12 @@ export class Matches {
         this.profileView.setInput("withUnlike", true);
         this.profileView.instance.user.set(returnedUser);
         this.profileView.instance.loaded.set(true);
+        this.profileView.instance.onUnlike.subscribe(()=>{
+          this.userService.setUserAsUnliked(userId).then((response)=>{
+            this.router.navigateByUrl('/matches');
+            this.profileView = null;
+          })
+        })
         this.profileView.instance.onClickOutside.subscribe(()=>{
           this.router.navigateByUrl('/matches');
           this.profileView = null;

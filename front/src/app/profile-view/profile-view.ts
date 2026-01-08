@@ -23,6 +23,7 @@ export class ProfileView {
   isOnline = signal(false);
 
   onClickOutside = output();
+  onUnlike = output();
 
   ngOnInit(){
     if (this.activatedRoute.snapshot.url.length > 3 && this.activatedRoute.snapshot.url[3].path == "chat"){
@@ -95,7 +96,6 @@ export class ProfileView {
   }
 
   unlikeUser(){
-    this.userService.setUserAsUnliked(this.user().id);
-    this.onClickOutside.emit();
+    this.onUnlike.emit();
   }
 }

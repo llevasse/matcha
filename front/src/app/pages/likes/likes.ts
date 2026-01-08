@@ -39,12 +39,12 @@ export class Likes {
     }
     this.user = tmpUser;
     this.user = await getClientCity(this.user);
-    this.profiles.set(await this.userService.getUsersWhoLikedClient());
+    this.profiles.set(await this.likesService.getUsersWhoLikedClient());
     // Update liked list on new match or got unliked
     this.user.ws?.asObservable().pipe().subscribe(async (obj) => {
       const notif = createNotificationFromWsObject(obj)
       if (notif.type == notifType.LIKED || notif.type == notifType.UNLIKED){
-        this.profiles.set(await this.userService.getUsersWhoLikedClient());
+        this.profiles.set(await this.likesService.getUsersWhoLikedClient());
         this.loaded.set(false)
         this.loaded.set(true)
       }

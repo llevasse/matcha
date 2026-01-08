@@ -1,5 +1,5 @@
-import { UserService } from './../../services/userService';
-import { Component, ElementRef, inject, input, output, signal, ViewRef } from '@angular/core';
+import { LikesService } from './../../services/likesService';
+import { Component, input, output, signal } from '@angular/core';
 import { User } from '../core/class/user';
 
 
@@ -20,13 +20,13 @@ export class ProfilePreview {
 
   allowInteraction = input(true);
 
-  constructor(private userService: UserService){};
+  constructor(private likesService: LikesService){};
 
   ngOnInit(){
   }
 
   likeUser(){
-    this.userService.setUserAsLiked(this.user().id);
+    this.likesService.setUserAsLiked(this.user().id);
     this.onDestroy.emit();
   }
 

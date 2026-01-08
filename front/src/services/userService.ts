@@ -12,7 +12,6 @@ export class UserService {
   baseUrl = `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000`;
   private profileUrl = `${this.baseUrl}/api/users`;
   private pictureUrl = `${this.baseUrl}/api/profiles`;
-  private interationUrl = `${this.baseUrl}/api/interactions`;
 
   private clientUser: User | null = null;
 
@@ -133,8 +132,6 @@ export class UserService {
     var user: User;
     await response.json().then((obj)=>{
       user = new User(obj)
-      // user = new User(obj['id'], obj['lastname'], obj['firstname'], obj['username'],
-      //   obj['birthdate'], obj['city'], obj['location_latitude'], obj['location_longitude'], obj['gender'], 'woman', obj['bio'], [], [], obj['fame'])
     })
     await fetch(`${this.pictureUrl}/${user!.id}`, {
       headers : {
@@ -172,8 +169,6 @@ export class UserService {
       Object.entries(obj).forEach(async (miniObj)=>{
         var obj = new Map(Object.entries(miniObj[1] as Map<string, any>));
         var user = new User(miniObj[1] as any);
-        // var user = new User(obj.get('id'), obj.get('lastname'), obj.get('firstname'), obj.get('username'),
-        //   obj.get('birthdate'), obj.get('city'), obj.get('location_latitude'), obj.get('location_longitude'), obj.get('gender'), 'woman', obj.get('bio'), [], [], obj.get('fame'))
         var image = new ProfileImage(`${this.baseUrl}${obj.get('profile_picture')}`);
         image.isNew = false;
         user.photos.push(image)
@@ -208,64 +203,6 @@ export class UserService {
         'content-type': 'application/json',
       },
       body: JSON.stringify(values)
-    })
-  }
-
-  setUserAsLiked(userIdToLike:number){
-    return fetch(`${this.interationUrl}/like`, {
-    method: 'POST',
-      headers : {
-        "Authorization":"Bearer " + localStorage.getItem('token'),
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({to_user_id:userIdToLike})
-    });
-  }
-
-  setUserAsUnliked(userIdToUnlike:number){
-    return fetch(`${this.interationUrl}/unlike`, {
-    method: 'POST',
-      headers : {
-        "Authorization":"Bearer " + localStorage.getItem('token'),
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({to_user_id:userIdToUnlike})
-    });
-  }
-
-  getUsersWhoLikedClient(){
-    return fetch(`${this.interationUrl}/likes-received`, {
-      headers : {
-        "Authorization":"Bearer " + localStorage.getItem('token'),
-      },
-    }).then(async (value)=>{
-      return this.userListFromResponse(value);
-    });
-  }
-
-  getUserMatches(){
-    return fetch(`${this.interationUrl}/matches`, {
-      headers : {
-        "Authorization":"Bearer " + localStorage.getItem('token'),
-      },
-    }).then(async (value)=>{
-      return this.userListFromResponse(value);
-    });
-  }
-
-  getPhotosUrl(): Promise<any> {
-    return fetch(`${this.pictureUrl}`, {
-      headers : {
-        "Authorization":"Bearer " + localStorage.getItem('token'),
-      }
-    })
-  }
-
-  getPhotoData(url: string): Promise<any> {
-    return fetch(`${this.baseUrl}${url}`, {
-      headers : {
-        "Authorization":"Bearer " + localStorage.getItem('token'),
-      }
     })
   }
 

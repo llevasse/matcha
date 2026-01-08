@@ -1,3 +1,4 @@
+import { LikesService } from './../../../services/likesService';
 import { MatchesService } from './../../../services/matchesService';
 import { Component, ComponentRef, inject, signal, viewChildren, ViewContainerRef } from '@angular/core';
 import { UserService } from '../../../services/userService';
@@ -18,7 +19,7 @@ export class Matches {
   previews = viewChildren<ProfilePreview>(ProfilePreview);
   user!: User;
   profileView: ComponentRef<ProfileView> | null = null;
-  constructor(private userService: UserService, private matchesService: MatchesService, private router: Router){
+  constructor(private userService: UserService, private matchesService: MatchesService, private likesService: LikesService, private router: Router){
     this.getUserProfile();
 
     if (this.activatedRoute.snapshot.url.length > 1 && this.activatedRoute.snapshot.url[1].path == "profile"){
@@ -34,7 +35,7 @@ export class Matches {
     this.user = tmpUser;
     this.user = await getClientCity(this.user);
     //TODO api call to get similar user as client
-    this.profiles.set(await this.userService.getUserMatches());
+    this.profiles.set(await this.matchesService.getUserMatches());
 
     // Update match list on new match or got unliked
     this.user.ws?.asObservable().pipe().subscribe(async (obj) => {
@@ -44,7 +45,7 @@ export class Matches {
           this.router.navigateByUrl('/matches');
         }
         else{
-          this.profiles.set(await this.userService.getUserMatches());
+          this.profiles.set(await this.matchesService.getUserMatches());
           this.loaded.set(false)
           this.loaded.set(true)
         }
@@ -70,7 +71,7 @@ export class Matches {
         this.profileView.instance.user.set(returnedUser);
         this.profileView.instance.loaded.set(true);
         this.profileView.instance.onUnlike.subscribe(()=>{
-          this.userService.setUserAsUnliked(userId).then((response)=>{
+          this.likesService.setUserAsUnliked(userId).then((response)=>{
             this.router.navigateByUrl('/matches');
             this.profileView = null;
           })

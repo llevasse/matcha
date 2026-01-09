@@ -34,7 +34,7 @@ export class Home {
   previews = viewChildren<ProfilePreview>(ProfilePreview);
   ngOnInit(){  }
 
-  constructor(private userService: UserService, private router: Router) {
+  constructor(private userService: UserService) {
     this.getUserProfile();
     if (this.activatedRoute.snapshot.url.length > 0 && this.activatedRoute.snapshot.url[0].path == "profile"){
       this.createProfilePopup(Number.parseInt(this.activatedRoute.snapshot.url[1].path));
@@ -90,17 +90,19 @@ export class Home {
         profile.instance.loaded.set(true);
 
         profile.instance.onClickOutside.subscribe(()=>{
-          this.router.navigateByUrl('/');
+          window.history.pushState('','',`/`);
+          profile.destroy();
         });
       }
       else{
-        this.router.navigateByUrl('/');
+        window.history.replaceState('','',`/`);
       }
     });
   }
 
   seeProfile(user: User){
-    this.router.navigateByUrl(`/profile/${user.id}`);
+    window.history.pushState('','',`/profile/${user.id}`);
+    this.createProfilePopup(user.id);
   }
 
   removeProfile(user: User){

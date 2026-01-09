@@ -19,7 +19,7 @@ export class Matches {
   previews = viewChildren<ProfilePreview>(ProfilePreview);
   user!: User;
   profileView: ComponentRef<ProfileView> | null = null;
-  constructor(private userService: UserService, private matchesService: MatchesService, private likesService: LikesService, private router: Router){
+  constructor(private userService: UserService, private matchesService: MatchesService, private likesService: LikesService){
     this.getUserProfile();
 
     if (this.activatedRoute.snapshot.url.length > 1 && this.activatedRoute.snapshot.url[1].path == "profile"){
@@ -42,7 +42,9 @@ export class Matches {
       const notif = createNotificationFromWsObject(obj)
       if (notif.type == notifType.MATCH || notif.type == notifType.UNLIKED){
         if (notif.type == notifType.UNLIKED && this.profileView){
-          this.router.navigateByUrl('/matches');
+          window.history.replaceState('','',`/matches`);
+          this.profileView?.destroy();
+          this.profileView = null;
         }
         else{
           this.profiles.set(await this.matchesService.getUserMatches());
@@ -71,23 +73,29 @@ export class Matches {
         this.profileView.instance.user.set(returnedUser);
         this.profileView.instance.loaded.set(true);
         this.profileView.instance.onUnlike.subscribe(()=>{
-          this.likesService.setUserAsUnliked(userId).then((response)=>{
-            this.router.navigateByUrl('/matches');
+          this.likesService.setUserAsUnliked(userId).then(()=>{
+            window.history.pushState('','',`/matches`);
+            this.profiles.update((list)=>{
+              return list.filter((checkedProfile)=> checkedProfile.id != userId);
+            })
+            this.profileView?.destroy();
             this.profileView = null;
           })
         })
         this.profileView.instance.onClickOutside.subscribe(()=>{
-          this.router.navigateByUrl('/matches');
+          window.history.pushState('','',`/matches`);
+          this.profileView?.destroy();
           this.profileView = null;
         });
       }
       else{
-        this.router.navigateByUrl('/matches');
+        window.history.replaceState('','',`/matches`);
       }
     })
   }
 
   seeProfile(user: User){
-    this.router.navigateByUrl(`/matches/profile/${user.id}`);
+    window.history.pushState('','',`/matches/profile/${user.id}`);
+    this.createProfilePopup(user.id);
   }
 }

@@ -39,7 +39,7 @@ export class ProfileView {
   private activatedRoute = inject(ActivatedRoute);
   private ref = inject(ElementRef);
 
-  constructor(private userService: UserService, private router: Router) {
+  constructor(private userService: UserService) {
     //TODO call API to add profile to user history
     userService.getClientUser().then((user)=>{
       if (user){
@@ -82,16 +82,14 @@ export class ProfileView {
   }
 
   openChat(){
-    this.router.navigateByUrl(`/matches/profile/${this.userId()}/chat`);
-    // history.pushState('','', `/matches/profile/${this.userId()}/chat`);
+    history.pushState('','', `/matches/profile/${this.userId()}/chat`);
 
     var chat = this.viewContainer.createComponent(Chat);
     chat.setInput("userId", this.userId());
     chat.instance.onClickOutside.subscribe(()=>{
       chat.destroy();
       this.clientUser?.ws?.next({message: `unwatch : ${this.clientUser.id}->${this.userId()}`});
-      this.router.navigateByUrl(`/matches/profile/${this.userId()}`);
-      // history.pushState('','', `/matches/profile/${this.userId()}`);
+      history.pushState('','', `/matches/profile/${this.userId()}`);
     });
   }
 

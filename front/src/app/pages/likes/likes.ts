@@ -23,7 +23,7 @@ export class Likes {
   private activatedRoute = inject(ActivatedRoute);
   private viewContainer = inject(ViewContainerRef);
 
-  constructor(private userService: UserService, private likesService: LikesService, private router: Router) {;
+  constructor(private userService: UserService, private likesService: LikesService) {;
     this.getUserProfile();
 
     console.log(this.activatedRoute.snapshot.url);
@@ -61,18 +61,19 @@ export class Likes {
         profile.instance.loaded.set(true);
 
         profile.instance.onClickOutside.subscribe(()=>{
-          this.router.navigateByUrl('/likes');
+          profile.destroy();
+          window.history.pushState('','',`/likes`);
         });
       }
-
       else{
-        this.router.navigateByUrl('/likes');
+        window.history.replaceState('','',`/likes`);
       }
     })
   }
 
   seeProfile(user: User){
-    this.router.navigateByUrl(`/likes/profile/${user.id}`)
+    window.history.pushState('','',`/likes/profile/${user.id}`);
+    this.createProfilePopup(user.id);
   }
 
   removeProfile(user: User){

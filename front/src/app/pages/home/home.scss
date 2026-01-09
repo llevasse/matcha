@@ -36,8 +36,11 @@ h1{
 #search-option-container{
   display: flex;
   flex-direction: column;
-  padding: 0 6em;
+  margin: 0 6rem;
+  padding: 1rem;
   gap: 1rem;
+
+  border-radius: v.$border-radius-default;
 
 
   div{
@@ -47,4 +50,14 @@ h1{
   button{
     font-size: 1em;
   }
+  background-color: v.$secondary-bg-color;
+}
+
+#sort-by-container{
+  display: flex;
+  flex-direction: row;
+}
+
+.active-sort-selector {
+  border: 1px solid v.$text-color;
 }

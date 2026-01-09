@@ -131,7 +131,11 @@ export class Home {
     this.maxFame = Number.parseFloat(((event as InputEvent).target as HTMLInputElement).value);
   }
 
-  setSortBy(value: string){
+  setSortBy(event: PointerEvent, value: string){
+    document.querySelector(".active-sort-selector")?.classList.remove("active-sort-selector");
+    if (event.target instanceof HTMLElement){
+      event.target.classList.add("active-sort-selector");
+    }
     this.sortBy = value;
     this.searchForProfile()
   }

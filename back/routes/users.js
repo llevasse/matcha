@@ -24,7 +24,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
 // Obtenir les info d'un utilisateur
 router.get('/profile/:user_id', async (req, res) => {
     try {
-        const [users] = await db.execute(getUserPublicInfoByIdSqlStatement, [req.user.id]);
+        const [users] = await db.execute(getUserPublicInfoByIdSqlStatement, [req.params.user_id]);
         if (users.length === 0) {
             return res.status(404).json({ error: 'User not found' });
         }

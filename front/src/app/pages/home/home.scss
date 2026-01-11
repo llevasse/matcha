@@ -50,11 +50,14 @@ h1{
 
 #search-option-container{
   display: flex;
+  max-height: 0px;
   flex-direction: column;
+  overflow: hidden;
   gap: 1rem;
   div{
     gap: 1rem;
   }
+  transition: all 500ms allow-discrete;
 }
 
 #sort-by-container{
@@ -64,4 +67,8 @@ h1{
 
 .active-sort-selector {
   border: 1px solid v.$text-color;
+}
+
+.display-search-options{
+  max-height: 100vh !important;
 }

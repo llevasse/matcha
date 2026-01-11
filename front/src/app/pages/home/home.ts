@@ -182,6 +182,16 @@ export class Home {
     })
   }
 
+  toggleSearchOptionsDisplay(){
+    const e = document.querySelector("#search-option-container");
+    if (e && !e.classList.contains("display-search-options")){
+      e.classList.add("display-search-options")
+    }
+    else{
+      e?.classList.remove("display-search-options");
+    }
+  }
+
   async getClientCity() {
     const url = "http://ip-api.com/json/";
     try {

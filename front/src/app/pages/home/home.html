@@ -1,6 +1,6 @@
 <h1>{{profiles().length}} {{profiles().length < 2 ? "profile" : "profiles"}} found</h1>
 <div id="search-container">
-  <input id="search-option-preview" [value]="searchOptionPreview()" type="text" readonly>
+  <input id="search-option-preview" [value]="searchOptionPreview()" type="text" (click)="toggleSearchOptionsDisplay()" readonly>
   <div id="search-option-container">
     <label>
       <span>Sort by</span>

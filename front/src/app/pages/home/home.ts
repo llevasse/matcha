@@ -23,6 +23,8 @@ export class Home {
 	maxFame: number | null = null;
 	sortBy: string = "distance_ascending";
 
+	updateSearchTimeoutID: number|null = null;
+
 	sortStringToPreview = new Map<string, string>([
 	  ['age_ascending', 'ascending age'],
 	  ['age_descending', 'descending age'],
@@ -59,7 +61,7 @@ export class Home {
     if (this.activatedRoute.snapshot.url.length > 0 && this.activatedRoute.snapshot.url[0].path == "profile"){
       this.createProfilePopup(Number.parseInt(this.activatedRoute.snapshot.url[1].path));
     }
-    this.setOptionPreview();
+    this.setOptionPreview(false);
   }
 
   async getUserProfile(){
@@ -73,17 +75,25 @@ export class Home {
     await this.searchForProfile();
 	}
 
-  async searchForProfile(){
-		this.loading.set(true)
-		var whiteListInterestId: number[] = [];
-		this.interestWhitelistDropdown()!.selectedValues().forEach((interest)=>{
-      whiteListInterestId.push(interest.id);
-		});
+  updateSearch(){
+    if (this.updateSearchTimeoutID){
+      window.clearTimeout(this.updateSearchTimeoutID!);
+      this.updateSearchTimeoutID = null;
+    }
+    this.updateSearchTimeoutID = window.setTimeout(()=>{this.searchForProfile()}, 1000)
+  }
 
-		var blackListInterestId: number[] = [];
-		this.interestBlacklistDropdown()!.selectedValues().forEach((interest)=>{
+  async searchForProfile(){
+    this.loading.set(true)
+    var whiteListInterestId: number[] = [];
+    this.interestWhitelistDropdown()!.selectedValues().forEach((interest)=>{
+      whiteListInterestId.push(interest.id);
+    });
+
+    var blackListInterestId: number[] = [];
+    this.interestBlacklistDropdown()!.selectedValues().forEach((interest)=>{
       blackListInterestId.push(interest.id);
-		});
+    });
 
     try{
       this.profiles.set(await this.userService.searchProfile(
@@ -99,7 +109,8 @@ export class Home {
     catch(e){
       console.error(e);
     }
-		this.loading.set(false)
+    this.loading.set(false)
+    this.updateSearchTimeoutID = null;
   }
 
   createProfilePopup(userId: number){
@@ -164,10 +175,12 @@ export class Home {
     }
     this.sortBy = value;
     this.setOptionPreview();
-    this.searchForProfile()
   }
 
-  setOptionPreview(){
+  setOptionPreview(updateSearch = true){
+    if (updateSearch){
+      this.updateSearch();
+    }
     this.searchOptionPreview.update((preview)=>{
       preview = `Sort by ${this.sortStringToPreview.get(this.sortBy)}`;
       if (this.radius){

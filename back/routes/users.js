@@ -335,6 +335,23 @@ router.get('/search', authenticateToken, async (req, res) => {
           });
         }
         
+        if (fame_min) {
+            query += ' AND u.fame >= ?';
+            params.push(fame_min);
+          }
+        if (fame_max) {
+          query += ' AND u.fame <= ?';
+          params.push(fame_max);
+        }
+        
+        if (city) {
+          query += ' AND u.city LIKE ?';
+          params.push(`%${city}%`);
+        }
+        
+        query += ` HAVING distance < ${radius}`
+        
+        // age clause needs to be in HAVING section because 'age' is an alias
         if (age_min) {
             query += ' AND age >= ?';
             params.push(age_min);
@@ -344,21 +361,7 @@ router.get('/search', authenticateToken, async (req, res) => {
             params.push(age_max);
         }
         
-        if (fame_min) {
-            query += ' AND u.fame >= ?';
-            params.push(fame_min);
-        }
-        if (fame_max) {
-            query += ' AND u.fame <= ?';
-            params.push(fame_max);
-        }
-        
-        if (city) {
-            query += ' AND u.city LIKE ?';
-            params.push(`%${city}%`);
-        }
-
-        query += ` HAVING distance < ${radius} ORDER BY ${order_by} ${order} LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;
+        query += ` ORDER BY ${order_by} ${order} LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;
         const [users] = await db.execute(query,params);
         res.json(users);
     } catch (error) {

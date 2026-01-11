@@ -50,14 +50,7 @@ export class Home {
   ngOnInit(){  }
 
   constructor(private userService: UserService) {
-    this.getUserProfile().then(()=>{
-      this.interestWhitelistDropdown()?.onSelected.subscribe(()=>{
-        this.setOptionPreview();
-      })
-      this.interestBlacklistDropdown()?.onSelected.subscribe(()=>{
-        this.setOptionPreview();
-      })
-    });
+    this.getUserProfile();
     if (this.activatedRoute.snapshot.url.length > 0 && this.activatedRoute.snapshot.url[0].path == "profile"){
       this.createProfilePopup(Number.parseInt(this.activatedRoute.snapshot.url[1].path));
     }

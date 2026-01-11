@@ -19,26 +19,24 @@
     <label>
       <span>Filter by</span>
       <div style="display: flex; flex-direction: row;">
-        <input [value]="radius" (change)="setRadius($event)" type="number" placeholder="Radius"/>
-        <input [value]="minAge" (change)="setMinAge($event)" type="number" min="18" placeholder="min age"/>
-        <input [value]="maxAge" (change)="setMaxAge($event)" type="number" min="18" placeholder="max age"/>
-
-        <input [value]="minFame" (change)="setMinFame($event)" type="number" min="0" placeholder="min fame"/>
-        <input [value]="maxFame" (change)="setMaxFame($event)" type="number" min="0" placeholder="max fame"/>
-        <!-- <button (click)="searchForProfile()">Search</button> -->
+        <input [value]="radius" (input)="setRadius($event)" type="number" placeholder="Radius"/>
+        <input [value]="minAge" (input)="setMinAge($event)" type="number" min="18" placeholder="min age"/>
+        <input [value]="maxAge" (input)="setMaxAge($event)" type="number" min="18" placeholder="max age"/>
+        <input [value]="minFame" (input)="setMinFame($event)" type="number" min="0" placeholder="min fame"/>
+        <input [value]="maxFame" (input)="setMaxFame($event)" type="number" min="0" placeholder="max fame"/>
       </div>
     </label>
 
     <div style="display: flex; flex-direction: row;">
       <label>
         <span>Interest whitelist</span>
-        <app-interest-dropdown #interestWhitelistDropdownContainer
+        <app-interest-dropdown (onSelected)="setOptionPreview()" #interestWhitelistDropdownContainer
           style="z-index: 2; position: relative; width: 100%;"
         ></app-interest-dropdown>
       </label>
       <label>
         <span>Interest blacklist</span>
-        <app-interest-dropdown #interestBlacklistDropdownContainer
+        <app-interest-dropdown (onSelected)="setOptionPreview()" #interestBlacklistDropdownContainer
           style="z-index: 2; position: relative; width: 100%;"
         ></app-interest-dropdown>
       </label>

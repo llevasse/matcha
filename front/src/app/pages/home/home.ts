@@ -48,7 +48,14 @@ export class Home {
   ngOnInit(){  }
 
   constructor(private userService: UserService) {
-    this.getUserProfile();
+    this.getUserProfile().then(()=>{
+      this.interestWhitelistDropdown()?.onSelected.subscribe(()=>{
+        this.setOptionPreview();
+      })
+      this.interestBlacklistDropdown()?.onSelected.subscribe(()=>{
+        this.setOptionPreview();
+      })
+    });
     if (this.activatedRoute.snapshot.url.length > 0 && this.activatedRoute.snapshot.url[0].path == "profile"){
       this.createProfilePopup(Number.parseInt(this.activatedRoute.snapshot.url[1].path));
     }
@@ -177,6 +184,25 @@ export class Home {
       }
       if (this.maxFame){
         preview += `, max fame = ${this.maxFame}`
+      }
+      if (this.interestWhitelistDropdown() && this.interestWhitelistDropdown()!.selectedValues().length > 0){
+        let whiteListInterest = ", whitelisted interest : "
+        let whiteListInterestNames = new Array<string>();
+        this.interestWhitelistDropdown()!.selectedValues().forEach((interest)=>{
+          whiteListInterestNames.push(interest.name);
+        })
+        whiteListInterest += `(${whiteListInterestNames.join(", ")})`;
+        preview += whiteListInterest;
+      }
+
+      if (this.interestBlacklistDropdown() && this.interestBlacklistDropdown()!.selectedValues().length > 0){
+        let blackListInterest = ", blacklisted interest : "
+        let blackListInterestNames = new Array<string>();
+        this.interestBlacklistDropdown()!.selectedValues().forEach((interest)=>{
+          blackListInterestNames.push(interest.name);
+        })
+        blackListInterest += `(${blackListInterestNames.join(", ")})`;
+        preview += blackListInterest;
       }
       return preview;
     })

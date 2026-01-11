@@ -33,7 +33,7 @@ h1{
   border-radius: v.$border-radius-default;
 }
 
-#search-option-container{
+#search-container{
   display: flex;
   flex-direction: column;
   margin: 0 6rem;
@@ -42,15 +42,19 @@ h1{
 
   border-radius: v.$border-radius-default;
 
-
-  div{
-    gap: 1rem;
-  }
-
   button{
     font-size: 1em;
   }
   background-color: v.$secondary-bg-color;
+}
+
+#search-option-container{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  div{
+    gap: 1rem;
+  }
 }
 
 #sort-by-container{

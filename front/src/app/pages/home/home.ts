@@ -2,7 +2,7 @@ import { Component, inject, signal, viewChildren, ViewContainerRef, viewChild } 
 import { ProfilePreview } from "../../profile-preview/profile-preview";
 import { User } from "../../core/class/user"
 import { ProfileView } from '../../profile-view/profile-view';
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { UserService } from '../../../services/userService';
 import { InterestDropdown } from "../edit-profile/interest-dropdown/interest-dropdown";
 
@@ -23,7 +23,20 @@ export class Home {
 	maxFame: number | null = null;
 	sortBy: string = "distance_ascending";
 
+	sortStringToPreview = new Map<string, string>([
+	  ['age_ascending', 'ascending age'],
+	  ['age_descending', 'descending age'],
+	  ['distance_ascending', 'ascending distance'],
+	  ['distance_descending', 'descending distance'],
+	  ['interest_ascending', 'ascending common interest'],
+	  ['interest_descending', 'descending common interest'],
+	  ['fame_ascending', 'ascending fame'],
+	  ['fame_descending', 'descending fame'],
+	])
+
 	loading = signal<boolean>(true)
+
+	searchOptionPreview = signal<string>('');
 
   private activatedRoute = inject(ActivatedRoute);
   private viewContainer = inject(ViewContainerRef);
@@ -39,6 +52,7 @@ export class Home {
     if (this.activatedRoute.snapshot.url.length > 0 && this.activatedRoute.snapshot.url[0].path == "profile"){
       this.createProfilePopup(Number.parseInt(this.activatedRoute.snapshot.url[1].path));
     }
+    this.setOptionPreview();
   }
 
   async getUserProfile(){
@@ -113,22 +127,27 @@ export class Home {
 
   setRadius(event: Event){
     this.radius = Number.parseFloat(((event as InputEvent).target as HTMLInputElement).value);
+    this.setOptionPreview();
   }
 
   setMinAge(event: Event){
     this.minAge = Number.parseFloat(((event as InputEvent).target as HTMLInputElement).value);
+    this.setOptionPreview();
   }
 
   setMaxAge(event: Event){
     this.maxAge = Number.parseFloat(((event as InputEvent).target as HTMLInputElement).value);
+    this.setOptionPreview();
   }
 
   setMinFame(event: Event){
     this.minFame = Number.parseFloat(((event as InputEvent).target as HTMLInputElement).value);
+    this.setOptionPreview();
   }
 
   setMaxFame(event: Event){
     this.maxFame = Number.parseFloat(((event as InputEvent).target as HTMLInputElement).value);
+    this.setOptionPreview();
   }
 
   setSortBy(event: PointerEvent, value: string){
@@ -137,7 +156,30 @@ export class Home {
       event.target.classList.add("active-sort-selector");
     }
     this.sortBy = value;
+    this.setOptionPreview();
     this.searchForProfile()
+  }
+
+  setOptionPreview(){
+    this.searchOptionPreview.update((preview)=>{
+      preview = `Sort by ${this.sortStringToPreview.get(this.sortBy)}`;
+      if (this.radius){
+        preview += `, max radius = ${this.radius}km`
+      }
+      if (this.minAge){
+        preview += `, min age = ${this.minAge}`
+      }
+      if (this.maxAge){
+        preview += `, max age = ${this.maxAge}`
+      }
+      if (this.minFame){
+        preview += `, min fame = ${this.minFame}`
+      }
+      if (this.maxFame){
+        preview += `, max fame = ${this.maxFame}`
+      }
+      return preview;
+    })
   }
 
   async getClientCity() {

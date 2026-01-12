@@ -5,14 +5,10 @@
     <label>
       <span>Sort by</span>
       <div id="sort-by-container">
-        <button (click)="setSortBy($event, 'age_ascending')">Age ascending</button>
-        <button (click)="setSortBy($event, 'age_descending')">Age descending</button>
-        <button (click)="setSortBy($event, 'distance_ascending')" class="active-sort-selector">Distance ascending</button>
-        <button (click)="setSortBy($event, 'distance_descending')">Distance descending</button>
-        <button (click)="setSortBy($event, 'interest_ascending')">Interest in common ascending</button>
-        <button (click)="setSortBy($event, 'interest_descending')">Interest in common descending</button>
-        <button (click)="setSortBy($event, 'fame_ascending')">Fame ascending</button>
-        <button (click)="setSortBy($event, 'fame_descending')">Fame descending</button>
+        <button (click)="setSortBy($event, 'age')">Age</button>
+        <button (click)="setSortBy($event, 'distance')" class="active-sort-selector ascending">Distance</button>
+        <button (click)="setSortBy($event, 'interest')">Common interest</button>
+        <button (click)="setSortBy($event, 'fame')">Fame</button>
       </div>
     </label>
 

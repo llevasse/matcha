@@ -42,9 +42,6 @@ h1{
 
   border-radius: v.$border-radius-default;
 
-  button{
-    font-size: 1em;
-  }
   background-color: v.$secondary-bg-color;
 }
 
@@ -63,14 +60,26 @@ h1{
 #sort-by-container{
   display: flex;
   flex-direction: row;
+
+  button{
+    font-size: 1em;
+  }
 }
 
 .active-sort-selector {
   border: 1px solid v.$text-color;
 }
 
+.active-sort-selector.ascending::after{
+  content: " ↗";
+}
+
+.active-sort-selector.descending::after{
+  content: " ↘";
+}
+
 .display-search-options{
-  max-height: 100vh !important;
+    max-height: 100vh !important;
   overflow:visible !important;
 
 }

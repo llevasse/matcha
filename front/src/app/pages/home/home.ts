@@ -1,10 +1,11 @@
-import { Component, inject, signal, viewChildren, ViewContainerRef, viewChild } from '@angular/core';
+import { Component, inject, signal, viewChildren, ViewContainerRef, viewChild, HostListener } from '@angular/core';
 import { ProfilePreview } from "../../profile-preview/profile-preview";
 import { User } from "../../core/class/user"
 import { ProfileView } from '../../profile-view/profile-view';
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from '../../../services/userService';
 import { InterestDropdown } from "../edit-profile/interest-dropdown/interest-dropdown";
+import e from 'express';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +23,7 @@ export class Home {
 	minFame: number | null = null;
 	maxFame: number | null = null;
 	sortBy: string = "distance_ascending";
+	ascendingOrder:boolean = true;
 
 	updateSearchTimeoutID: number|null = null;
 
@@ -162,11 +164,27 @@ export class Home {
   }
 
   setSortBy(event: PointerEvent, value: string){
-    document.querySelector(".active-sort-selector")?.classList.remove("active-sort-selector");
     if (event.target instanceof HTMLElement){
-      event.target.classList.add("active-sort-selector");
+      if (event.target.classList.contains("active-sort-selector")){
+        if (this.ascendingOrder){
+          event.target.classList.replace("ascending", "descending");
+          this.ascendingOrder = false;
+        }
+        else{
+          event.target.classList.replace("descending", "ascending");
+          this.ascendingOrder = true;
+        }
+      }
+      else{
+        if(document.querySelector(".active-sort-selector")){
+          document.querySelector(".active-sort-selector")!.className = "";
+        }
+        event.target.classList.add("active-sort-selector");
+        event.target.classList.add("ascending");
+        this.ascendingOrder = true;
+      }
     }
-    this.sortBy = value;
+    this.sortBy = `${value}_${this.ascendingOrder ? "ascending" : "descending"}`;
     this.setOptionPreview();
   }
 

@@ -27,6 +27,7 @@ export class InterestDropdown {
   activeSearchResultInSelectedValues = signal<Interest[]>([]);
   selectedValues = signal<Interest[]>([]);
   originalUserInterest = signal<Interest[]>([]);
+  allowInterestCreation = input<boolean>(false);
 
 
   placeholder = signal("Interest");
@@ -56,12 +57,13 @@ export class InterestDropdown {
 
   keydown(event: KeyboardEvent){
     var input =(event.target as HTMLInputElement).value;
-    if (event.key === 'Enter'){
+    if (event.key === 'Enter' && this.allowInterestCreation()){
       input = input.trim().toLowerCase();
       while (input.startsWith('#')){
         input = input.substring(1)
       }
       input = "#" + input;
+
       this.interestService.createInterest(input).then((tmp)=>{
         var response: Response = tmp as Response;
         if (response.ok){

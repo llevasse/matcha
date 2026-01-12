@@ -15,12 +15,15 @@ export class InterestDropdown {
   }
 
   ngOnInit(){
-    this.e = this.ref.nativeElement;
+    this.e = this.ref.nativeElement as HTMLElement;
+    this.e.addEventListener("focusin",()=>{
+      this.contentClass.set("");
+    });
   }
 
   loading = signal<boolean>(true)
 
-  e:any = HTMLElement;
+  e:HTMLElement | undefined;
 
   allInterest = signal<Interest[]>([]);
   activeSearchResult = signal<Interest[]>([]);
@@ -125,10 +128,20 @@ export class InterestDropdown {
     this.onSelected.emit(new Map<string, any>([['value', str], ['list', this.selectedValues]]));
   }
 
-  @HostListener('document:mousedown', ['$event']) closeDropdown(event: any){
+  @HostListener('document:mousedown', ['$event']) mousedown(event: any){
     var closest: HTMLElement = event.target.closest("app-interest-dropdown");
     if (closest == null || (this.e != closest)){
       this.contentClass.set("inactive");
+    }
+  }
+
+  @HostListener('document:focusout', ['$event']) focusout(event: FocusEvent){
+    const target = event.relatedTarget;
+    if (target instanceof HTMLElement){
+      var closest: HTMLElement | null = target.closest("app-interest-dropdown");
+      if (closest == null || (this.e != closest)){
+        this.contentClass.set("inactive");
+      }
     }
   }
 }

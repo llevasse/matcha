@@ -3,8 +3,6 @@ import { Injectable } from "@angular/core";
 import { User } from "../app/core/class/user";
 import { InterestService } from "./interestService";
 import { Router } from "@angular/router";
-import { ProfileImage } from "../app/core/class/profile-image";
-import { Interest } from "../app/core/class/interest";
 import { webSocket } from "rxjs/webSocket";
 
 @Injectable({ providedIn: 'root' })

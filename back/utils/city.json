@@ -1,0 +1,37 @@
+[
+  {
+    "name": "lyon",
+    "lat": 45.763420,
+    "lon": 4.834277
+  },
+  {
+    "name": "Middle hearth",
+    "lat": 0,
+    "lon": 0
+  },
+  {
+    "name": "Marseille",
+    "lat": 43.2961743,
+    "lon": 5.3699525
+  },
+  {
+    "name": "Nice",
+    "lat": 43.7009358,
+    "lon": 7.2683912
+  },
+  {
+    "name": "Villeurbanne",
+    "lat": 45.7733573,
+    "lon": 4.8868454
+  },
+  {
+    "name": "Saint-Étienne",
+    "lat": 45.4401467,
+    "lon": 4.3873058
+  },
+  {
+    "name": "Écully",
+    "lat": 45.7754498,
+    "lon": 4.7785644
+  }
+]

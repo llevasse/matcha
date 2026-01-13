@@ -53,6 +53,12 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
 		res.set("Cross-Origin-Resource-Policy", "cross-origin");
 	}
 }));
+// Servir les fichiers statiques (images de profil)
+app.use('/default_profile_pictures', express.static(path.join(__dirname, 'default_profile_pictures'), {
+	setHeaders: function(res, path){
+		res.set("Cross-Origin-Resource-Policy", "cross-origin");
+	}
+}));
 
 // Routes
 app.use('/api/auth', authRoutes);

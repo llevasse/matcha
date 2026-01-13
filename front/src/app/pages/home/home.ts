@@ -5,7 +5,6 @@ import { ProfileView } from '../../profile-view/profile-view';
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from '../../../services/userService';
 import { InterestDropdown } from "../edit-profile/interest-dropdown/interest-dropdown";
-import e from 'express';
 
 @Component({
   selector: 'app-home',

@@ -12,6 +12,7 @@ const profileRoutes = require('./routes/profiles');
 const interactionRoutes = require('./routes/interactions');
 const messageRoutes = require('./routes/messages');
 const tagRoutes = require('./routes/tags');
+const adminRoutes = require('./routes/admin');
 
 // middleware d'erreur
 const errorHandler = require('./middleware/errorHandler');
@@ -60,6 +61,7 @@ app.use('/api/profiles', profileRoutes);
 app.use('/api/interactions', interactionRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/tags', tagRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Route de test
 app.get('/api/health', (req, res) => {

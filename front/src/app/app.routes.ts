@@ -5,6 +5,7 @@ import { Home } from './pages/home/home';
 import { EditProfile } from './pages/edit-profile/edit-profile';
 import { Error404Page, Error503Page} from './pages/error-pages/error-page';
 import { Likes } from './pages/likes/likes';
+import { Admin } from './pages/admin/admin';
 
 export const routes: Routes = [
   {path: '', component: Home},
@@ -18,5 +19,6 @@ export const routes: Routes = [
   {path: 'login', component: Login},
   {path: 'register', component: Login},
   {path: 'error-503',  component: Error503Page},
+  {path: 'admin', component: Admin},
   {path: '**',  component: Error404Page}
 ];

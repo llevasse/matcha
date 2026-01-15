@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const db = require('../config/database');
-const { authenticateToken } = require('../middleware/auth');
+const { adminAuthenticateToken } = require('../middleware/auth');
 const fem_names = require('../utils/fem_names.json')
 const masc_names = require('../utils/masc_names.json')
 const lastnames = require('../utils/last_names.json')
@@ -14,7 +14,7 @@ function getRandomInt(min, max) {
 }
 
 const router = express.Router();
-router.post('/create-users', authenticateToken, async (req, res) => {
+router.post('/create-users', adminAuthenticateToken, async (req, res) => {
   try {
     const { number_of_users, password } = req.body;
 

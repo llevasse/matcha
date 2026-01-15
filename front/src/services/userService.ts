@@ -77,12 +77,12 @@ export class UserService {
   }
 
 
-  searchProfile(radius: number | null = 42, minAge: number | null = null, maxAge: number | null = null, minFame: number | null = null, maxFame: number | null = null, whiteListInterestId: number[] | null, blackListInterestId: number[] | null, sortBy:string){
+  searchProfile(size:number, offset:number, radius: number | null = 42, minAge: number | null = null, maxAge: number | null = null, minFame: number | null = null, maxFame: number | null = null, whiteListInterestId: number[] | null, blackListInterestId: number[] | null, sortBy:string){
     var users: User[] = [];
-    var params = "";
+    var params = `&limit=${size}&offset=${offset}`;
 
     if (radius){
-      params = `&radius=${radius}`;
+      params += `&radius=${radius}`;
     }
     if (minAge){
       params += `&age_min=${minAge}`;

@@ -48,7 +48,33 @@ export class Home {
 	interestBlacklistDropdown = viewChild<InterestDropdown>('interestBlacklistDropdownContainer');
 
   previews = viewChildren<ProfilePreview>(ProfilePreview);
+
+
   ngOnInit(){  }
+
+
+  private getDocHeight() {
+    var D = document;
+    return Math.max(
+      D.body.scrollHeight, D.documentElement.scrollHeight,
+      D.body.offsetHeight, D.documentElement.offsetHeight,
+      D.body.clientHeight, D.documentElement.clientHeight
+    );
+  }
+
+  private scrollChecker(){
+    if(document.documentElement.scrollTop + document.documentElement.offsetHeight == this.getDocHeight()) {
+      this.searchForProfile(20, document.querySelectorAll("#profile-list-container app-profile-preview").length, false);
+    }
+  }
+
+  ngAfterViewInit(){
+    document.onscroll = ()=>{this.scrollChecker()};
+  }
+
+  ngOnDestroy(){
+    document.onscroll = null;
+  }
 
   constructor(private userService: UserService) {
     this.getUserProfile();
@@ -77,8 +103,10 @@ export class Home {
     this.updateSearchTimeoutID = window.setTimeout(()=>{this.searchForProfile()}, 1000)
   }
 
-  async searchForProfile(){
-    this.loading.set(true)
+  async searchForProfile(size: number = 20, offset: number = 0, showLoad = true){
+    if (showLoad){
+      this.loading.set(true)
+    }
     var whiteListInterestId: number[] = [];
     this.interestWhitelistDropdown()!.selectedValues().forEach((interest)=>{
       whiteListInterestId.push(interest.id);
@@ -90,7 +118,7 @@ export class Home {
     });
 
     try{
-      this.profiles.set(await this.userService.searchProfile(
+      const newProfiles = await this.userService.searchProfile(size, offset,
         this.radius,
         this.minAge,
         this.maxAge,
@@ -98,12 +126,20 @@ export class Home {
         this.maxFame,
         whiteListInterestId,
         blackListInterestId,
-        this.sortBy));
+        this.sortBy);
+      this.profiles.update((currentList)=>{
+        if(offset == 0){
+          return newProfiles;
+        }
+        return currentList.concat(newProfiles);
+      })
     }
     catch(e){
       console.error(e);
     }
-    this.loading.set(false)
+    if (showLoad){
+      this.loading.set(false)
+    }
     this.updateSearchTimeoutID = null;
   }
 

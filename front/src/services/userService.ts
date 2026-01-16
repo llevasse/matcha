@@ -138,6 +138,14 @@ export class UserService {
     })
   }
 
+  getProfileHistory(){
+    return fetch(`${this.profileUrl}/history`, {
+      headers : {
+        "Authorization":"Bearer " + localStorage.getItem('token'),
+      }
+    })
+  }
+
   private async userFromResponse(response: Response): Promise<User>{
     return await response.json().then((obj)=>{
       return new User(obj)

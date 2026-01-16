@@ -16,16 +16,7 @@ import { notifType } from './utilities/utils';
 })
 export class App {
   clientUser: User | null = null;
-  notifList = signal<MatchaNotification[]>([
-    // new MatchaNotification("New match", "", null, null, notifType.MATCH),
-    // new MatchaNotification("New like", "", null, null, notifType.LIKED),
-    // new MatchaNotification("New message", "", null, null, notifType.MESSAGE_SENT),
-    // new MatchaNotification("Unliked", "", null, null, notifType.UNLIKED),
-    // new MatchaNotification("New match", "", null, null, notifType.MATCH),
-    // new MatchaNotification("New message", "", null, null, notifType.MESSAGE_SENT),
-    // new MatchaNotification("New message", "", null, null, notifType.MESSAGE_SENT),
-
-  ]);
+  notifList = signal<MatchaNotification[]>([]);
 
   loaded = signal<boolean>(false);
   protected readonly title = signal('matcha-front');
@@ -86,6 +77,10 @@ export class App {
 
   goProfile(){
     this.router.navigate([`/profile`]);
+  }
+
+  goHistory(){
+    this.router.navigate([`/history`]);
   }
 
   logout(){

@@ -115,6 +115,22 @@ router.post('/add_to_history', authenticateToken, async (req, res) =>{
   }
 })
 
+router.get('/history', authenticateToken, async (req, res) =>{
+  try{
+    const [users] = await db.execute(`
+      SELECT u.id, u.username, (SELECT pp.file_path FROM profile_pictures pp WHERE pp.user_id = u.id AND is_main=TRUE LIMIT 1) AS pictures
+      FROM users u WHERE u.id IN
+        (SELECT viewer_user_id from viewing_history WHERE viewed_user_id = ? GROUP BY viewer_user_id)`,
+      [req.user.id]);
+    if (users.length === 0) {
+      res.json([]);
+    }
+    res.json(users);
+  }catch(e){
+    throw e;
+  }
+})
+
 async function checkProfileValidity(userId){
   var is_confirmed = true;	
   const connection = await db.getConnection();  

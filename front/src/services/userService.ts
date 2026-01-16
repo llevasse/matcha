@@ -77,7 +77,7 @@ export class UserService {
   }
 
 
-  searchProfile(size:number, offset:number, radius: number | null = 42, minAge: number | null = null, maxAge: number | null = null, minFame: number | null = null, maxFame: number | null = null, whiteListInterestId: number[] | null, blackListInterestId: number[] | null, sortBy:string){
+  searchProfile(size:number, offset:number, radius: number | null = 42, minAge: number | null = null, maxAge: number | null = null, minFame: number | null = null, maxFame: number | null = null, whiteListInterestId: number[] | null, blackListInterestId: number[] | null, location : {lat: number, lon: number} | null, sortBy:string){
     var users: User[] = [];
     var params = `&limit=${size}&offset=${offset}`;
 
@@ -104,6 +104,10 @@ export class UserService {
     }
     if (blackListInterestId){
       params += `&blacklist_interest=${blackListInterestId}`;
+    }
+
+    if (location){
+      params += `&lat=${location.lat}&lon=${location.lon}`;
     }
 
     params += `&sort_by=${sortBy}`;

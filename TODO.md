@@ -29,10 +29,10 @@
     - [x] tags
 
 # Research
-- [ ] The user must be able to search profile with criteria such as :
+- [x] The user must be able to search profile with criteria such as :
   - [x] Age gap
   - [x] Fame rating
-  - [ ] Location
+  - [x] Location
   - [x] One or multiple tags
 
 # Profile of other user

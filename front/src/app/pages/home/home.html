@@ -36,6 +36,13 @@
           style="z-index: 2; position: relative; width: 100%;"
         ></app-interest-dropdown>
       </label>
+      <label>
+        <span>Search from location</span>
+        <app-dropdown style="z-index: 2;" #locationInputContainer
+          id="location-input-container" [inputId]="'location-input'" [placeholder]="'Location'"
+          [options]="userSearchCityListStr()" [value]="selectedCityName() || ''" (onSelected)="setSelectedCity($event)"
+          [searchable]="true" (onSearch)="searchCity()"></app-dropdown>
+      </label>
     </div>
   </div>
 </div>

@@ -5,10 +5,11 @@ import { ProfileView } from '../../profile-view/profile-view';
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from '../../../services/userService';
 import { InterestDropdown } from "../edit-profile/interest-dropdown/interest-dropdown";
+import { Dropdown } from "../../core/dropdown/dropdown";
 
 @Component({
   selector: 'app-home',
-  imports: [ProfilePreview, InterestDropdown],
+  imports: [ProfilePreview, InterestDropdown, Dropdown],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
@@ -23,6 +24,13 @@ export class Home {
 	maxFame: number | null = null;
 	sortBy: string = "distance_ascending";
 	ascendingOrder:boolean = true;
+
+	selectedCityName = signal<string | null>(null);
+	selectedLocation = signal<{lat: number, lon: number}| null>(null);
+	userSearchCityList =	signal<Map<string, any>[]>([]);
+	userSearchCityListStr =  signal<string[]>([]);
+	locationInputContainer = viewChild<Dropdown>('locationInputContainer');
+
 
 	updateSearchTimeoutID: number|null = null;
 
@@ -126,6 +134,7 @@ export class Home {
         this.maxFame,
         whiteListInterestId,
         blackListInterestId,
+        this.selectedLocation(),
         this.sortBy);
       this.profiles.update((currentList)=>{
         if(offset == 0){
@@ -295,4 +304,50 @@ export class Home {
     }
     return this.user;
   }
+
+
+	setSelectedCity(map: Map<string, any>){
+	  const loc = this.userSearchCityList()[map.get('index')];
+    this.selectedLocation.set({
+      lat: Number.parseFloat(loc.get('lat')),
+      lon:Number.parseFloat(loc.get('lon'))
+    });
+    this.selectedCityName.set(this.userSearchCityListStr()[map.get('index')]);
+		this.userSearchCityList.set([]);
+		this.userSearchCityListStr.set([]);
+		this.updateSearch();
+	}
+
+
+	async searchCity(){
+		var e:HTMLInputElement = document.querySelector("#location-input")!;
+		var API_KEY = import.meta.env.NG_APP_GEOCODING_API_KEY;
+		this.userSearchCityList.set([]);
+		this.userSearchCityListStr.set([]);
+		this.locationInputContainer()?.toggleDropDown();
+		if (e.value != null && e.value.length > 3){ // todo make api call from back
+			const geocodingUrl = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(e.value)}&apiKey=${API_KEY}`;
+			 fetch(geocodingUrl).then(response => response.json())
+				.then(result => {
+					Object.values(result['features']).forEach((value)=>{
+						var obj = (value as any)['properties'];
+						this.userSearchCityList.update((list) => {
+							list.push(new Map([
+								['city', obj['city']],
+								['lon', obj['lon']],
+								['lat', obj['lat']],
+							]));
+							return list;
+						})
+						this.userSearchCityListStr.update((list) => {
+							list.push(`${obj['city']}, ${obj['state']}, ${obj['country']}`);
+							return list;
+						})
+					});
+					this.locationInputContainer()?.toggleDropDown();
+				})
+				.catch(error => console.log('error', error));
+		}
+	}
+
 }

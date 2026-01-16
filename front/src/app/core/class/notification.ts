@@ -43,6 +43,9 @@ export function createNotificationFromWsObject(obj:any): MatchaNotification{
       case 'match':
         notif.message = `It's a match with ${username}!`
         break;
+      case 'viewed':
+        notif.message = `${username} just viewed your profile!`
+        break;
       case 'message':
         const messageSplit = notif.rawMessage.split(':')
         const info = messageSplit[0].split("->");

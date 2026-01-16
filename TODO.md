@@ -54,7 +54,7 @@
 # Notifications 
 - [ ] A client must receive a notification in real time when :
   - [x] They receive a like
-  - [ ] Their profile has been viewed
+  - [x] Their profile has been viewed
   - [x] They received a message
   - [x] They had a match
   - [x] They are unliked

@@ -10,6 +10,7 @@ const messageType = {
   UNLIKED: 'unliked',
   MATCH: 'match',
   MESSAGE_SENT: 'message',
+  VIEWED: 'viewed',
   ONLINE: 'online',
   OFFLINE: 'offline',
 }
@@ -69,6 +70,9 @@ server.on('connection', function connection(clientWs) {
       }
       else if (messageText.startsWith('unwatch')){
         unsetUserAsWatched(messageText);
+      }
+      else if (messageText.startsWith('viewed')){
+        handleClientViewedMessage(messageText);
       }
       else{  // chat message need be sent in this format : `{sender_id}->{receiver_id}:${message}`
         handleClientChatMessage(messageText);
@@ -153,6 +157,12 @@ async function unsetUserAsWatched(messageText = ""){ // "unwatch : $watcherId->$
   }
 }
 
+async function handleClientViewedMessage(messageText = ""){ // "viewed : $viewerId->$viewedId"
+  ids = messageText.split(":")[1].split("->");
+  let viewerId = Number.parseInt(ids[0]);
+  let viewedId = Number.parseInt(ids[1]);
+  sendMessage(viewerId, viewedId, "", messageType.VIEWED);
+}
 
 async function initClientWebSocketConnection(messageText = "", clientWs){
   var client = null;

@@ -127,6 +127,17 @@ export class UserService {
     })
   }
 
+  addProfileToHistory(userId:number){
+    return fetch(`${this.profileUrl}/add_to_history`, {
+      method: 'POST',
+      headers : {
+        "Authorization":"Bearer " + localStorage.getItem('token'),
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({user_id:userId})
+    })
+  }
+
   private async userFromResponse(response: Response): Promise<User>{
     return await response.json().then((obj)=>{
       return new User(obj)

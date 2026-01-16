@@ -110,3 +110,12 @@ CREATE TABLE user_tags (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
 );
+
+CREATE TABLE viewing_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    viewer_user_id INT NOT NULL,
+    viewed_user_id INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (viewer_user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (viewed_user_id) REFERENCES users(id) ON DELETE CASCADE
+);

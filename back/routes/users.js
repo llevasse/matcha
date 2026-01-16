@@ -102,6 +102,19 @@ router.post('/profile', authenticateToken, validateProfileUpdate, async (req, re
     }
 });
 
+router.post('/add_to_history', authenticateToken, async (req, res) =>{
+  const { user_id } = req.body;
+  const [users] = await db.execute('SELECT id FROM users WHERE id = ?', [user_id]);
+  if (users.length === 0) {
+    return res.status(404).json({ error: 'User does not exist' });
+  }
+  try{
+    await db.execute('INSERT INTO viewing_history (viewer_user_id, viewed_user_id) VALUES (?, ?)', [req.user.id, user_id]);
+  }catch(e){
+    throw e;
+  }
+})
+
 async function checkProfileValidity(userId){
   var is_confirmed = true;	
   const connection = await db.getConnection();  

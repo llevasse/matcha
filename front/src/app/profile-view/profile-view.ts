@@ -44,7 +44,9 @@ export class ProfileView {
     userService.getClientUser().then((user)=>{
       if (user){
         this.clientUser = user;
+        userService.addProfileToHistory(this.userId());
         this.clientUser.ws?.next({message: `watch : ${user.id}->${this.userId()}`})
+        this.clientUser.ws?.next({message: `viewed : ${user.id}->${this.userId()}`})
         this.clientUser.ws?.asObservable().pipe().subscribe({
           next: (msg)=>{
             const notif = createNotificationFromWsObject(msg);

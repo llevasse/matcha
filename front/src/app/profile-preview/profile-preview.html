@@ -6,15 +6,20 @@
     </div>
     <div class="profile-info">
       <div class="profile-name-distance-container">
-        <a>{{user().username}}{{user().age ? `, ${user().age} years old` : ""}}</a>
+        <a>{{user().username}}{{user().age ? ", "  : ""}}</a>
+        <a>{{user().age ? `${user().age} years old` : ""}}</a>
         <a>~{{user().distance.toFixed(0)}}km away</a>
       </div>
-      <a id="profile-bio">{{user().bio}}</a>
-      <div class="profile-interest-container">
-        @for (item of user().interest; track $index) {
-          <span>{{item}}</span>
-        }
-      </div>
+      @if (user().bio.trim().length > 0) {
+        <a id="profile-bio">{{user().bio}}</a>
+      }
+      @if (user().interest.length > 0) {
+        <div class="profile-interest-container">
+          @for (item of user().interest; track $index) {
+            <span>{{item}}</span>
+          }
+        </div>
+      }
     </div>
   </div>
   @if (allowInteraction()) {

@@ -316,14 +316,19 @@ router.get('/search', authenticateToken, async (req, res) => {
                               + sin ( radians( ? ) ) * sin( radians( location_latitude ) ) ) ) AS distance,
               (SELECT COUNT(ut.tag_id) FROM user_tags ut WHERE ut.user_id = u.id AND ut.tag_id IN (SELECT ut.tag_id FROM user_tags ut WHERE ut.user_id = ?)) AS nb_tag_in_common,
               (SELECT g.label FROM genders g WHERE g.id = u.gender_id) as gender,
-              (SELECT JSON_ARRAYAGG(g.label) FROM user_preferences up JOIN genders g ON up.gender_id = g.id WHERE up.user_id = u.id GROUP BY up.user_id) as preferences,
+              (SELECT JSON_ARRAYAGG(g.label) FROM user_preferences up JOIN genders g ON up.gender_id = g.id WHERE up.user_id = u.id) as preferences,
               (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', t.id, 'name', t.name)) FROM user_tags ut JOIN tags t ON ut.tag_id = t.id WHERE ut.user_id = u.id GROUP BY ut.user_id) as tags,
               (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', pp.id, 'file_path', pp.file_path, 'is_main', pp.is_main, 'uploaded_at', pp.uploaded_at)) FROM profile_pictures pp WHERE pp.user_id = u.id GROUP BY pp.user_id) as pictures,
               TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) as age
-            FROM users u 
-            WHERE u.id != ? AND u.is_confirmed=true
-        `;
-        const params = [searchOriginLat, searchOriginLon, searchOriginLat, req.user.id, req.user.id];
+            FROM users u WHERE u.id != ? AND u.is_confirmed=true
+          `;
+        
+        // This SQL clause is responsible for only return users gender that req.user is attracted to
+        query += ` AND u.gender_id IN (SELECT up.gender_id FROM user_preferences up WHERE up.user_id = ?)`
+        // This SQL clause is responsible for only return users that are attracted to the req.user gender
+        query += ` AND u.id IN (SELECT up.user_id FROM user_preferences up where up.gender_id = ?)`
+
+        const params = [searchOriginLat, searchOriginLon, searchOriginLat, req.user.id, req.user.id, req.user.id, req.user.gender_id];
         
         if (interest_whitelist_user_id_list.length > 0){
           var tokens = new Array(interest_whitelist_user_id_list.length).fill('?').join(',');
@@ -356,6 +361,8 @@ router.get('/search', authenticateToken, async (req, res) => {
           query += ' AND u.city LIKE ?';
           params.push(`%${city}%`);
         }
+        
+        // Every query adition from here are in the HAVING clause
         
         query += ` HAVING distance < ${radius}`
         

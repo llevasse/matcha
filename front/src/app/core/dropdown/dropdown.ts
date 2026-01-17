@@ -57,7 +57,6 @@ export class Dropdown {
       clearTimeout(this.AutoSearchId);
     }
     this.AutoSearchId = setTimeout(()=>{
-      console.log('search');
       this.onSearch.emit();
       this.AutoSearchId = undefined;
     }, this.AutoSearchTimeout);

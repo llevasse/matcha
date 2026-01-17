@@ -1,5 +1,5 @@
 <div>
-  <div class="{{contentClass()}} container"  (click)="onClick($event)">
+  <div class="{{contentClass()}} container" (click)="onClick($event)">
     @if (searchable()) {
       <div class="flexRow" id="input-container" >
         <input autocomplete="off" (input)="search()"  id="{{inputId()}}" [placeholder]="placeholder()" [value]="value()"/>

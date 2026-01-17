@@ -45,6 +45,8 @@
   gap: .25em;
   padding: 1em;
   // padding-top: 0px;
+  border-top: solid 1px v.$text-color;
+
 }
 
 .content-column{
@@ -93,7 +95,6 @@ input::placeholder{
 }
 
 #input-container{
-  border-bottom: solid 1px v.$text-color;
   user-select: auto;
 
   input{
@@ -106,8 +107,4 @@ input::placeholder{
     border-left: solid 1px v.$text-color;
     color: v.$text-color;
   }
-}
-
-.inactive #input-container{
-  border-bottom: transparent;
 }

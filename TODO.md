@@ -8,7 +8,7 @@
 # User profile
 - [x] Users must provide : their gender, sexual preferences, biography, interest, 5 picture at most
 - [x] Users must be able to modify all their info, including their first and last name, and their email address
-- [ ] The user must be able to check who viewed their profile
+- [x] The user must be able to check who viewed their profile
 - [x] The user must be able to see who liked their profile
 - [x] The user must have a public fame rating
 - [x] The user must be located using their GPS, or IP location, and must be able to modify their position
@@ -58,3 +58,10 @@
   - [x] They received a message
   - [x] They had a match
   - [x] They are unliked
+
+
+
+chores :
+
+Remove french comment (or anything french)
+Remove todo in back folder

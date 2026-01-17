@@ -64,7 +64,6 @@ export class EditProfile {
 	  private userService: UserService,
 	  private interestService: InterestService,
 	  private router: Router){
-		// this.user.createDummy();
 		this.user.photos = [];
 		this.getUserProfile();
 
@@ -108,6 +107,7 @@ export class EditProfile {
               });
             }
             else{
+              file.isNew = false;
               if (file.isMain){
                 var obj = await res.json()
                 var map = new Map<String, any>(Object.entries(obj));
@@ -142,6 +142,7 @@ export class EditProfile {
         });
       }
 		});
+		interestToAdd = [];
 		interestToRemove.forEach(async (interest)=>{
 		  const res: Response = await this.interestService.unassignUserAnInterest(interest.id);
 			if (!res.ok){
@@ -151,6 +152,12 @@ export class EditProfile {
         });
       }
 		});
+		interestToRemove = [];
+		this.userService.getClientUser().then((user)=>{
+      if(user && this.interestDropdown()?.selectedValues()){
+        user.interest = this.interestDropdown()!.selectedValues();
+      }
+		})
 
 		const res: Response = await this.userService.updateProfile({
       username: this.tmpUser().username || this.user.username,

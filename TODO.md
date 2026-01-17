@@ -65,3 +65,4 @@ chores :
 
 Remove french comment (or anything french)
 Remove todo in back folder
+Self test

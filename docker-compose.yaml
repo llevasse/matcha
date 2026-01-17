@@ -4,7 +4,7 @@ services:
     build: mysql
     container_name: mysql-database
     volumes:
-      - db_volume:/var/lib/mysql/
+      - db_volume:/var/lib/mysql/data
     env_file:
       - .env
     networks:
@@ -48,10 +48,7 @@ services:
 volumes:
   db_volume:
     driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ./db
+    name: db_volume
     
   front_volume:
     driver: local

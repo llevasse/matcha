@@ -110,24 +110,28 @@ router.post('/add_to_history', authenticateToken, async (req, res) =>{
   }
   try{
     await db.execute('INSERT INTO viewing_history (viewer_user_id, viewed_user_id) VALUES (?, ?)', [req.user.id, user_id]);
+    res.json({ message: 'Successfully added to history' });
   }catch(e){
-    throw e;
+    console.log(e);
+    return res.status(400).json({ error: 'Error occured' });
   }
 })
 
 router.get('/history', authenticateToken, async (req, res) =>{
   try{
     const [users] = await db.execute(`
-      SELECT u.id, u.username, (SELECT pp.file_path FROM profile_pictures pp WHERE pp.user_id = u.id AND is_main=TRUE LIMIT 1) AS pictures
-      FROM users u WHERE u.id IN
-        (SELECT viewer_user_id from viewing_history WHERE viewed_user_id = ? GROUP BY viewer_user_id)`,
-      [req.user.id]);
+      SELECT u.id, u.username, vh.created_at as viewed_time,
+        (SELECT pp.file_path FROM profile_pictures pp WHERE pp.user_id = u.id AND is_main=TRUE LIMIT 1) AS pictures
+      FROM users u LEFT JOIN viewing_history vh ON viewed_user_id = ? 
+      WHERE u.id IN (SELECT viewer_user_id from viewing_history WHERE viewed_user_id = ? GROUP BY viewer_user_id)`,
+      [req.user.id, req.user.id]);
     if (users.length === 0) {
       res.json([]);
     }
     res.json(users);
   }catch(e){
-    throw e;
+    console.log(e);
+    return res.status(400).json({ error: 'Error occured' });
   }
 })
 

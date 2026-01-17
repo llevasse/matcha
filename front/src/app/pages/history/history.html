@@ -1,7 +1,13 @@
 <div class="container">
-  @for (item of viewed(); track $index) {
-    <div>
-      <span>{{item.viewerName}}->{{item.viewedName}}</span>
-    </div>
+  @if (viewed().length > 0){
+    @for (item of viewed(); track $index) {
+      <div class="history-element">
+        <a (click)="seeProfile($event, item.viewerId)" href="history/profile/{{item.viewerId}}">{{item.viewerName}}</a>
+        <span>has seen your profile on {{item.date.toLocaleString()}}</span>
+      </div>
+    }
+  }
+  @else {
+    <span>No one has viewed your profile yet :(</span>
   }
 </div>

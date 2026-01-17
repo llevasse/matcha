@@ -22,5 +22,6 @@ export const routes: Routes = [
   {path: 'error-503',  component: Error503Page},
   {path: 'admin', component: Admin},
   {path: 'history', component: HistoryPage},
+  {path: 'history/profile/:id', component: HistoryPage},
   {path: '**',  component: Error404Page}
 ];

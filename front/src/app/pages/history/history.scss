@@ -1,0 +1,29 @@
+@use '../../utilities/variables.scss' as v;
+
+.container{
+  display: flex;
+  flex-direction: column;
+  margin: 1em;
+  gap: .5em;
+  color: v.$text-color;
+  background-color: v.$secondary-bg-color;
+  border-radius: v.$border-radius-default;
+  width: fit-content;
+  margin: 1em auto;
+  padding: 1em;
+}
+
+.history-element{
+  display: flex;
+  flex-direction: row;
+  width: -webkit-fill-available;
+  justify-content: center;
+  gap: 1ch;
+  padding: 1em;
+  border-radius: v.$border-radius-default;
+  background-color: v.$primary-bg-color;
+
+  a{
+    user-select: none;
+  }
+}

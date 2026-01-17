@@ -18,15 +18,19 @@ export class HistoryPage {
       if (user){
         userService.getProfileHistory().then((response)=>{
           response.json().then((obj)=>{
-            const userList = obj as {"id": number,"username": string,"pictures": string, "viewed_time": string}[]
+            const userList = obj as {"viewer_id": number, "viewed_id": number,
+              "viewer_name": string,"viewer_pfp": string,
+              "viewed_name": string,"viewed_pfp": string,
+              "time": string}[]
 
             this.viewed.update((list)=>{
               list = []
               userList.forEach((u)=>{
-                list.push(new viewedClass({viewerId: u.id, viewedId: user.id,
-                  viewerName: u.username, viewedName: user.username,
-                  viewerPfpUrl: u.pictures, viewedPfpUrl: user.photos[0].url!,
-                  date: new Date(Date.parse(u.viewed_time))
+                list.push(new viewedClass({viewerId: u.viewer_id, viewedId: u.viewed_id,
+                  viewerName: u.viewer_name, viewedName: u.viewed_name,
+                  viewerPfpUrl: u.viewer_pfp, viewedPfpUrl: u.viewed_pfp,
+                  date: new Date(Date.parse(u.time)),
+                  received: u.viewed_id == user.id
                 }))
               })
               return list;
@@ -47,7 +51,7 @@ export class HistoryPage {
         profile.setInput("userId", userId);
         profile.instance.user.set(returnedUser);
         profile.instance.loaded.set(true);
-        
+
 
         profile.instance.onClickOutside.subscribe(()=>{
           window.history.pushState('','',`/`);
@@ -76,6 +80,7 @@ class viewedClass{
   viewerPfpUrl: string;
   viewedPfpUrl: string;
   date: Date;
+  received:boolean; // True if client has been seen, false if client has seen
 
   constructor(obj: {viewerId: number,
   viewedId: number,
@@ -83,7 +88,8 @@ class viewedClass{
   viewedName: string,
   viewerPfpUrl: string,
   viewedPfpUrl: string,
-  date: Date}){
+  date: Date,
+  received: boolean}){
     this.viewerId = obj.viewerId;
     this.viewedId = obj.viewedId;
     this.viewerName = obj.viewerName;
@@ -91,5 +97,6 @@ class viewedClass{
     this.viewerPfpUrl = obj.viewerPfpUrl;
     this.viewedPfpUrl = obj.viewedPfpUrl;
     this.date = obj.date;
+    this.received = obj.received;
   }
 }

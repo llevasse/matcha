@@ -118,12 +118,15 @@ router.post('/add_to_history', authenticateToken, async (req, res) =>{
 })
 
 router.get('/history', authenticateToken, async (req, res) =>{
-  try{
+  try{    
     const [users] = await db.execute(`
-      SELECT u.id, u.username, vh.created_at as viewed_time,
-        (SELECT pp.file_path FROM profile_pictures pp WHERE pp.user_id = u.id AND is_main=TRUE LIMIT 1) AS pictures
-      FROM users u LEFT JOIN viewing_history vh ON viewed_user_id = ? 
-      WHERE u.id IN (SELECT viewer_user_id from viewing_history WHERE viewed_user_id = ? GROUP BY viewer_user_id)`,
+      SELECT vh.viewer_user_id AS viewer_id, vh.viewed_user_id AS viewed_id, vh.created_at AS time,
+        (SELECT u.username FROM users u WHERE u.id = vh.viewer_user_id) as viewer_name,
+        (SELECT pp.file_path FROM profile_pictures pp WHERE pp.user_id = vh.viewer_user_id AND is_main=TRUE LIMIT 1) AS viewer_pfp,
+        (SELECT u.username FROM users u WHERE u.id = vh.viewed_user_id) as viewed_name,
+        (SELECT pp.file_path FROM profile_pictures pp WHERE pp.user_id = vh.viewed_user_id AND is_main=TRUE LIMIT 1) AS viewed_pfp
+      FROM viewing_history vh 
+      WHERE vh.viewer_user_id = ? OR vh.viewed_user_id = ?`,
       [req.user.id, req.user.id]);
     if (users.length === 0) {
       res.json([]);

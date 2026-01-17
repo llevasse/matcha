@@ -2,8 +2,15 @@
   @if (viewed().length > 0){
     @for (item of viewed(); track $index) {
       <div class="history-element">
-        <a (click)="seeProfile($event, item.viewerId)" href="history/profile/{{item.viewerId}}">{{item.viewerName}}</a>
-        <span>has seen your profile on {{item.date.toLocaleString()}}</span>
+        @if (item.received){
+          <a (click)="seeProfile($event, item.viewerId)" href="history/profile/{{item.viewerId}}">{{item.viewerName}}</a>
+          <span>has seen your profile on {{item.date.toLocaleString()}}</span>
+        }
+        @else {
+          <span>You have seen the profile of</span>
+          <a (click)="seeProfile($event, item.viewedId)" href="history/profile/{{item.viewedId}}">{{item.viewedName}}</a>
+          <span>on {{item.date.toLocaleString()}}</span>
+        }
       </div>
     }
   }

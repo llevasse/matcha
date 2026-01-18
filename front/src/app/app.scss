@@ -51,7 +51,7 @@ app-image-viewer{
   z-index: 10;
 }
 
-#navbar-desktop, #navbar-mobile, #bottom-navbar-mobile{
+#navbar-desktop, #navbar-mobile, #navbar-mobile-fixed, #bottom-navbar-mobile{
   display: flex;
 
   // height: 1em;
@@ -117,6 +117,23 @@ app-image-viewer{
   }
 }
 
+#navbar-mobile-fixed, #navbar-mobile{
+  top: 0;
+  position: relative;
+  width: -webkit-fill-available;
+
+
+  li:last-child{
+    position: relative;
+    flex: 1;
+    text-align: right;
+  }
+}
+
+#navbar-mobile-fixed{
+  position: fixed;
+}
+
 #bottom-navbar-mobile{
   bottom: 0;
   position: fixed;
@@ -135,7 +152,7 @@ app-image-viewer{
 }
 
 @media all and (min-width: v.$max-width-to-consider-mobile) {
-  #navbar-mobile, #bottom-navbar-mobile{
+  #navbar-mobile, #navbar-mobile-fixed, #bottom-navbar-mobile{
     display: none;
   }
 }

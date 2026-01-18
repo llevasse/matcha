@@ -19,7 +19,6 @@ export class App {
   notifList = signal<MatchaNotification[]>([]);
 
   loaded = signal<boolean>(false);
-  protected readonly title = signal('matcha-front');
   constructor(private authService: AuthService, private router: Router, private userService: UserService){
     if (this.getCurrentPathName().startsWith("/login") || this.getCurrentPathName().startsWith("/register")
     || this.getCurrentPathName().startsWith("/confirm-email") || this.getCurrentPathName().startsWith("/reset-password")){
@@ -36,6 +35,11 @@ export class App {
         })
       }
       this.loaded.set(true);
+    })
+    document.addEventListener("logout", ()=>{
+      this.loaded.set(false);
+      this.loaded.set(true);
+      this.notifList.set([]);
     })
   }
 
@@ -97,21 +101,23 @@ export class App {
     this.router.navigate([`/matches`]);
   }
 
-  toggleNotifDropdown(){
-    var container = document.querySelector("#notif-content-container");
-    if (container?.classList.contains('inactive') && container?.children.length != 0){
-      container?.classList.remove('inactive');
-    }else{
-      container?.classList.add('inactive');
+  toggleNotifDropdown(event: PointerEvent){
+    if (event.target instanceof HTMLElement){
+      let container = event.target.nextElementSibling;
+      if (container?.classList.contains('inactive') && container?.children.length != 0){
+        container?.classList.remove('inactive');
+      }else{
+        container?.classList.add('inactive');
+      }
     }
   }
 
   @HostListener('document:mousedown', ['$event']) closeNotifDropdown(event: any){
-    if (event.target.closest("#notif-dropdown-container") == null && event.target.closest("#notif-content-container") == null){
-      var container = document.querySelector("#notif-content-container");
-      if (container && !container?.classList.contains("inactive")){
-        container?.classList.add('inactive');
-      }
+    if (event.target.closest(".notif-dropdown-container") == null && event.target.closest(".notif-content-container") == null){
+      document.querySelectorAll(".notif-content-container").forEach((element)=>{
+        if (!element.classList.contains("inactive"))
+          element.classList.add('inactive');
+      });
     }
   }
 

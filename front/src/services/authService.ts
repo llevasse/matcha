@@ -50,6 +50,7 @@ export class AuthService {
   logout(): void {
     this.userService.deleteClient();
     localStorage.removeItem('token');
+    document.dispatchEvent(new Event('logout'));
   }
 
   getToken(): string | null {
@@ -72,5 +73,5 @@ export class AuthService {
   resetPassword(passwordInput: string, token: string | null) {
     return this.http.post(`${this.authUrl}/reset-password/confirm`, { password: passwordInput, token: token});
   }
-  
+
 }

@@ -7,9 +7,9 @@
         <li (click)="goLikes()">Likes</li>
         <li (click)="goMatches()">Matches</li>
         <li (click)="goHistory()">History</li>
-        <div id="notif-dropdown-container">
-          <li (click)="toggleNotifDropdown()">Notif ({{notifList().length}})</li>
-          <div id="notif-content-container" class="inactive">
+        <div class="notif-dropdown-container">
+          <li (click)="toggleNotifDropdown($event)">Notif ({{notifList().length}})</li>
+          <div class="notif-content-container inactive">
             @for (notif of notifList(); track $index) {
               <app-notification [notification]="notif"></app-notification>
             }
@@ -19,10 +19,13 @@
       </ul>
 
       <ul id="navbar-mobile">
+        <li class="navbar-title">MATCHA</li>
+      </ul>
+      <ul id="navbar-mobile-fixed">
         <li (click)="goHome()" class="navbar-title">MATCHA</li>
-        <div id="notif-dropdown-container">
-          <li (click)="toggleNotifDropdown()">Notif ({{notifList().length}})</li>
-          <div id="notif-content-container" class="inactive">
+        <div class="notif-dropdown-container">
+          <li (click)="toggleNotifDropdown($event)">Notif ({{notifList().length}})</li>
+          <div class="notif-content-container inactive">
             @for (notif of notifList(); track $index) {
               <app-notification [notification]="notif"></app-notification>
             }

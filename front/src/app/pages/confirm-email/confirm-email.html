@@ -1,0 +1,9 @@
+<div class="container">
+    @if (confirmSuccess()) {
+      <p> Your account has been confirmed.</p>
+      <button (click)="redirectLoginPage()">Login page</button>
+    }
+    @if (confirmFail()) {
+      <p> Your account could not be verified.</p>
+    }
+</div>

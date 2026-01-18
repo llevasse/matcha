@@ -75,6 +75,11 @@ export class InterestDropdown {
             var obj: Interest = new Interest(map.get("name"), map.get("id"));
             this.allInterest.update((list)=>{list.push(obj); return list});
             this.selectedValues.update((list)=>{list.push(obj); return list});
+            var str = "";
+            this.selectedValues().forEach((value, index)=>{
+              str += `${value.name}${index == this.selectedValues().length - 1 ? "" : ", "}`;
+            })
+            this.placeholder.set(str);
             this.setDropdownValues();
           })
         }

@@ -51,16 +51,19 @@ export class Login {
     var password = (document.querySelector("#register-password-input") as HTMLInputElement).value;
     if (username && first_name && last_name && email && password){
       this.authService.register({username, firstname: first_name, lastname: last_name, email, password}).then((value)=>{
-        if (value.ok){
+        let response: Response = value;
+        if (response.ok){
           this.emailConfirmationPopup.set(true);
         }
         else{
-          if (value['error'] != null){
-            this.loginErrorMessage.set(value['error']);
-          }
-          else{
-            this.loginErrorMessage.set(value['message']);
-          }
+          response.json().then((obj)=>{
+            if (obj['error'] != null){
+              this.registerErrorMessage.set(obj['error']);
+            }
+            else{
+              this.registerErrorMessage.set(obj['message']);
+            }
+          })
         }
       });
     }

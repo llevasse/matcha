@@ -1,9 +1,8 @@
 <div>
-  <div class="{{contentClass()}} container"  (click)="onClick($event)">
+  <div [classList]="`container ${contentClass() == '' ? options().length == 0 ? 'inactive' : '' : contentClass()}`" (click)="onClick($event)">
     @if (searchable()) {
       <div class="flexRow" id="input-container" >
         <input autocomplete="off" (input)="search()"  id="{{inputId()}}" [placeholder]="placeholder()" [value]="value()"/>
-        <!-- <button type="button" (click)="search()">search</button> -->
       </div>
     }
     @else {

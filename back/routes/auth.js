@@ -19,7 +19,21 @@ router.post('/register', validateRegistration, async (req, res) => {
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
         await connection.beginTransaction();
-
+        
+        // Check if user with same username || email exist
+        const [duplicates] = await connection.execute(
+            `SELECT id FROM users WHERE username = ? OR email = ?`,
+            [username, email]
+        );
+        
+        if (duplicates.length > 0) {
+          res.status(400).json({
+            error: 'User with same username or email already exist',
+          });
+          connection.release();
+          return ;
+        }
+        // Insérer l'utilisateur
         const [result] = await connection.execute(
             `INSERT INTO users (username, firstname, lastname, email, password_hash, is_confirmed)
              VALUES (?, ?, ?, ?, ?, ?)`,
@@ -39,7 +53,7 @@ router.post('/register', validateRegistration, async (req, res) => {
     } catch (error) {
         await connection.rollback();
         console.error(error);
-        res.status(500).json({ error: 'Erreur lors de l’inscription : ' + error.message });
+        res.status(400).json({ error: 'Unexpected error when creating user' });
     } finally {
         connection.release();
     }

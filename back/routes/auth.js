@@ -1,7 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto'); //todo enlever si pas utilisé
 const db = require('../config/database');
 const { validateRegistration, validateLogin } = require('../middleware/validation');
 const { authenticateToken } = require('../middleware/auth');
@@ -19,7 +18,20 @@ router.post('/register', validateRegistration, async (req, res) => {
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
         await connection.beginTransaction();
-
+        
+        // Check if user with same username || email exist
+        const [duplicates] = await connection.execute(
+            `SELECT id FROM users WHERE username = ? OR email = ?`,
+            [username, email]
+        );
+        
+        if (duplicates.length > 0) {
+          res.status(400).json({
+            error: 'User with same username or email already exist',
+          });
+          connection.release();
+          return ;
+        }
         // Insérer l'utilisateur
         const [result] = await connection.execute(
             `INSERT INTO users (username, firstname, lastname, email, password_hash)
@@ -41,12 +53,11 @@ router.post('/register', validateRegistration, async (req, res) => {
             message: 'User created successfully',
             userId: userId,
             token
-        });
-
+        });        
     } catch (error) {
         await connection.rollback();
         console.error(error);
-        res.status(500).json({ error: 'Erreur lors de l’inscription' });
+        res.status(400).json({ error: 'Unexpected error when creating user' });
     } finally {
         connection.release();
     }

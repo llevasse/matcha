@@ -4,6 +4,8 @@ $text-color:#FFDBDE;
 $secondary-text-color: #bfa5a3;
 $focus-text-color:#BF4D76;
 
-$border-radius-default: 1em;
+$border-radius-default: 1rem;
 
 $background-deg:linear-gradient(42deg, $primary-bg-color, $focus-text-color);
+
+$max-width-to-consider-mobile: 500px;

@@ -11,6 +11,9 @@
   border-radius: v.$border-radius-default;
 
   margin: 5em auto;
+  @media all and (max-width: v.$max-width-to-consider-mobile) {
+    width: 70vw;
+  }
 }
 
 .container>form{

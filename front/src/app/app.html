@@ -1,9 +1,8 @@
 @if (loaded()) {
   <main class="main">
     @if (isAuth()) {
-      <ul id="navbar">
-        <li (click)="goHome()" id="navbar-title">MATCHA</li>
-        <!-- <li (click)="goHome()">Home</li> -->
+      <ul id="navbar-desktop">
+        <li (click)="goHome()" class="navbar-title">MATCHA</li>
         <li (click)="goProfile()">Profile</li>
         <li (click)="goLikes()">Likes</li>
         <li (click)="goMatches()">Matches</li>
@@ -18,11 +17,31 @@
         </div>
         <li (click)="logout()">Log out</li>
       </ul>
+
+      <ul id="navbar-mobile">
+        <li (click)="goHome()" class="navbar-title">MATCHA</li>
+        <div id="notif-dropdown-container">
+          <li (click)="toggleNotifDropdown()">Notif ({{notifList().length}})</li>
+          <div id="notif-content-container" class="inactive">
+            @for (notif of notifList(); track $index) {
+              <app-notification [notification]="notif"></app-notification>
+            }
+          </div>
+        </div>
+        <li (click)="logout()">Log out</li>
+      </ul>
+
+      <router-outlet />
+      
+      <ul id="bottom-navbar-mobile">
+        <li (click)="goMatches()">Matches</li>
+        <li (click)="goLikes()">Likes</li>
+        <li (click)="goProfile()">Profile</li>
+        <li (click)="goHistory()">History</li>
+      </ul>
     }
-    <!-- <h1 id="title">MATCHA</h1> -->
   </main>
 
-  <router-outlet />
 }
 
 @else {

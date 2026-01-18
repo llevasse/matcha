@@ -4,7 +4,7 @@
   <div id="search-option-container">
     <label>
       <span>Sort by</span>
-      <div id="sort-by-container">
+      <div class="options-container">
         <button (click)="setSortBy($event, 'age')">Age</button>
         <button (click)="setSortBy($event, 'distance')" class="active-sort-selector ascending">Distance</button>
         <button (click)="setSortBy($event, 'interest')">Common interest</button>
@@ -14,7 +14,7 @@
 
     <label>
       <span>Filter by</span>
-      <div style="display: flex; flex-direction: row;">
+      <div class="options-container">
         <input [value]="radius" (input)="setRadius($event)" type="number" placeholder="Radius"/>
         <input [value]="minAge" (input)="setMinAge($event)" type="number" min="18" placeholder="min age"/>
         <input [value]="maxAge" (input)="setMaxAge($event)" type="number" min="18" placeholder="max age"/>
@@ -23,7 +23,7 @@
       </div>
     </label>
 
-    <div style="display: flex; flex-direction: row;">
+    <div class="options-container">
       <label>
         <span>Interest whitelist</span>
         <app-interest-dropdown (onSelected)="setOptionPreview()" #interestWhitelistDropdownContainer

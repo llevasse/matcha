@@ -37,7 +37,7 @@ export class EditProfile {
 	allowedGenders = ['woman','man', 'non-binary', 'other','prefer not to say'];
 
 	async getUserProfile(){
-    var tmpUser: User|null = await this.userService.getClientUser().then((value)=>{return value});
+    var tmpUser: User|null = await this.userService.getClientUser();
     if (tmpUser == null){
       console.error("Could not get client user");
       // this.router.navigate(['/login']);
@@ -55,9 +55,7 @@ export class EditProfile {
 		else{ // call if city was not set by user last time
       this.userCity.set(tmpUser.cityStr);
 		}
-		console.log(tmpUser);
-		this.loading.set(false)
-
+    this.loading.set(false);
 	}
 
 	constructor(

@@ -1,0 +1,19 @@
+@use '../../utilities/variables.scss' as v;
+.container{
+  padding: 2em;
+  background: v.$secondary-bg-color;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+
+  border-radius: v.$border-radius-default;
+  color: v.$text-color;
+  margin: 5em auto;
+  text-align: center;
+
+}
+
+button{
+    font-size: 1em;
+}

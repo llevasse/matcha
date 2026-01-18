@@ -21,7 +21,8 @@ export class App {
   loaded = signal<boolean>(false);
   protected readonly title = signal('matcha-front');
   constructor(private authService: AuthService, private router: Router, private userService: UserService){
-    if (this.getCurrentPathName().startsWith("/login") || this.getCurrentPathName().startsWith("/register")){
+    if (this.getCurrentPathName().startsWith("/login") || this.getCurrentPathName().startsWith("/register")
+    || this.getCurrentPathName().startsWith("/confirm-email") || this.getCurrentPathName().startsWith("/reset-password")){
       this.loaded.set(true);
       return;
     }

@@ -3,6 +3,7 @@ import { Component, output, forwardRef, input, signal } from '@angular/core';
 import { Input } from '../../core/input/input';
 import { Router } from '@angular/router';
 import { UserService } from '../../../services/userService';
+import e from 'express';
 
 @Component({
   selector: 'app-login',
@@ -11,6 +12,11 @@ import { UserService } from '../../../services/userService';
   styleUrl: './login.scss'
 })
 export class Login {
+
+  emailConfirmationPopup = signal<boolean>(false);
+  passwordForgottenPopup = signal<boolean>(false);
+  passwordForgottenButtonClicked = signal<boolean>(false);
+
   constructor(private authService: AuthService, private router: Router, private userService: UserService){
     authService.logout();
   }
@@ -30,7 +36,6 @@ export class Login {
     history.replaceState('','', "/login");
   }
 
-
   activateSigninForm(){
     document.querySelector("#loginForm")?.classList.add('inactive');
     document.querySelector("#signinForm")?.classList.remove('inactive');
@@ -47,8 +52,7 @@ export class Login {
     if (username && first_name && last_name && email && password){
       this.authService.register({username, firstname: first_name, lastname: last_name, email, password}).then((value)=>{
         if (value.ok){
-          history.pushState('','', "/profile");
-          this.router.navigate([`/profile`]);
+          this.emailConfirmationPopup.set(true);
         }
         else{
           if (value['error'] != null){
@@ -89,9 +93,30 @@ export class Login {
       });
     }
   }
+
+  openPasswordForgottenPopup(){
+    this.passwordForgottenPopup.set(true);
+  }
+
+  closePasswordForgottenPopup(){
+    this.passwordForgottenPopup.set(false);
+    this.passwordForgottenButtonClicked.set(false);
+  }
+
+  forgottenPasswordApiCall(event: SubmitEvent) {
+    event.preventDefault();
+    var email = (document.querySelector("#forgotten-password-email-input") as HTMLInputElement).value;
+    document.querySelector("#ok-button")?.classList.add('inactive');
+    if (email){
+      this.authService.passwordForgotten(email).then((value)=>{
+        if (value.ok){
+          this.passwordForgottenButtonClicked.set(true);
+        }
+      });
+    }
+  }
+
 }
-
-
 @Component({
   selector: 'login-selector',
   template : `<a (click)="click()">{{value()}}</a>`,

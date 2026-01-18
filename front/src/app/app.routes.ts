@@ -7,6 +7,8 @@ import { Error404Page, Error503Page} from './pages/error-pages/error-page';
 import { Likes } from './pages/likes/likes';
 import { Admin } from './pages/admin/admin';
 import { HistoryPage } from './pages/history/history';
+import { ConfirmEmail } from './pages/confirm-email/confirm-email';
+import { ResetPassword } from './pages/reset-password/reset-password';
 
 export const routes: Routes = [
   {path: '', component: Home},
@@ -19,6 +21,8 @@ export const routes: Routes = [
   {path: 'profile/:id', component: Home},
   {path: 'login', component: Login},
   {path: 'register', component: Login},
+  {path: 'confirm-email', component: ConfirmEmail},
+  {path: 'reset-password', component: ResetPassword},
   {path: 'error-503',  component: Error503Page},
   {path: 'admin', component: Admin},
   {path: 'history', component: HistoryPage},

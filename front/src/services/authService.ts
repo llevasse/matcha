@@ -58,4 +58,19 @@ export class AuthService {
   isAuthenticated(): boolean {
     return !!this.getToken();
   }
+
+  passwordForgotten(email: string) {
+    return fetch(`${this.authUrl}/reset-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+  }
+
+  resetPassword(passwordInput: string, token: string | null) {
+    return this.http.post(`${this.authUrl}/reset-password/confirm`, { password: passwordInput, token: token});
+  }
+  
 }

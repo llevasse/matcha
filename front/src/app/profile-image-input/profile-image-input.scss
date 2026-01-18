@@ -1,4 +1,7 @@
+@use '../utilities/variables.scss' as v;
+
 .container{
+  overflow: auto;
   width: 100%;
   height: fit-content;
   display: flex;
@@ -10,17 +13,18 @@
   background-color: rgba(0, 0, 0, .2);
   display: flex;
   gap: .5em;
-  width: 100%;
+  width: -webkit-fill-available;
+  min-width: fit-content;
   justify-content: space-around;
 
   div{
-    width: 20%;
+    // width: 100%;
   }
 }
 
 #images-preview img, .picture-preview{
   height: 13em;
-  width: 100%;
+  width: 13em;
   position: relative;
 
 
@@ -40,4 +44,19 @@
 app-image-input{
   width: 100%;
   height: 13em;
+}
+
+@media all and (max-width: v.$max-width-to-consider-mobile) {
+  #images-preview{
+    flex-direction: column;
+    width: -webkit-fill-available;
+
+    div{
+      width: -webkit-fill-available;
+    }
+
+    .picture-preview{
+      width: -webkit-fill-available;
+    }
+  }
 }

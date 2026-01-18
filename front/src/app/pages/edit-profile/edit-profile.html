@@ -4,7 +4,7 @@
   }
   @else {
     <form (submit)="processForm($event)" id="profileForm" class="flexColumn">
-      <div class="flexRow">
+      <div class="fields-containers">
         <label>
           <span>Firstname</span>
           <input (input)="setFirstname($event)" id="first-name-input" type="text" placeholder="Firstname" [value]="tmpUser().firstName"/>
@@ -26,7 +26,7 @@
           <input (input)="setEmail($event)" id="email-input" type="email" placeholder="Email" [value]="tmpUser().email"/>
         </label>
 
-      <div class="flexRow">
+      <div class="fields-containers">
         <label>
           <span>Date of birth</span>
           <input required (input)="setBirthday($event)" id="DOB-input" type="date" [value]="tmpUser().birthday" [max]="maxBirthDay.toISOString().substring(0,10)"/>
@@ -41,15 +41,15 @@
         </label>
       </div>
 
-      <div class="flexRow">
+      <div class="fields-containers">
         <label>
           <span>Gender</span>
-          <app-dropdown [placeholder]="'Gender'"
+          <app-dropdown [placeholder]="'Gender'" style="z-index: 4; position: relative; width: 100%;"
             (onSelected)="setGender($event)" [value]="tmpUser().gender ?? 'prefer not to say'" [options]="allowedGenders"/>
         </label>
         <label>
           <span>Orientation</span>
-          <app-dropdown [placeholder]="'Orientation'"
+          <app-dropdown [placeholder]="'Orientation'" style="z-index: 3; position: relative; width: 100%;"
             (onSelected)="setOrientation($event)" [multiChoice]="true" [values]="tmpUser().preferences" [options]="allowedGenders"/>
         </label>
 

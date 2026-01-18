@@ -28,12 +28,12 @@ app-dropdown, app-interest-dropdown{
   gap: 1rem;
 }
 
-.flexRow{
+.fields-containers{
   display: flex;
   flex-direction: row;
-  width: 100%;
-  gap: 25px;
   align-items: center;
+  gap: 1rem;
+  width: 100%;
 }
 
 textarea{
@@ -77,4 +77,14 @@ profile-image-input{
   display: flex;
   flex-direction: row;
   width: 100%;
+}
+
+@media all and (max-width: v.$max-width-to-consider-mobile) {
+  .fields-containers{
+    flex-direction: column;
+  }
+
+  #profileForm{
+    margin-bottom: 3em; // for some reason the .container margin bottom don't apply when .container is as high as body
+  }
 }

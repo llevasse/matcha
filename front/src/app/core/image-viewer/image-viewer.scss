@@ -51,3 +51,30 @@
 #picture-input{
   display: none;
 }
+
+#editing-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+@media all and (max-width: v.$max-width-to-consider-mobile) {
+  #image-viewer-container{
+    flex-direction: column;
+    height: fit-content;
+
+    div{
+      flex: unset;
+    }
+  }
+
+  #image-viewer, #picture-viewer{
+    min-height: 15rem;
+  }
+
+
+  #editing-container{
+    flex-direction: row;
+    gap: 1em;
+  }
+}

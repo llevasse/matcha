@@ -5,7 +5,7 @@
       <input (change)="onChange()" id="picture-input" type="file" accept="image/png, image/jpeg"/>
     </div>
     @if (allowEditing()) {
-      <div style="display: flex; flex-direction: column; justify-content: space-around;">
+      <div id="editing-container" style="">
         <button id="replace-button" type="button" (click)="openFileSelector()">replace</button>
         <button id="delete-button" type="button" (click)="deletePhoto()">delete</button>
       </div>

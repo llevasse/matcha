@@ -1,5 +1,5 @@
 import { UserService } from './../services/userService';
-import { Component, HostListener, inject, signal, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, signal, ViewEncapsulation } from '@angular/core';
 import { Event, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../services/authService';
 import { User } from './core/class/user';

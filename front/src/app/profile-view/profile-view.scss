@@ -4,7 +4,7 @@ $--picture-size: 15rem;
 
 .container{
   width: 90vw;
-  height: 80vh;
+  max-height: 80vh;
   color: v.$text-color;
 
   background-color: v.$secondary-bg-color;
@@ -14,26 +14,31 @@ $--picture-size: 15rem;
 
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  // justify-content: space-evenly;
+  padding: 1rem;
+  gap: 1rem;
+  overflow: auto;
 }
 
-#name-container{
-  display: flex;
+.name-container{
+  display: none;
   flex-direction: row;
   width: fit-content;
-  font-size: 4rem;
+  max-width: -webkit-fill-available;
+  flex-wrap: wrap;
   gap: 1rem;
-
+  justify-content: center;
   align-self: center;
+  word-break: break-all;
 }
 
-#name-container span:nth-child(2){
+.name-container span:nth-child(2){
   font-weight: bold;
 }
 
 #picture-container, #bio-container, #detail-container{
   padding: 1rem;
-  margin: 1rem;
+  // margin: 1rem;
   background-color: rgba(255, 255, 255, .2);
   border-radius: 1.5rem;
   box-sizing: border-box;
@@ -45,11 +50,14 @@ $--picture-size: 15rem;
 
   gap: 1rem;
   justify-content: space-evenly;
+  overflow-x: auto;
+  min-height: fit-content;
 
 
   .picture-viewer{
     height: $--picture-size;
     width: $--picture-size;
+    min-width: $--picture-size;
     position: relative;
 
 
@@ -71,29 +79,20 @@ $--picture-size: 15rem;
 
   white-space: break-spaces;
 
-  overflow: hidden;
+  gap: 1rem;
 
   div{
     width: 100%;
-    overflow: auto;
+    height: fit-content;
   }
+}
 
-  #bio-container span{
-    height: 100%;
-  }
-
-  span{
-    overflow: auto;
-    display: block;
-  }
-
-  #detail-container{
+#detail-container{
     width: 30%;
     display: flex;
     flex-direction: column;
     gap: .5rem;
   }
-}
 
 #interest-container{
   display: flex !important;
@@ -113,4 +112,32 @@ $--picture-size: 15rem;
 #buttons-container{
   display: flex;
   flex-direction: row;
+  gap: 1rem;
+}
+
+@media all and (max-width: v.$max-width-to-consider-mobile) {
+  .name-container.mobile{
+    display: flex;
+    font-size: 2rem;
+    flex-direction: column;
+    align-items: center;
+
+    span{
+      width: fit-content;
+    }
+  }
+
+  #info-container{
+    flex-direction: column;
+  }
+
+  #buttons-container{
+    flex-direction: column-reverse;
+  }
+}
+@media all and (min-width: v.$max-width-to-consider-mobile) {
+  .name-container.desktop{
+    display: flex;
+    font-size: 4rem;
+  }
 }

@@ -1,9 +1,13 @@
 <div class="container">
   @if (loaded()) {
-    <div id="name-container">
+    <div class="name-container desktop">
       <span>{{user().firstName}}</span>
       <span>'{{user().username}}'</span>
       <span>{{user().lastName}}</span>
+    </div>
+    <div class="name-container mobile">
+      <span>{{user().firstName}} {{user().lastName}}</span>
+      <span>'{{user().username}}'</span>
     </div>
     @if (isOnline()) {
       <span style="text-align: center;">Online</span>
@@ -21,11 +25,13 @@
     </div>
 
     <div id="info-container">
-      <div id="bio-container">
-        <span>{{user().bio}}</span>
-      </div>
+      @if (user().bio.trim().length > 0) {
+        <div id="bio-container">
+          <span>{{user().bio}}</span>
+        </div>
+      }
       <div id="detail-container">
-        <span>Birthday : {{user().birthday}}</span>
+        <span>Birthday : {{user().birthday.substring(0,10)}}</span>
         <span>Gender : {{user().gender}}</span>
         <span>Orientation : {{user().preferences.join(", ")}}</span>
         <span>City : {{user().cityStr}}</span>
@@ -34,14 +40,22 @@
         }</span>
       </div>
     </div>
-    <div id="buttons-container">
-      @if (withChat()) {
-        <button (click)="openChat()">chat</button>
-      }
-      @if (withUnlike()) {
-        <button (click)="unlikeUser()">unlike</button>
-      }
-    </div>
+    @if (withChat() || withUnlike() || withIgnore() || withLike()) {
+      <div id="buttons-container">
+        @if (withIgnore()) {
+          <button (click)="ignoreUser()">X</button>
+        }
+        @if (withLike()) {
+          <button (click)="likeUser()"><3</button>
+        }
+        @if (withUnlike()) {
+          <button (click)="unlikeUser()">unlike</button>
+        }
+        @if (withChat()) {
+          <button (click)="openChat()">chat</button>
+        }
+      </div>
+    }
   }
   @else {
     <h2>Loading...</h2>

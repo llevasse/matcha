@@ -6,6 +6,7 @@ import { ActivatedRoute } from "@angular/router";
 import { UserService } from '../../../services/userService';
 import { InterestDropdown } from "../edit-profile/interest-dropdown/interest-dropdown";
 import { Dropdown } from "../../core/dropdown/dropdown";
+import { LikesService } from '../../../services/likesService';
 
 @Component({
   selector: 'app-home',
@@ -84,7 +85,7 @@ export class Home {
     document.onscroll = null;
   }
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private likeService: LikesService) {
     this.getUserProfile();
     if (this.activatedRoute.snapshot.url.length > 0 && this.activatedRoute.snapshot.url[0].path == "profile"){
       this.createProfilePopup(Number.parseInt(this.activatedRoute.snapshot.url[1].path));
@@ -157,8 +158,27 @@ export class Home {
       if (returnedUser){
         var profile = this.viewContainer.createComponent(ProfileView);
         profile.setInput("userId", userId);
+        profile.setInput("withLike", true);
+        profile.setInput("withIgnore", true);
         profile.instance.user.set(returnedUser);
         profile.instance.loaded.set(true);
+
+        profile.instance.onLike.subscribe(()=>{
+          this.likeService.setUserAsLiked(userId);
+          window.history.pushState('','',`/`);
+          this.profiles.update((list)=>{
+            return list.filter((checkedUser)=>{return checkedUser.id != userId});
+          })
+          profile.destroy();
+        })
+
+        profile.instance.onIgnore.subscribe(()=>{
+          window.history.pushState('','',`/`);
+          this.profiles.update((list)=>{
+            return list.filter((checkedUser)=>{return checkedUser.id != userId});
+          })
+          profile.destroy();
+        })
 
         profile.instance.onClickOutside.subscribe(()=>{
           window.history.pushState('','',`/`);

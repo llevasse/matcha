@@ -16,6 +16,12 @@ app-dropdown, app-interest-dropdown{
   position: relative;
 }
 
+@media all and (max-width: v.$max-width-to-consider-mobile) {
+  app-dropdown, app-interest-dropdown{
+    height: auto;
+  }
+}
+
 app-profile-view, app-chat{
   position: fixed;
   z-index: 10;
@@ -197,4 +203,3 @@ input::placeholder{
   font-style: italic;
   opacity: .7;
 }
-

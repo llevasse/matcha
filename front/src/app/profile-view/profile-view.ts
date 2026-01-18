@@ -18,12 +18,18 @@ export class ProfileView {
   userId = input.required<number>()
   withChat = input(false)
   withUnlike = input(false)
+
+  withIgnore = input(false)
+  withLike = input(false)
+
   user = signal<User>(new User());  // user should be set in parent for now !
   clientUser:User|null = null;
   isOnline = signal(false);
 
   onClickOutside = output();
   onUnlike = output();
+  onLike = output();
+  onIgnore = output();
 
   ngOnInit(){
     if (this.activatedRoute.snapshot.url.length > 3 && this.activatedRoute.snapshot.url[3].path == "chat"){
@@ -97,5 +103,13 @@ export class ProfileView {
 
   unlikeUser(){
     this.onUnlike.emit();
+  }
+
+  likeUser(){
+    this.onLike.emit();
+  }
+
+  ignoreUser(){
+    this.onIgnore.emit();
   }
 }

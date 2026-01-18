@@ -32,13 +32,16 @@
       </ul>
 
       <router-outlet />
-      
+
       <ul id="bottom-navbar-mobile">
         <li (click)="goMatches()">Matches</li>
         <li (click)="goLikes()">Likes</li>
         <li (click)="goProfile()">Profile</li>
         <li (click)="goHistory()">History</li>
       </ul>
+    }
+    @else {
+      <router-outlet />
     }
   </main>
 

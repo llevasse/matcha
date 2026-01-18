@@ -7,7 +7,7 @@
     <app-input [id]="'login-username-input'" [label]="'Username :'" [placeholder]="'Username :'"/>
     <app-input [type]="'password'" [autocomplete]="'password'"  [label]="'Password :'" [id]="'login-password-input'" [placeholder]="'Password :'"/>
     <button>Login</button>
-    <a (click)="openPasswordForgottenPopup()" style="cursor: pointer;">Mot de passe oublié ?</a>
+    <a (click)="openPasswordForgottenPopup()" style="cursor: pointer;">Forgot password ?</a>
     @if (loginErrorMessage() != null) {
       <a>{{loginErrorMessage()}}</a>
     }
@@ -27,8 +27,8 @@
   @if (emailConfirmationPopup()) {
   <div class="popup-overlay">
     <div class="popup">
-      <p>Inscription réussie.</p>
-      <p>Merci de vérifier vos emails pour confirmer votre compte.</p>
+      <p>Success</p>
+      <p>Please check your email in order to confirm your account</p>
       <button (click)="emailConfirmationPopup.set(false)">OK</button>
     </div>
   </div>

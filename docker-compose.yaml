@@ -34,12 +34,14 @@ services:
       - .env
     build: back
     container_name: back-end-container
+    command: npm run-script dev
     networks:
       - matcha
     ports:
       - 3000:3000
     volumes:
-      - back_volume:/usr/src/app/uploads/profiles
+      - back_volume:/usr/src/app
+      - back_upload_volume:/usr/src/app/uploads/profiles
     depends_on:
       mysql:
         condition: service_healthy
@@ -57,6 +59,12 @@ volumes:
       type: none
       device: ./front
   back_volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./back/
+  back_upload_volume:
     driver: local
     driver_opts:
       o: bind

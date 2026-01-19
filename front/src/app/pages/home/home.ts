@@ -369,5 +369,4 @@ export class Home {
 				.catch(error => console.log('error', error));
 		}
 	}
-
 }

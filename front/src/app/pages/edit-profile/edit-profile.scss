@@ -1,16 +1,36 @@
 @use '../../utilities/variables.scss' as v;
 
 .container{
-  padding: 2em;
-  background: v.$secondary-bg-color;
   width: 60vw;
   display: flex;
   flex-direction: column;
   gap: 25px;
-
-  border-radius: v.$border-radius-default;
-
   margin: 1em auto;
+
+  h1{
+    user-select: none;
+    text-align: center;
+    color: v.$text-color;
+  }
+
+  .dropdown-container{
+    overflow: hidden;
+    background: v.$secondary-bg-color;
+    border-radius: v.$border-radius-default;
+    padding: 2em;
+  }
+  .dropdown{
+    transition: max-height 300ms allow-discrete, opacity 300ms allow-discrete;
+    height: fit-content;
+    max-height: 100vh;
+    opacity: 1;
+    overflow: auto;
+  }
+}
+
+.dropdown.inactive{
+  max-height: 0px !important;
+  opacity: 0 !important;
 }
 
 app-input, app-dropdown{
@@ -82,9 +102,5 @@ profile-image-input{
 @media all and (max-width: v.$max-width-to-consider-mobile) {
   .fields-containers{
     flex-direction: column;
-  }
-
-  #profileForm{
-    margin-bottom: 3em; // for some reason the .container margin bottom don't apply when .container is as high as body
   }
 }

@@ -282,4 +282,19 @@ export class EditProfile {
 				.catch(error => console.log('error', error));
 		}
 	}
+
+	toggleDropdown(event: PointerEvent){
+    if (event.target instanceof HTMLElement){
+      if (event.target.closest(".dropdown") == null){
+        event.target.closest(".dropdown-container")?.querySelectorAll(".dropdown").forEach((element)=>{
+          if (element.classList.contains("inactive")){
+            element.classList.remove("inactive");
+          }
+          else{
+            element.classList.add("inactive");
+          }
+        })
+      }
+    }
+	}
 }

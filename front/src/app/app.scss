@@ -220,6 +220,13 @@ input::placeholder{
   }
 }
 
+app-edit-profile{
+    padding-bottom: 5em;
+    overflow: auto;
+    height: 100vh;
+    display: block;
+  }
+
 @media all and (max-width: v.$max-width-to-consider-mobile) {
   .profile-list-container{
     padding: unset;

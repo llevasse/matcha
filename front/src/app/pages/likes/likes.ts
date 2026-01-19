@@ -57,6 +57,8 @@ export class Likes {
       if (returnedUser){
         var profile = this.viewContainer.createComponent(ProfileView);
         profile.setInput("userId", userId);
+        profile.setInput("withLike", true);
+        profile.setInput("withIgnore", true);
         profile.instance.user.set(returnedUser);
         profile.instance.loaded.set(true);
 

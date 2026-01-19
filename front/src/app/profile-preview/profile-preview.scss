@@ -143,3 +143,9 @@ $--picture-size: 20rem;
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
+@media all and (max-width: v.$max-width-to-consider-mobile) {
+  .profile-name-distance-container{
+    
+  }
+}

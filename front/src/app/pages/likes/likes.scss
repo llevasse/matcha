@@ -3,19 +3,3 @@ h1{
   color: v.$text-color;
   text-align: center;
 }
-
-#profile-list-container{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 1em;
-
-  padding: 6em;
-
-  justify-content: center;
-
-  app-profile-preview{
-    width: fit-content;
-    display: block;
-  }
-}

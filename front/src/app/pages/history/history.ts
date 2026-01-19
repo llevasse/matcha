@@ -2,6 +2,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UserService } from './../../../services/userService';
 import { Component, inject, signal, ViewContainerRef } from '@angular/core';
 import { ProfileView } from '../../profile-view/profile-view';
+import { LikesService } from '../../../services/likesService';
 
 @Component({
   selector: 'app-history',
@@ -13,7 +14,7 @@ export class HistoryPage {
   viewed = signal<viewedClass[]>([]);
   private activatedRoute = inject(ActivatedRoute);
   private viewContainer = inject(ViewContainerRef)
-  constructor(private userService: UserService){
+  constructor(private userService: UserService, private likeService: LikesService){
     userService.getClientUser().then((user)=>{
       if (user){
         userService.getProfileHistory().then((response)=>{
@@ -49,23 +50,28 @@ export class HistoryPage {
       if (returnedUser){
         var profile = this.viewContainer.createComponent(ProfileView);
         profile.setInput("userId", userId);
+        profile.setInput("withLike", true);
         profile.instance.user.set(returnedUser);
         profile.instance.loaded.set(true);
 
+        profile.instance.onLike.subscribe(()=>{
+          this.likeService.setUserAsLiked(userId);
+          window.history.pushState('','',`/history`);
+          profile.destroy();
+        })
 
         profile.instance.onClickOutside.subscribe(()=>{
-          window.history.pushState('','',`/`);
+          window.history.pushState('','',`/history`);
           profile.destroy();
         });
       }
       else{
-        window.history.replaceState('','',`/`);
+        window.history.replaceState('','',`/history`);
       }
     });
   }
 
   seeProfile(event: Event, id: number){
-    console.log(event, id);
     event.preventDefault();
     window.history.pushState('','',`history/profile/${id}`);
     this.createProfilePopup(id);

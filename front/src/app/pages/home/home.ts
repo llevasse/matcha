@@ -72,8 +72,8 @@ export class Home {
   }
 
   private scrollChecker(){
-    if(document.documentElement.scrollTop + document.documentElement.offsetHeight == this.getDocHeight()) {
-      this.searchForProfile(20, document.querySelectorAll("#profile-list-container app-profile-preview").length, false);
+    if(document.documentElement.scrollTop + document.documentElement.offsetHeight >= this.getDocHeight() - 100) { // make new search request when close to bottom of page
+      this.searchForProfile(20, document.querySelectorAll(".profile-list-container app-profile-preview").length, false);
     }
   }
 

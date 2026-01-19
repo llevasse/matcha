@@ -18,6 +18,7 @@
   flex-direction: row;
   width: -webkit-fill-available;
   justify-content: center;
+  align-items: center;
   gap: 1ch;
   padding: 1em;
   border-radius: v.$border-radius-default;
@@ -25,5 +26,11 @@
 
   a{
     user-select: none;
+  }
+}
+
+@media all and (max-width: v.$max-width-to-consider-mobile) {
+  .history-element{
+    flex-direction: column;
   }
 }

@@ -4,22 +4,6 @@ h1{
   text-align: center;
 }
 
-#profile-list-container{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 1em;
-
-  padding: 6em;
-
-  justify-content: center;
-
-  app-profile-preview{
-    width: fit-content;
-    display: block;
-  }
-}
-
 #search-container{
   display: flex;
   flex-direction: column;
@@ -35,7 +19,7 @@ h1{
 
 @media all and (max-width: v.$max-width-to-consider-mobile) {
   #search-container{
-    margin: 0 1rem;
+    margin: 1rem;
   }
 }
 

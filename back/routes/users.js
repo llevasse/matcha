@@ -359,12 +359,14 @@ router.get('/search', authenticateToken, async (req, res) => {
             FROM users u WHERE u.id != ? AND u.is_confirmed=true
           `;
         
+        // this SQL clause is responsible for only returning users client has not liked/is matched with
+        query += ` AND u.id NOT IN (SELECT i.from_user_id from interactions i where i.to_user_id = ?)`
         // This SQL clause is responsible for only return users gender that req.user is attracted to
         query += ` AND u.gender_id IN (SELECT up.gender_id FROM user_preferences up WHERE up.user_id = ?)`
         // This SQL clause is responsible for only return users that are attracted to the req.user gender
         query += ` AND u.id IN (SELECT up.user_id FROM user_preferences up where up.gender_id = ?)`
 
-        const params = [searchOriginLat, searchOriginLon, searchOriginLat, req.user.id, req.user.id, req.user.id, req.user.gender_id];
+        const params = [searchOriginLat, searchOriginLon, searchOriginLat, req.user.id, req.user.id, req.user.id, req.user.id, req.user.gender_id];
         
         if (interest_whitelist_user_id_list.length > 0){
           var tokens = new Array(interest_whitelist_user_id_list.length).fill('?').join(',');

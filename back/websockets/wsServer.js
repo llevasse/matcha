@@ -209,7 +209,7 @@ function handleClientChatMessage(messageText = ""){
 }
 
 function sendMessage(fromUserId, toUserId, content = "", type){
-  if (socketMap.get(toUserId)){
+  if (socketMap.get(toUserId) && socketMap.get(toUserId).length > 0){
     try {
       var sender = socketMap.get(fromUserId)[0];
       const obj = JSON.stringify({

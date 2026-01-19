@@ -1,7 +1,5 @@
-import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { User } from "../app/core/class/user";
-import { InterestService } from "./interestService";
 import { Router } from "@angular/router";
 import { webSocket } from "rxjs/webSocket";
 
@@ -13,9 +11,10 @@ export class UserService {
 
   private clientUser: User | null = null;
 
-  constructor(private http: HttpClient, private interestService: InterestService, private router: Router) {}
+  constructor(private router: Router) {}
 
   createClientUser(): Promise<User | null>{
+    console.log("call to create user");
     return this.profile().then(async (tmp)=>{
       var response = tmp as Response;
       if (!response.ok){
@@ -30,13 +29,12 @@ export class UserService {
         this.clientUser.ws.subscribe();
         this.clientUser.ws.next({message: `init : ${id}`})
 
-
         return this.clientUser;
       }
       return null;
     }).catch((value)=>{
       console.error(value.message)
-      this.router.navigate(['/error-503'])
+      document.dispatchEvent(new Event("error503"));
       return null;
     })
   }

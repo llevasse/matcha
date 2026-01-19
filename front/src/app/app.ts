@@ -6,10 +6,11 @@ import { User } from './core/class/user';
 import { NotificationComponent } from "./core/notification-component/notification";
 import { createNotificationFromWsObject, MatchaNotification } from './core/class/notification';
 import { notifType } from './utilities/utils';
+import { Error503Page } from "./pages/error-pages/error-page";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NotificationComponent],
+  imports: [RouterOutlet, NotificationComponent, Error503Page],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   encapsulation: ViewEncapsulation.None,
@@ -19,6 +20,7 @@ export class App {
   notifList = signal<MatchaNotification[]>([]);
 
   loaded = signal<boolean>(false);
+  error503 = signal<boolean>(false);
   constructor(private authService: AuthService, private router: Router, private userService: UserService){
     if (this.getCurrentPathName().startsWith("/login") || this.getCurrentPathName().startsWith("/register")
     || this.getCurrentPathName().startsWith("/confirm-email") || this.getCurrentPathName().startsWith("/reset-password")){
@@ -41,6 +43,12 @@ export class App {
       this.loaded.set(true);
       this.notifList.set([]);
     })
+
+    document.addEventListener("error503", ()=>{
+      this.error503.set(false);
+      this.error503.set(true);
+    })
+
   }
 
   ngOnInit(){

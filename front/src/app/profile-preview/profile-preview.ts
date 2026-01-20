@@ -1,4 +1,5 @@
 import { LikesService } from './../../services/likesService';
+import { BlockOrReportService } from '../../services/blockOrReportService';
 import { Component, input, output, signal } from '@angular/core';
 import { User } from '../core/class/user';
 
@@ -23,7 +24,7 @@ export class ProfilePreview {
   allowUnblock = input(false);
   allowUnlike = input(false);
 
-  constructor(private likesService: LikesService){};
+  constructor(private likesService: LikesService, private blockService: BlockOrReportService){};
 
   ngOnInit(){
   }
@@ -34,7 +35,7 @@ export class ProfilePreview {
   }
 
   unblockUser(){
-    //TODO unblock api call
+    this.blockService.unblockUser(this.user().id);
     this.onDestroy.emit();
   }
 

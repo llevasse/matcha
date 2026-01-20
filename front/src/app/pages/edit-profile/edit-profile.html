@@ -1,4 +1,4 @@
-<div class="container">
+<div class="page-container">
   @if (loading()) {
     <span>Loading...</span>
   }
@@ -81,10 +81,17 @@
       <h1>Liked profiles</h1>
       <div class="dropdown inactive">
         <h1>List of profiles you liked</h1>
-        @if(likedProfiles()){
+        @if(likedProfiles().length > 0){
           <div class="profile-list-container">
             @for (item of likedProfiles(); track $index) {
-              <app-profile-preview [allowUnlike]="true" (onDestroy)="destroyLikedProfile(item)" [allowLike]="false" [allowIgnore]="false" [user]="item" [id]="$index"></app-profile-preview>
+              <app-profile-preview
+              [allowUnlike]="true"
+              (onDestroy)="destroyLikedProfile(item)"
+              [allowLike]="false"
+              [allowIgnore]="false"
+              [user]="item"
+              [id]="$index">
+              </app-profile-preview>
             }
           </div>
         }
@@ -94,10 +101,18 @@
       <h1>Blocked profiles</h1>
       <div class="dropdown inactive">
         <h1>List of profiles you blocked</h1>
-        @if(blockedProfiles()){
+        @if (blockedProfiles().length > 0){
           <div class="profile-list-container">
             @for (item of blockedProfiles(); track $index) {
-              <app-profile-preview [allowUnblock]="true" [allowLike]="false" [allowIgnore]="false" [user]="item" [id]="$index"></app-profile-preview>
+              <app-profile-preview
+              [allowUnblock]="true"
+              [allowLike]="false"
+              [allowIgnore]="false"
+              [user]="item"
+              [id]="$index"
+              (onDestroy)="removeBlockedProfile(item)"
+              >
+              </app-profile-preview>
             }
           </div>
         }

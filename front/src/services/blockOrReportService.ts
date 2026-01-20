@@ -5,6 +5,7 @@ import { User } from "../app/core/class/user";
 export class BlockOrReportService {
 
   private blockUrl = `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000/api/block`;
+  private unblockUrl = `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000/api/block/unblock`;
   private reportUrl = `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000/api/report`;
 
   private getAuthHeaders(): Record<string, string> {
@@ -16,32 +17,29 @@ export class BlockOrReportService {
     };
   }
 
+  async getBlockedUsers(): Promise<User[]> {
+    const response = await fetch(this.blockUrl, {
+      method: 'GET',
+      headers: this.getAuthHeaders(),
+    });
+
+    return this.userListFromResponse(response);
+  }
+
+  private async userListFromResponse(response: Response): Promise<User[]> {
+    const obj = await response.json();
+
+    return Object.values(obj).map(
+      (data: any) => new User(data)
+    );
+  }
+
   blockUser(userToBlock: number): Promise<Response> {
     return fetch(this.blockUrl, {
       method: 'POST',
       headers: this.getAuthHeaders(),
       body: JSON.stringify({ to_user_id: userToBlock })
     });
-  }
-
-  getBlockedUsers(){
-    return fetch(this.blockUrl, {
-      method: 'GET',
-      headers: this.getAuthHeaders(),
-    }).then((response)=>{
-      return this.userListFromResponse(response);
-    });
-  }
-
-  private async userListFromResponse(response: Response){
-    let users: User[] = [];
-    return await response.json().then((obj)=>{
-      Object.entries(obj).forEach(async (miniObj)=>{
-        users.push(new User(miniObj[1] as any));
-        return users;
-      });
-      return users;
-    })
   }
 
   reportUser(userToReport: number): Promise<Response> {
@@ -51,4 +49,13 @@ export class BlockOrReportService {
       body: JSON.stringify({ to_user_id: userToReport })
     });
   }
+
+  unblockUser(userToBlock: number): Promise<Response> {
+    return fetch(this.unblockUrl, {
+      method: 'POST',
+      headers: this.getAuthHeaders(),
+      body: JSON.stringify({ to_user_id: userToBlock })
+    });
+  }
+
 }

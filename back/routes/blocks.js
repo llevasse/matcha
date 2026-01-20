@@ -1,8 +1,8 @@
 const express = require('express');
 const db = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
-const { blockUser } = require('../services/blockService');
-const { getUserPublicInfoSqlStatement, getUserPreviewInfoSqlStatement } = require('../utils/users');
+const { blockUser, unblockUser} = require('../services/blockService');
+const { getUserPreviewInfoSqlStatement } = require('../utils/users');
 
 const router = express.Router();
 
@@ -29,6 +29,30 @@ router.post('/', authenticateToken, async (req, res) => {
         }
 });
 
+router.post('/unblock', authenticateToken, async (req, res) => {
+  console.log("/unblock");
+    try {
+        const { to_user_id } = req.body;
+
+        if (to_user_id == req.user.id) {
+            return res.status(400).json({ error: 'Cannot unblock yourself' });
+        }
+
+        await unblockUser(req.user.id, to_user_id);
+
+        res.status(201).json({
+            message: 'The user specified has been successfully unblocked',
+            userId: to_user_id,
+        });
+    } catch (error) {
+        console.log("error catched :", error);
+        const statusCode = error.status || 500;
+        const message = error.message || 'Internal Server Error';
+        
+        res.status(statusCode).json({ error: message });
+        }
+});
+
 router.get('/', authenticateToken, async (req, res) => {
   try {
     console.log("Get blocked user received from user with id : ", req.user.id);
@@ -41,8 +65,6 @@ router.get('/', authenticateToken, async (req, res) => {
     userLng = userLocation[0][0].location_longitude;
     let query = getUserPreviewInfoSqlStatement + ` FROM users u WHERE u.id IN (SELECT to_user_id FROM blocks WHERE from_user_id = ?)`;
     const [result] = await db.query(query, [userLat, userLng, userLat, req.user.id, req.user.id])
-    console.log("Returned values :");
-    console.log(result);
     res.json(result);
   } catch (error) {
     console.log("error catched :", error);

@@ -13,9 +13,17 @@ async function blockUser(userId, toUserId){
 
 }
 
-async function reportUser(userId, toUserId){
+async function unblockUser(userId, toUserId){
 
-    console.log("reportUser");
+    await _throw404IfUserDoesNotExist(toUserId);
+
+    await _throw204IfUnblockAlreadyExist(userId, toUserId);
+
+    await _addUnblockToThisUser(userId, toUserId);
+
+}
+
+async function reportUser(userId, toUserId){
 
     await _throw404IfUserDoesNotExist(toUserId);
 
@@ -26,25 +34,16 @@ async function reportUser(userId, toUserId){
     await _unlikeAndUnmatchUsers(userId, toUserId);
 
     await _addReportToThisUser(userId, toUserId);
-
-    console.log("reportUser done");
 }
 
 async function hasBeenBlockedByOrIsBlocking(id1, id2){
 
-    console.log("Does " + id1 + " block/is blocking ", + id2 + "?");
     const [result] = await db.execute(
         `SELECT id FROM blocks 
          WHERE (from_user_id = ? AND to_user_id = ?) 
             OR (from_user_id = ? AND to_user_id = ?)`,
         [id1, id2, id2, id1]
     );
-    if (result.length > 0){
-        console.log("yes : ", result);
-    }
-    else{
-        console.log("no")
-    }
 
     return result.length > 0;
 }
@@ -81,6 +80,14 @@ async function _throw204IfBlockAlreadyExist(userId, toUserId) {
     };
 }
 
+async function _throw204IfUnblockAlreadyExist(userId, toUserId) {
+    if (! await _checkIfBlockAlreadyExist(userId, toUserId)) {
+        const error = new Error('User already unblocked');
+        error.status = 204;
+        throw error;
+    };
+}
+
 async function _throw204IfReportAlreadyExist(userId, toUserId) {
     if (await _checkIfReportAlreadyExist(userId, toUserId)) {
         const error = new Error('User already reported');
@@ -96,6 +103,13 @@ async function _addBlockToThisUser(userId, toUserId) {
             [userId, toUserId]
         );
     }
+}
+
+async function _addUnblockToThisUser(userId, toUserId) {
+    await db.execute(
+        'DELETE FROM blocks WHERE from_user_id = ? AND to_user_id = ?',
+        [userId, toUserId]
+    );
 }
 
 async function _addReportToThisUser(userId, toUserId) {
@@ -132,4 +146,4 @@ async function _checkIfUserExist(toUserId) {
     return (targetUser.length !== 0);
 }
 
-module.exports = { blockUser, reportUser, hasBeenBlockedByOrIsBlocking};
+module.exports = { blockUser, unblockUser, reportUser, hasBeenBlockedByOrIsBlocking};

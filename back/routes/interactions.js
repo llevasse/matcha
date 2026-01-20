@@ -106,9 +106,7 @@ router.post('/unlike', authenticateToken, asyncHandler(async (req, res) => {
     }
 }));
 
-// Obtenir la liste des matchs
 router.get('/matches', authenticateToken, asyncHandler(async (req, res) => {
-  try{
     _throw400IfUserHasNoLocation(req.user);
 
     let query = getUserPreviewInfoSqlStatement + `, i.created_at as matched_at 
@@ -123,11 +121,7 @@ router.get('/matches', authenticateToken, asyncHandler(async (req, res) => {
         req.user.location_latitude,
         req.user.id, req.user.id]);
     return res.json(matches);
-    } catch (error){
-        const statusCode = error.status || 500;
-        const message = error.message || 'Internal Server Error';
-        return res.status(statusCode).json({ error: message });
-    }
+
 
 }));
 
@@ -140,7 +134,6 @@ function _throw400IfUserHasNoLocation(user) {
 }
 
 router.get('/matches/:user_id', authenticateToken, asyncHandler(async (req, res) => {
-  try {
     const [matches] = await db.execute(
       `SELECT is_match FROM interactions WHERE from_user_id = ? AND to_user_id = ? OR from_user_id = ? AND to_user_id = ?`,
       [req.params.user_id, req.user.id, req.user.id, req.params.user_id]
@@ -161,14 +154,9 @@ router.get('/matches/:user_id', authenticateToken, asyncHandler(async (req, res)
     }
 
     res.json(users[0]);
-  } catch (error) {
-        const statusCode = error.status || 500;
-        const message = error.message || 'Internal Server Error';
-        return res.status(statusCode).json({ error: message });
-    } 
+
 }));
 
-// Obtenir les likes reçus
 router.get('/likes-received', authenticateToken, asyncHandler(async (req, res) => {
       _throw400IfUserHasNoLocation(req.user);
       console.log(req.user.location_latitude);
@@ -206,7 +194,6 @@ router.get('/likes-given', authenticateToken, asyncHandler(async (req, res) => {
 
 
 router.get('/likes-received/:user_id', authenticateToken, asyncHandler(async (req, res) => {
-  try {
     const [likes] = await db.execute(
       `SELECT * FROM interactions WHERE from_user_id = ? AND to_user_id = ? AND is_match = 0`,
       [req.params.user_id, req.user.id]
@@ -227,11 +214,7 @@ router.get('/likes-received/:user_id', authenticateToken, asyncHandler(async (re
     }
 
     res.json(users[0]);
-  } catch (error) {
-      const statusCode = error.status || 500;
-      const message = error.message || 'Internal Server Error';
-      res.status(statusCode).json({ error: message });
-  }
+
 }));
 
 

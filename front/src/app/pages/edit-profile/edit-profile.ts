@@ -256,17 +256,19 @@ export class EditProfile {
 	}
 
 	async getUserCity() {
-		const url = "http://ip-api.com/json/";
+		var API_KEY = import.meta.env.NG_APP_GEOCODING_API_KEY;
+		const url = `https://api.geoapify.com/v1/ipinfo?&apiKey=${API_KEY}`;
 		try {
-			if (Number.isNaN(this.user.cityLat) || Number.isNaN(this.user.cityLon)){
+			if (Number.isNaN(this.user.cityLat) || Number.isNaN(this.user.cityLon) || this.user.cityLat == null || this.user.cityLon == null){
 				const response = await fetch(url);
 				if (!response.ok) {
 					throw new Error(`Response status: ${response.status}`);
 				}
 				const result = await response.json();
-				this.user.cityStr = result['city'];
-				this.user.cityLon = result['lon'];
-				this.user.cityLat = result['lat'];
+
+				this.user.cityStr = `${result['city']['name']}, ${result['country']['name']}` ;
+				this.user.cityLon = result['location']['longitude'];
+				this.user.cityLat = result['location']['latitude'];
         this.userCity.set(this.user.cityStr!);
 			}
 		} catch (error: any) {

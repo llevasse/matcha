@@ -3,10 +3,11 @@ const db = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
 const { blockUser, unblockUser} = require('../services/blockService');
 const { getUserPreviewInfoSqlStatement } = require('../utils/users');
+const asyncHandler = require('../middleware/asyncHandler');
 
 const router = express.Router();
 
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authenticateToken, asyncHandler(async (req, res) => {
     try {
         const { to_user_id } = req.body;
 
@@ -27,9 +28,9 @@ router.post('/', authenticateToken, async (req, res) => {
         
         res.status(statusCode).json({ error: message });
         }
-});
+}));
 
-router.post('/unblock', authenticateToken, async (req, res) => {
+router.post('/unblock', authenticateToken, asyncHandler(async (req, res) => {
   console.log("/unblock");
     try {
         const { to_user_id } = req.body;
@@ -51,9 +52,9 @@ router.post('/unblock', authenticateToken, async (req, res) => {
         
         res.status(statusCode).json({ error: message });
         }
-});
+}));
 
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', authenticateToken, asyncHandler(async (req, res) => {
     const userId = req.user.id;
 
     try {
@@ -68,7 +69,7 @@ router.get('/', authenticateToken, async (req, res) => {
         const statusCode = error.status || 500;
         res.status(statusCode).json({ error: error.message || 'Internal Server Error' });
     }
-});
+}));
 
 async function _getUserLocation(userId) {
     const [rows] = await db.execute(

@@ -2,11 +2,12 @@ const express = require('express');
 const db = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
 const { validateMessage } = require('../middleware/validation');
+const asyncHandler = require('../middleware/asyncHandler');
 
 const router = express.Router();
 
 // Envoyer un message
-router.post('/', authenticateToken, validateMessage, async (req, res) => {
+router.post('/', authenticateToken, validateMessage, asyncHandler(async (req, res) => {
     try {
         const { receiver_id, content } = req.body;
 
@@ -38,10 +39,10 @@ router.post('/', authenticateToken, validateMessage, async (req, res) => {
     } catch (error) {
         throw error;
     }
-});
+}));
 
 // Obtenir la conversation avec un utilisateur
-router.get('/conversation/:user_id', authenticateToken, async (req, res) => {
+router.get('/conversation/:user_id', authenticateToken, asyncHandler(async (req, res) => {
     try {
         const otherUserId = req.params.user_id;
         const { limit = 50, offset = 0 } = req.query;
@@ -72,10 +73,10 @@ router.get('/conversation/:user_id', authenticateToken, async (req, res) => {
     } catch (error) {
         throw error;
     }
-});
+}));
 
 // Obtenir toutes les conversations
-router.get('/conversations', authenticateToken, async (req, res) => {
+router.get('/conversations', authenticateToken, asyncHandler(async (req, res) => {
     try {
         const [conversations] = await db.execute(`
             SELECT 
@@ -109,6 +110,6 @@ router.get('/conversations', authenticateToken, async (req, res) => {
     } catch (error) {
         throw error;
     }
-});
+}));
 
 module.exports = router;

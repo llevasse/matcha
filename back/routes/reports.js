@@ -2,10 +2,11 @@ const express = require('express');
 const db = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
 const { reportUser } = require('../services/blockService');
+const asyncHandler = require('../middleware/asyncHandler');
 
 const router = express.Router();
 
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authenticateToken, asyncHandler(async (req, res) => {
     try {
         const { to_user_id } = req.body;
 
@@ -26,6 +27,6 @@ router.post('/', authenticateToken, async (req, res) => {
         
         res.status(statusCode).json({ error: message });
         }
-});
+}));
 
 module.exports = router;

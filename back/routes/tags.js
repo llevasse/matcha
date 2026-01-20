@@ -1,21 +1,22 @@
   const express = require('express');
 const db = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
+const asyncHandler = require('../middleware/asyncHandler');
 
 const router = express.Router();
 
 // Obtenir tous les tags
-router.get('/', async (req, res) => {
+router.get('/', asyncHandler(async (req, res) => {
     try {
         const [tags] = await db.execute('SELECT * FROM tags ORDER BY name');
         res.json(tags);
     } catch (error) {
         throw error;
     }
-});
+}));
 
 // Créer un nouveau tag
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authenticateToken, asyncHandler(async (req, res) => {
     try {
         const { name } = req.body;
 
@@ -39,10 +40,10 @@ router.post('/', authenticateToken, async (req, res) => {
         }
         throw error;
     }
-});
+}));
 
 // Obtenir les tags d'un utilisateur
-router.get('/user/:user_id', async (req, res) => {
+router.get('/user/:user_id', asyncHandler(async (req, res) => {
     try {
         const userId = req.params.user_id;
 
@@ -58,10 +59,10 @@ router.get('/user/:user_id', async (req, res) => {
     } catch (error) {
         throw error;
     }
-});
+}));
 
 // Ajouter un tag à l'utilisateur connecté
-router.post('/user', authenticateToken, async (req, res) => {
+router.post('/user', authenticateToken, asyncHandler(async (req, res) => {
     try {
         const { tag_id } = req.body;
 
@@ -81,10 +82,10 @@ router.post('/user', authenticateToken, async (req, res) => {
     } catch (error) {
         throw error;
     }
-});
+}));
 
 // Supprimer un tag de l'utilisateur connecté
-router.delete('/user/:tag_id', authenticateToken, async (req, res) => {
+router.delete('/user/:tag_id', authenticateToken, asyncHandler(async (req, res) => {
     try {
         const tagId = req.params.tag_id;
 
@@ -101,6 +102,6 @@ router.delete('/user/:tag_id', authenticateToken, async (req, res) => {
     } catch (error) {
         throw error;
     }
-});
+}));
 
 module.exports = router;

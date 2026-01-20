@@ -4,11 +4,11 @@ const { authenticateToken } = require('../middleware/auth');
 const { sendMessage, messageType } = require('../websockets/wsServer');
 const { getUserPublicInfoByIdSqlStatement, getUserPreviewInfoSqlStatement } = require('../utils/users');
 const { performUnlike } = require('../services/interactionService');
+const asyncHandler = require('../middleware/asyncHandler');
 
 const router = express.Router();
 
-router.post('/like', authenticateToken, async (req, res) => {
-    try {
+router.post('/like', authenticateToken, asyncHandler(async (req, res) => {
         const { to_user_id } = req.body;
 
         if (to_user_id == req.user.id) {
@@ -81,15 +81,10 @@ router.post('/like', authenticateToken, async (req, res) => {
             message: isMatch ? 'It\'s a match!' : 'Like sent successfully',
             is_match: isMatch
         });
-    } catch (error) {
-        const statusCode = error.status || 500;
-        const message = error.message || 'Internal Server Error';
-        return res.status(statusCode).json({ error: message });
-    }
-});
+}));
 
 
-router.post('/unlike', authenticateToken, async (req, res) => {
+router.post('/unlike', authenticateToken, asyncHandler(async (req, res) => {
     try {
         const { to_user_id } = req.body;
 
@@ -109,10 +104,10 @@ router.post('/unlike', authenticateToken, async (req, res) => {
         }
         return res.status(500).json({ error: 'Internal server error' });
     }
-});
+}));
 
 // Obtenir la liste des matchs
-router.get('/matches', authenticateToken, async (req, res) => {
+router.get('/matches', authenticateToken, asyncHandler(async (req, res) => {
   try{
     _throw400IfUserHasNoLocation(req.user);
 
@@ -134,7 +129,7 @@ router.get('/matches', authenticateToken, async (req, res) => {
         return res.status(statusCode).json({ error: message });
     }
 
-});
+}));
 
 function _throw400IfUserHasNoLocation(user) {
     if (!user.location_latitude || !user.location_longitude){
@@ -144,7 +139,7 @@ function _throw400IfUserHasNoLocation(user) {
     }
 }
 
-router.get('/matches/:user_id', authenticateToken, async (req, res) => {
+router.get('/matches/:user_id', authenticateToken, asyncHandler(async (req, res) => {
   try {
     const [matches] = await db.execute(
       `SELECT is_match FROM interactions WHERE from_user_id = ? AND to_user_id = ? OR from_user_id = ? AND to_user_id = ?`,
@@ -171,11 +166,10 @@ router.get('/matches/:user_id', authenticateToken, async (req, res) => {
         const message = error.message || 'Internal Server Error';
         return res.status(statusCode).json({ error: message });
     } 
-});
+}));
 
 // Obtenir les likes reçus
-router.get('/likes-received', authenticateToken, async (req, res) => {
-    try {
+router.get('/likes-received', authenticateToken, asyncHandler(async (req, res) => {
       _throw400IfUserHasNoLocation(req.user);
       console.log(req.user.location_latitude);
       let query = getUserPreviewInfoSqlStatement + `, i.created_at as liked_at 
@@ -187,14 +181,10 @@ router.get('/likes-received', authenticateToken, async (req, res) => {
       const [likes] = await db.execute(query, [userLat, userLng, userLat, req.user.id, req.user.id]);
 
       res.json(likes);
-    } catch (error) {
-        const statusCode = error.status || 500;
-        const message = error.message || 'Internal Server Error';
-        return res.status(statusCode).json({ error: message });
-    }
-});
 
-router.get('/likes-given', authenticateToken, async (req, res) => {
+}));
+
+router.get('/likes-given', authenticateToken, asyncHandler(async (req, res) => {
     try {
         userLocation = await db.execute(`SELECT id, location_latitude, location_longitude FROM users WHERE id = ?`,
           [req.user.id]);
@@ -216,10 +206,10 @@ router.get('/likes-given', authenticateToken, async (req, res) => {
     } catch (error) {
         throw error;
     }
-});
+}));
 
 
-router.get('/likes-received/:user_id', authenticateToken, async (req, res) => {
+router.get('/likes-received/:user_id', authenticateToken, asyncHandler(async (req, res) => {
   try {
     const [likes] = await db.execute(
       `SELECT * FROM interactions WHERE from_user_id = ? AND to_user_id = ? AND is_match = 0`,
@@ -246,7 +236,7 @@ router.get('/likes-received/:user_id', authenticateToken, async (req, res) => {
       const message = error.message || 'Internal Server Error';
       res.status(statusCode).json({ error: message });
   }
-});
+}));
 
 
 module.exports = router;

@@ -5,10 +5,10 @@ const { validateProfileUpdate } = require('../middleware/validation');
 const { authenticateToken } = require('../middleware/auth');
 const { getUserPrivateInfoByIdSqlStatement, getUserPublicInfoByIdSqlStatement, getUserPreviewInfoSqlStatement } = require('../utils/users');
 const { hasBeenBlockedByOrIsBlocking } = require('../services/blockService');
+const asyncHandler = require('../middleware/asyncHandler');
 
 const router = express.Router();
-router.get('/profile', authenticateToken, async (req, res) => {
-    try {
+router.get('/profile', authenticateToken, asyncHandler(async (req, res) => {
         const [users] = await db.execute(getUserPrivateInfoByIdSqlStatement, [req.user.id]);
 
         if (users.length === 0) {
@@ -17,16 +17,11 @@ router.get('/profile', authenticateToken, async (req, res) => {
 
         users[0].birthdate = users[0].birthdate ? users[0].birthdate.toISOString().split('T')[0] : null;
         res.json(users[0]);
-    } catch (error) {
-        const statusCode = error.status || 500;
-        const message = error.message || 'Internal Server Error';
-        return res.status(statusCode).json({ error: message });
-    }
-});
+
+}));
 
 // Obtenir les info d'un utilisateur
-router.get('/profile/:user_id', authenticateToken, async (req, res) => {
-    try {
+router.get('/profile/:user_id', authenticateToken, asyncHandler(async (req, res) => {
         const { user_id } = req.params;
         if (await hasBeenBlockedByOrIsBlocking(user_id, req.user.id)){
           return res.status(404).json({ error: 'User not found' });
@@ -39,14 +34,10 @@ router.get('/profile/:user_id', authenticateToken, async (req, res) => {
 
         users[0].birthdate = users[0].birthdate ? users[0].birthdate.toISOString().split('T')[0] : null;
         res.json(users[0]);
-    } catch (error) {
-        const statusCode = error.status || 500;
-        const message = error.message || 'Internal Server Error';
-        return res.status(statusCode).json({ error: message });
-    }
-});
 
-router.post('/profile', authenticateToken, validateProfileUpdate, async (req, res) => {
+}));
+
+router.post('/profile', authenticateToken, validateProfileUpdate, asyncHandler(async (req, res) => {
     const connection = await db.getConnection();
     try {
       const { username, firstname, lastname, email, bio, city, gender, preferences, birthdate, location_latitude, location_longitude } = req.body;
@@ -110,9 +101,9 @@ router.post('/profile', authenticateToken, validateProfileUpdate, async (req, re
     } finally {
       connection.release();
     }
-});
+}));
 
-router.post('/add_to_history', authenticateToken, async (req, res) =>{
+router.post('/add_to_history', authenticateToken, asyncHandler(async (req, res) => {
   const { user_id } = req.body;
   const [users] = await db.execute('SELECT id FROM users WHERE id = ?', [user_id]);
   if (users.length === 0) {
@@ -125,9 +116,9 @@ router.post('/add_to_history', authenticateToken, async (req, res) =>{
     console.log(e);
     return res.status(400).json({ error: 'Error occured' });
   }
-})
+}));
 
-router.get('/history', authenticateToken, async (req, res) =>{
+router.get('/history', authenticateToken, asyncHandler(async (req, res) => {
   try{    
     const [users] = await db.execute(`
       SELECT vh.viewer_user_id AS viewer_id, vh.viewed_user_id AS viewed_id, vh.created_at AS time,
@@ -146,7 +137,7 @@ router.get('/history', authenticateToken, async (req, res) =>{
     console.log(e);
     return res.status(400).json({ error: 'Error occured' });
   }
-})
+}));
 
 async function updateProfileValidity(userId){
   var is_confirmed = true;	
@@ -180,9 +171,7 @@ async function updateProfileValidity(userId){
   console.log(`User with id = ${userId} is confirmed status is now : ${is_confirmed}!`);
 }
 
-// Changer le mot de passe
-router.put('/password', authenticateToken, async (req, res) => {
-    try {
+router.put('/password', authenticateToken, asyncHandler(async (req, res) => {
         const { currentPassword, newPassword } = req.body;
 
         // Vérifier le mot de passe actuel
@@ -209,12 +198,7 @@ router.put('/password', authenticateToken, async (req, res) => {
         );
 
         res.json({ message: 'Password updated successfully' });
-    } catch (error) {
-        const statusCode = error.status || 500;
-        const message = error.message || 'Internal Server Error';
-        return res.status(statusCode).json({ error: message });
-    }
-});
+}));
 
 async function _getInterestBlackWhiteList(whitelist_interest, blacklist_interest, user_id){
   var interest_whitelist_user_id_list = [];
@@ -281,9 +265,7 @@ const allowed_sort_value = [
   "fame_descending",
 ]
 
-// Rechercher des utilisateurs
-router.get('/search', authenticateToken, async (req, res) => {
-    try {
+router.get('/search', authenticateToken, asyncHandler(async (req, res) => {
         const { age_min, age_max, fame_min, fame_max, whitelist_interest, blacklist_interest, radius = 42, city, lat, lon, sort_by, limit = 20, offset = 0 } = req.query;
 
         [interest_whitelist_user_id_list, interest_blacklist_user_id_list] = await _getInterestBlackWhiteList(whitelist_interest, blacklist_interest, req.user.id)
@@ -435,11 +417,7 @@ router.get('/search', authenticateToken, async (req, res) => {
         query += ` ORDER BY ${order_by} ${order} LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;
         const [users] = await db.execute(query,params);
         res.json(users);
-    } catch (error) {
-        const statusCode = error.status || 500;
-        const message = error.message || 'Internal Server Error';
-        return res.status(statusCode).json({ error: message });
-    }
-});
+
+}));
 
 module.exports = {router, checkProfileValidity: updateProfileValidity};

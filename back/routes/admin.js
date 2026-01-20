@@ -1,3 +1,4 @@
+const asyncHandler = require('../middleware/asyncHandler');
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const db = require('../config/database');
@@ -14,7 +15,7 @@ function getRandomInt(min, max) {
 }
 
 const router = express.Router();
-router.post('/create-users', adminAuthenticateToken, async (req, res) => {
+router.post('/create-users', adminAuthenticateToken, asyncHandler(async (req, res) => {
   try {
     const { number_of_users, password } = req.body;
 
@@ -135,7 +136,7 @@ router.post('/create-users', adminAuthenticateToken, async (req, res) => {
     console.error(error);
     res.status(500).json({ error: 'Erreur lors de l’inscription' });
   } 
-});
+}));
 
 
 module.exports = router;

@@ -4,13 +4,14 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const db = require('../config/database');
 const { validateRegistration, validateLogin } = require('../middleware/validation');
+const asyncHandler = require('../middleware/asyncHandler');
 const { authenticateToken } = require('../middleware/auth');
 const { send } = require('process');
 const { error } = require('console');
 
 const router = express.Router();
 
-router.post('/register', validateRegistration, async (req, res) => {
+router.post('/register', validateRegistration, asyncHandler(async (req, res) => {
     const connection = await db.getConnection();
     try {
         const { username, firstname, lastname, email, password} = req.body;
@@ -57,7 +58,7 @@ router.post('/register', validateRegistration, async (req, res) => {
     } finally {
         connection.release();
     }
-});
+}));
 
 async function sendConfirmationEmail(email, userId) {
     const transporter = nodemailer.createTransport({
@@ -95,7 +96,7 @@ async function sendConfirmationEmail(email, userId) {
     }
 }
 
-router.get('/confirm-email', async (req, res) => {
+router.get('/confirm-email', asyncHandler(async (req, res) => {
     const token = req.query.token;
 
     if (!token) {
@@ -117,9 +118,9 @@ router.get('/confirm-email', async (req, res) => {
         console.error('Erreur lors de la confirmation de l’email :', error);
         return res.status(400).json({ error: 'Invalid or expired token' });
     }
-});
+}));
 
-router.post('/reset-password', async (req, res) => {
+router.post('/reset-password', asyncHandler(async (req, res) => {
     try {
         const { email } = req.body;
         if (!email) {
@@ -169,9 +170,9 @@ router.post('/reset-password', async (req, res) => {
     } catch (error) {
         throw error;
     }
-});
+}));
 
-router.post('/reset-password/confirm', async (req, res) => {
+router.post('/reset-password/confirm', asyncHandler(async (req, res) => {
 
     let decoded;
     let userId;
@@ -203,10 +204,10 @@ router.post('/reset-password/confirm', async (req, res) => {
         res.status(500).json({ error: 'Password update error : ' + error.message });
     }
 
-});
+}));
 
 
-router.post('/login', validateLogin, async (req, res) => {
+router.post('/login', validateLogin, asyncHandler(async (req, res) => {
     console.log("Login request received :", req.body);
     try {
         const { username, password } = req.body;
@@ -254,7 +255,7 @@ router.post('/login', validateLogin, async (req, res) => {
     } catch (error) {
         throw error;
     }
-});
+}));
 
 router.get('/verify', authenticateToken, (req, res) => {
     res.json({ user: req.user });

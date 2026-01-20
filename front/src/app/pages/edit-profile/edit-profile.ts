@@ -76,9 +76,9 @@ export class EditProfile {
     }
     this.user = tmpUser;
 
-		this.maxBirthDay.setFullYear(this.maxBirthDay.getFullYear() - 18);
+	this.maxBirthDay.setFullYear(this.maxBirthDay.getFullYear() - 18);
 
-    this.tmpUser.set(tmpUser);
+	this.tmpUser.set(tmpUser);
 
 		if (tmpUser.cityStr == null){
   		this.getUserCity();
@@ -96,8 +96,12 @@ export class EditProfile {
     this.loading.set(false);
 	}
 
-	async getBlockedProfiles(){
-    this.blockedProfiles.set(await this.blockService.getBlockedUsers())
+	async getBlockedProfiles() {
+		try {
+			this.blockedProfiles.set(await this.blockService.getBlockedUsers());
+		} catch {
+			this.blockedProfiles.set([]);
+		}
 	}
 
 	async getLikedProfiles(){
@@ -110,6 +114,7 @@ export class EditProfile {
       ;
     })
   }
+
 
 	async processForm(event: SubmitEvent) {
 		event.preventDefault();

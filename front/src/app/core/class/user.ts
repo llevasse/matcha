@@ -28,7 +28,7 @@ export class User{
       last_connection_date: string | null,
       tags: {id: number, name: string}[],
       pictures: {id: number, file_path: string, is_main: number, uploaded_at: string}[];
-      isValid: boolean,
+      is_valid: boolean,
     } = {
       id: NaN,
       lastname: "",
@@ -50,7 +50,7 @@ export class User{
       fame: NaN,
       tags: [],
       pictures: [],
-      isValid: false,
+      is_valid: false,
     }
   ){
     this.id = obj.id ?? NaN;
@@ -88,7 +88,7 @@ export class User{
     this.photos.length = 5;
     this.photos.fill(new ProfileImage(), this.photos.length);
 
-    this.isValid = obj.isValid;
+    this.isValid = obj.is_valid;
 
     // console.log(this);
   }

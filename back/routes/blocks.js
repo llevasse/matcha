@@ -54,25 +54,46 @@ router.post('/unblock', authenticateToken, async (req, res) => {
 });
 
 router.get('/', authenticateToken, async (req, res) => {
-  try {
-    console.log("Get blocked user received from user with id : ", req.user.id);
-    const userLocation = await db.execute(`SELECT id, location_latitude, location_longitude FROM users WHERE id = ?`,
-      [req.user.id]);
-    if (userLocation.length == 0 || userLocation[0][0].location_latitude == undefined || userLocation[0][0].location_longitude == undefined){
-      throw ("could not get user location")
+    const userId = req.user.id;
+
+    try {
+        const { lat, lng } = await _getUserLocation(userId);
+        const blockedUsers = await _getBlockedUsersDetails(userId, lat, lng);
+        if (blockedUsers.length == 0){
+          return res.status(204).json(blockedUsers);
+        }
+        res.json(blockedUsers);
+    } catch (error) {
+        console.error(`[Error Get Blocked] User ${userId}:`, error.message);
+        const statusCode = error.status || 500;
+        res.status(statusCode).json({ error: error.message || 'Internal Server Error' });
     }
-    userLat = userLocation[0][0].location_latitude;
-    userLng = userLocation[0][0].location_longitude;
-    let query = getUserPreviewInfoSqlStatement + ` FROM users u WHERE u.id IN (SELECT to_user_id FROM blocks WHERE from_user_id = ?)`;
-    const [result] = await db.query(query, [userLat, userLng, userLat, req.user.id, req.user.id])
-    res.json(result);
-  } catch (error) {
-    console.log("error catched :", error);
-    const statusCode = error.status || 500;
-    const message = error.message || 'Internal Server Error';
-    
-    res.status(statusCode).json({ error: message });
-  }
 });
+
+async function _getUserLocation(userId) {
+    const [rows] = await db.execute(
+        'SELECT location_latitude, location_longitude FROM users WHERE id = ?',
+        [userId]
+    );
+    
+    const user = rows[0];
+
+    return {
+        lat: user.location_latitude,
+        lng: user.location_longitude
+    };
+}
+
+async function _getBlockedUsersDetails(userId, lat, lng) {
+    const query = `
+        ${getUserPreviewInfoSqlStatement} 
+        FROM users u 
+        WHERE u.id IN (SELECT to_user_id FROM blocks WHERE from_user_id = ?)
+    `;
+    
+    const [rows] = await db.query(query, [lat, lng, lat, userId, userId]);
+
+    return rows;
+}
 
 module.exports = router;

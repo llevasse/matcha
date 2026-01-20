@@ -23,6 +23,10 @@ export class BlockOrReportService {
       headers: this.getAuthHeaders(),
     });
 
+    if (!response.ok) {
+      throw new Error(`HTTP error ${response.status}`);
+    }
+
     return this.userListFromResponse(response);
   }
 

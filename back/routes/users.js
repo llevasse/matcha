@@ -18,7 +18,9 @@ router.get('/profile', authenticateToken, async (req, res) => {
         users[0].birthdate = users[0].birthdate ? users[0].birthdate.toISOString().split('T')[0] : null;
         res.json(users[0]);
     } catch (error) {
-        throw error;
+        const statusCode = error.status || 500;
+        const message = error.message || 'Internal Server Error';
+        return res.status(statusCode).json({ error: message });
     }
 });
 
@@ -38,7 +40,9 @@ router.get('/profile/:user_id', authenticateToken, async (req, res) => {
         users[0].birthdate = users[0].birthdate ? users[0].birthdate.toISOString().split('T')[0] : null;
         res.json(users[0]);
     } catch (error) {
-        throw error;
+        const statusCode = error.status || 500;
+        const message = error.message || 'Internal Server Error';
+        return res.status(statusCode).json({ error: message });
     }
 });
 
@@ -93,7 +97,7 @@ router.post('/profile', authenticateToken, validateProfileUpdate, async (req, re
                 [userId, prefId]
             );
         }
-        checkProfileValidity(userId);
+        updateProfileValidity(userId);
         
 
         await connection.commit();
@@ -135,16 +139,16 @@ router.get('/history', authenticateToken, async (req, res) =>{
       WHERE vh.viewer_user_id = ? OR vh.viewed_user_id = ?`,
       [req.user.id, req.user.id]);
     if (users.length === 0) {
-      res.json([]);
+      return res.status(204).json([]);
     }
-    res.json(users);
+    return res.json(users);
   }catch(e){
     console.log(e);
     return res.status(400).json({ error: 'Error occured' });
   }
 })
 
-async function checkProfileValidity(userId){
+async function updateProfileValidity(userId){
   var is_confirmed = true;	
   const connection = await db.getConnection();  
   const [users] = await connection.execute(
@@ -170,7 +174,7 @@ async function checkProfileValidity(userId){
   }
   
   await connection.execute(
-            `UPDATE users SET is_confirmed = ? WHERE id = ?`,
+            `UPDATE users SET is_valid = ? WHERE id = ?`,
       [is_confirmed, userId]
   );
   console.log(`User with id = ${userId} is confirmed status is now : ${is_confirmed}!`);
@@ -206,7 +210,9 @@ router.put('/password', authenticateToken, async (req, res) => {
 
         res.json({ message: 'Password updated successfully' });
     } catch (error) {
-        throw error;
+        const statusCode = error.status || 500;
+        const message = error.message || 'Internal Server Error';
+        return res.status(statusCode).json({ error: message });
     }
 });
 
@@ -430,8 +436,10 @@ router.get('/search', authenticateToken, async (req, res) => {
         const [users] = await db.execute(query,params);
         res.json(users);
     } catch (error) {
-        throw error;
+        const statusCode = error.status || 500;
+        const message = error.message || 'Internal Server Error';
+        return res.status(statusCode).json({ error: message });
     }
 });
 
-module.exports = {router, checkProfileValidity};
+module.exports = {router, checkProfileValidity: updateProfileValidity};

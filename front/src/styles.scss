@@ -1,6 +1,7 @@
 @use './app/utilities/variables.scss' as v;
 
 body{
+  height: 100%;
   margin: 0px;
   padding: 0em;
   background: v.$background-deg;

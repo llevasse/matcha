@@ -68,7 +68,7 @@
 @if (blockPopup()) {
   <div class="popup-overlay">
     <div class="popup-block-report">
-      
+
       @if (!blockPopupResults()) {
         <p>Are you sure you want to block this user?</p>
 
@@ -83,7 +83,7 @@
           <button (click)="reportUser()">Block and report</button>
           <button (click)="closeBlockPopup()">Cancel</button>
         </div>
-      } 
+      }
       @else {
         <p>Action completed successfully.</p>
         <button (click)="closeBlockPopupAndRedirect()">Close</button>

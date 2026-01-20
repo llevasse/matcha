@@ -82,7 +82,7 @@ export class ProfileView {
     })
     this.ref.nativeElement.addEventListener('click', (e: any)=>{
       if ((e.target as HTMLElement).closest('app-profile-view > .container') == null
-      && (e.target as HTMLElement).closest('app-profile-view .popup-block-report') == null ){ 
+      && (e.target as HTMLElement).closest('app-profile-view .popup-block-report') == null ){
         this.onClickOutside.emit();
       }
     });
@@ -127,45 +127,45 @@ export class ProfileView {
     this.blockPopup.set(true);
   }
 
-errorMessage = signal<string | null>(null);
+  errorMessage = signal<string | null>(null);
 
-async blockUser() {
-  this.errorMessage.set(null);
-  try {
-    const response = await this.blockOrReportService.blockUser(this.userId());
-    if (response.ok) {
-      this.blockPopupResults.set(true);
-    } else {
-      this.errorMessage.set("An error occurred while blocking the user.");
+  async blockUser() {
+    this.errorMessage.set(null);
+    try {
+      const response = await this.blockOrReportService.blockUser(this.userId());
+      if (response.ok) {
+        this.blockPopupResults.set(true);
+      } else {
+        this.errorMessage.set("An error occurred while blocking the user.");
+      }
+    } catch (error) {
+      this.errorMessage.set("Network error. Please try again later.");
     }
-  } catch (error) {
-    this.errorMessage.set("Network error. Please try again later.");
   }
-}
 
-async reportUser() {
-  this.errorMessage.set(null);
-  try {
-    const response = await this.blockOrReportService.reportUser(this.userId());
-    if (response.ok) {
-      this.blockPopupResults.set(true);
-    } else {
-      this.errorMessage.set("An error occurred while reporting the user.");
+  async reportUser() {
+    this.errorMessage.set(null);
+    try {
+      const response = await this.blockOrReportService.reportUser(this.userId());
+      if (response.ok) {
+        this.blockPopupResults.set(true);
+      } else {
+        this.errorMessage.set("An error occurred while reporting the user.");
+      }
+    } catch (error) {
+      this.errorMessage.set("Network error. Please try again later.");
     }
-  } catch (error) {
-    this.errorMessage.set("Network error. Please try again later.");
   }
-}
 
-closeBlockPopup() {
-  this.blockPopup.set(false);
-  this.blockPopupResults.set(false);
-  this.errorMessage.set(null);
-}
+  closeBlockPopup() {
+    this.blockPopup.set(false);
+    this.blockPopupResults.set(false);
+    this.errorMessage.set(null);
+  }
 
-closeBlockPopupAndRedirect(){
-  this.closeBlockPopup();
-  window.location.href = '/';
-}
+  closeBlockPopupAndRedirect(){
+    this.closeBlockPopup();
+    window.location.href = '/';
+  }
 
 }

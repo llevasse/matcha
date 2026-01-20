@@ -83,9 +83,14 @@ export class Matches {
           })
         })
         this.profileView.instance.onClickOutside.subscribe(()=>{
-          window.history.pushState('','',`/matches`);
-          this.profileView?.destroy();
-          this.profileView = null;
+          if (this.profileView?.instance.blockPopup()){
+            this.profileView?.instance.blockPopup.set(false);
+          }
+          else{
+            window.history.pushState('','',`/matches`);
+            this.profileView?.destroy();
+            this.profileView = null;
+          }
         });
       }
       else{

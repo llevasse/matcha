@@ -63,8 +63,13 @@ export class Likes {
         profile.instance.loaded.set(true);
 
         profile.instance.onClickOutside.subscribe(()=>{
-          profile.destroy();
-          window.history.pushState('','',`/likes`);
+          if (profile.instance.blockPopup()){
+            profile.instance.blockPopup.set(false);
+          }
+          else{
+            window.history.pushState('','',`/likes`);
+            profile.destroy();
+          }
         });
       }
       else{

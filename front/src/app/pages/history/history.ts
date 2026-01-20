@@ -61,8 +61,13 @@ export class HistoryPage {
         })
 
         profile.instance.onClickOutside.subscribe(()=>{
-          window.history.pushState('','',`/history`);
-          profile.destroy();
+          if (profile.instance.blockPopup()){
+            profile.instance.blockPopup.set(false);
+          }
+          else{
+            window.history.pushState('','',`/history`);
+            profile.destroy();
+          }
         });
       }
       else{

@@ -8,7 +8,6 @@ const router = express.Router();
 
 // Envoyer un message
 router.post('/', authenticateToken, validateMessage, asyncHandler(async (req, res) => {
-    try {
         const { receiver_id, content } = req.body;
 
         // Vérifier que c'est un match
@@ -36,14 +35,10 @@ router.post('/', authenticateToken, validateMessage, asyncHandler(async (req, re
             sent_at: new Date(),
             message: 'Message sent successfully'
         });
-    } catch (error) {
-        throw error;
-    }
 }));
 
 // Obtenir la conversation avec un utilisateur
 router.get('/conversation/:user_id', authenticateToken, asyncHandler(async (req, res) => {
-    try {
         const otherUserId = req.params.user_id;
         const { limit = 50, offset = 0 } = req.query;
 
@@ -70,14 +65,10 @@ router.get('/conversation/:user_id', authenticateToken, asyncHandler(async (req,
         `, [req.user.id, otherUserId, otherUserId, req.user.id]);
 
         res.json(messages.reverse());
-    } catch (error) {
-        throw error;
-    }
 }));
 
 // Obtenir toutes les conversations
 router.get('/conversations', authenticateToken, asyncHandler(async (req, res) => {
-    try {
         const [conversations] = await db.execute(`
             SELECT 
                 u.id, u.username, pp.file_path as profile_picture,
@@ -107,9 +98,6 @@ router.get('/conversations', authenticateToken, asyncHandler(async (req, res) =>
         `, [req.user.id, req.user.id, req.user.id, req.user.id, req.user.id, req.user.id, req.user.id, req.user.id]);
 
         res.json(conversations);
-    } catch (error) {
-        throw error;
-    }
 }));
 
 module.exports = router;

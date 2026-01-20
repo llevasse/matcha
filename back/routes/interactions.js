@@ -185,7 +185,6 @@ router.get('/likes-received', authenticateToken, asyncHandler(async (req, res) =
 }));
 
 router.get('/likes-given', authenticateToken, asyncHandler(async (req, res) => {
-    try {
         userLocation = await db.execute(`SELECT id, location_latitude, location_longitude FROM users WHERE id = ?`,
           [req.user.id]);
         if (userLocation.length == 0 || userLocation[0][0].location_latitude == undefined || userLocation[0][0].location_longitude == undefined){
@@ -203,9 +202,6 @@ router.get('/likes-given', authenticateToken, asyncHandler(async (req, res) => {
         const [likes] = await db.execute(query, [userLat, userLng, userLat, req.user.id, req.user.id]);
 
         res.json(likes);
-    } catch (error) {
-        throw error;
-    }
 }));
 
 

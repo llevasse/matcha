@@ -121,7 +121,6 @@ router.get('/confirm-email', asyncHandler(async (req, res) => {
 }));
 
 router.post('/reset-password', asyncHandler(async (req, res) => {
-    try {
         const { email } = req.body;
         if (!email) {
             return res.status(400).json({ error: 'Email is required' });
@@ -167,9 +166,6 @@ router.post('/reset-password', asyncHandler(async (req, res) => {
         await transporter.sendMail(mailOptions);
 
         return res.sendStatus(200);
-    } catch (error) {
-        throw error;
-    }
 }));
 
 router.post('/reset-password/confirm', asyncHandler(async (req, res) => {
@@ -209,7 +205,6 @@ router.post('/reset-password/confirm', asyncHandler(async (req, res) => {
 
 router.post('/login', validateLogin, asyncHandler(async (req, res) => {
     console.log("Login request received :", req.body);
-    try {
         const { username, password } = req.body;
 
         const [users] = await db.execute(
@@ -252,9 +247,6 @@ router.post('/login', validateLogin, asyncHandler(async (req, res) => {
                 isConfirmed: user.is_confirmed,
             }
         });
-    } catch (error) {
-        throw error;
-    }
 }));
 
 router.get('/verify', authenticateToken, (req, res) => {

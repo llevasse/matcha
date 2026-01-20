@@ -41,36 +41,30 @@ const upload = multer({
 
 // Obtenir les photos de profil du client
 router.get('/', authenticateToken, asyncHandler(async (req, res) => {
-    try {
+
         const [pictures] = await db.execute(
             'SELECT id, file_path, is_main, uploaded_at FROM profile_pictures WHERE user_id = ? ORDER BY is_main DESC, uploaded_at DESC',
             [req.user.id]
         );
 
         res.json(pictures);
-    } catch (error) {
-        throw error;
-    }
+
 }));
 
 // Obtenir les photos de profil d'un utilisateur
 router.get('/:user_id', authenticateToken, asyncHandler(async (req, res) => {
 
-    try {
         const [pictures] = await db.execute(
             'SELECT id, file_path, is_main, uploaded_at FROM profile_pictures WHERE user_id = ? ORDER BY is_main DESC, uploaded_at DESC',
             [req.params.user_id]
         );
 
         res.json(pictures);
-    } catch (error) {
-        throw error;
-    }
+
 }));
 
 // Upload d'une photo de profil
 router.post('/upload', authenticateToken, upload.single('photo'), asyncHandler(async (req, res) => {
-    try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
         }
@@ -97,14 +91,10 @@ router.post('/upload', authenticateToken, upload.single('photo'), asyncHandler(a
             is_main: isMain,
             message: 'Photo uploaded successfully'
         });
-    } catch (error) {
-        throw error;
-    }
 }));
 
 // Définir une photo comme principale
 router.put('/:id/main', authenticateToken, asyncHandler(async (req, res) => {
-    try {
         const pictureId = req.params.id;
 
         // Vérifier que la photo appartient à l'utilisateur
@@ -130,14 +120,11 @@ router.put('/:id/main', authenticateToken, asyncHandler(async (req, res) => {
         );
 
         res.json({ message: 'Main picture updated successfully' });
-    } catch (error) {
-        throw error;
-    }
+
 }));
 
 // Supprimer une photo
 router.delete('/:id', authenticateToken, asyncHandler(async (req, res) => {
-    try {
         const pictureId = req.params.id;
 
         // Récupérer les infos de la photo
@@ -167,9 +154,6 @@ router.delete('/:id', authenticateToken, asyncHandler(async (req, res) => {
         }
 
         res.json({ message: 'Picture deleted successfully' });
-    } catch (error) {
-        throw error;
-    }
 }));
 
 module.exports = router;

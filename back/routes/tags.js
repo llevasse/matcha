@@ -7,12 +7,8 @@ const router = express.Router();
 
 // Obtenir tous les tags
 router.get('/', asyncHandler(async (req, res) => {
-    try {
         const [tags] = await db.execute('SELECT * FROM tags ORDER BY name');
         res.json(tags);
-    } catch (error) {
-        throw error;
-    }
 }));
 
 // Créer un nouveau tag
@@ -44,7 +40,6 @@ router.post('/', authenticateToken, asyncHandler(async (req, res) => {
 
 // Obtenir les tags d'un utilisateur
 router.get('/user/:user_id', asyncHandler(async (req, res) => {
-    try {
         const userId = req.params.user_id;
 
         const [userTags] = await db.execute(`
@@ -56,14 +51,11 @@ router.get('/user/:user_id', asyncHandler(async (req, res) => {
         `, [userId]);
         // (SELECT JSON_ARRAYAGG(t.id, t.name) FROM user_tags ut JOIN tags t ON ut.tag_id = t.id WHERE ut.user_id = ? GROUP BY ut.user_id) as tags
         res.json(userTags);
-    } catch (error) {
-        throw error;
-    }
+
 }));
 
 // Ajouter un tag à l'utilisateur connecté
 router.post('/user', authenticateToken, asyncHandler(async (req, res) => {
-    try {
         const { tag_id } = req.body;
 
         // Vérifier que le tag existe
@@ -79,14 +71,11 @@ router.post('/user', authenticateToken, asyncHandler(async (req, res) => {
         );
 
         res.json({ message: 'Tag added successfully' });
-    } catch (error) {
-        throw error;
-    }
+
 }));
 
 // Supprimer un tag de l'utilisateur connecté
 router.delete('/user/:tag_id', authenticateToken, asyncHandler(async (req, res) => {
-    try {
         const tagId = req.params.tag_id;
 
         const [result] = await db.execute(
@@ -99,9 +88,6 @@ router.delete('/user/:tag_id', authenticateToken, asyncHandler(async (req, res) 
         }
 
         res.json({ message: 'Tag removed successfully' });
-    } catch (error) {
-        throw error;
-    }
 }));
 
 module.exports = router;

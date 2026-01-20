@@ -18,7 +18,9 @@ export class ProfilePreview {
   onClick = output<User>()
   onDestroy = output<void>()
 
-  allowInteraction = input(true);
+  allowLike = input(true);
+  allowIgnore = input(true);
+  allowUnblock = input(false);
 
   constructor(private likesService: LikesService){};
 
@@ -27,6 +29,11 @@ export class ProfilePreview {
 
   likeUser(){
     this.likesService.setUserAsLiked(this.user().id);
+    this.onDestroy.emit();
+  }
+
+  unblockUser(){
+    //TODO unblock api call
     this.onDestroy.emit();
   }
 

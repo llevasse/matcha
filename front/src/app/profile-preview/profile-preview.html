@@ -22,10 +22,17 @@
       }
     </div>
   </div>
-  @if (allowInteraction()) {
+  @if (allowLike() || allowIgnore() || allowUnblock()) {
     <div class="profile-interact-container">
-      <button class="interact-button" (click)="dislikeUser()" id="dislike-button">X</button>
-      <button class="interact-button" (click)="likeUser()" id="like-button"><3</button>
+      @if (allowIgnore()) {
+        <button class="interact-button" (click)="dislikeUser()" id="dislike-button">X</button>
+      }
+      @if (allowLike()) {
+        <button class="interact-button" (click)="likeUser()" id="like-button"><3</button>
+      }
+      @if (allowUnblock()) {
+        <button class="interact-button" (click)="unblockUser()" id="unblock-button">Unblock</button>
+      }
     </div>
   }
 </div>

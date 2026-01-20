@@ -2,7 +2,7 @@
   <h1>{{profiles().length}} {{profiles().length < 2 ? "match" : "matches"}}</h1>
   <div class="profile-list-container">
   @for (item of profiles(); track $index) {
-    <app-profile-preview (onClick)="seeProfile(item)" [allowInteraction]="false" [user]="item" [id]="$index"></app-profile-preview>
+    <app-profile-preview [allowLike]="false" [allowIgnore]="false" (onClick)="seeProfile(item)" [user]="item" [id]="$index"></app-profile-preview>
   }
   </div>
 }

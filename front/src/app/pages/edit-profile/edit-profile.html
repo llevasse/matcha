@@ -91,7 +91,7 @@
         <h1>List of profiles you blocked</h1>
         <div class="profile-list-container">
         @for (item of blockedProfiles(); track $index) {
-          <app-profile-preview [user]="item" [id]="$index"></app-profile-preview>
+          <app-profile-preview [allowUnblock]="true" [allowLike]="false" [allowIgnore]="false" [user]="item" [id]="$index"></app-profile-preview>
         }
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { InterestService } from './../../../services/interestService';
 import { UserService } from './../../../services/userService';
-import { afterEveryRender, Component, signal, viewChild } from '@angular/core';
+import { afterEveryRender, Component, signal, viewChild, ViewEncapsulation } from '@angular/core';
 import { Dropdown } from "../../core/dropdown/dropdown";
 import { ProfileImageInput } from "../../profile-image-input/profile-image-input";
 import { User } from '../../core/class/user';
@@ -15,7 +15,7 @@ import { ProfilePreview } from "../../profile-preview/profile-preview";
 	imports: [Dropdown, ProfileImageInput, InterestDropdown, ProfilePreview],
 	templateUrl: './edit-profile.html',
 	styleUrl: './edit-profile.scss',
-
+  encapsulation: ViewEncapsulation.None,
 })
 export class EditProfile {
 	loading = signal<boolean>(true)

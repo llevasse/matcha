@@ -105,6 +105,10 @@ profile-image-input{
   }
 }
 
-profile-preview .container{
-  background: white;
+app-profile-preview .container{
+  background: v.$background-deg !important;
+
+  .interact-button:hover{
+    background-color: v.$secondary-bg-color !important;
+  }
 }

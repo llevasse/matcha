@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const db = require('../config/database');
 const { validateProfileUpdate } = require('../middleware/validation');
 const { authenticateToken } = require('../middleware/auth');
-const { getUserPrivateInfoByIdSqlStatement, getUserPublicInfoByIdSqlStatement } = require('../utils/users');
+const { getUserPrivateInfoByIdSqlStatement, getUserPublicInfoByIdSqlStatement, getUserPreviewInfoSqlStatement } = require('../utils/users');
 const { hasBeenBlockedByOrIsBlocking } = require('../services/blockService');
 
 const router = express.Router();
@@ -351,19 +351,7 @@ router.get('/search', authenticateToken, async (req, res) => {
         }
         
 
-        let query = `
-            SELECT u.id, u.username, u.bio, u.birthdate, u.city, u.location_latitude, u.location_longitude, u.gender_id, u.fame,
-              (6371 * acos ( cos ( radians( ? ) ) * cos( radians( location_latitude ) ) 
-                            * cos( radians( location_longitude ) - radians( ? ) ) 
-                              + sin ( radians( ? ) ) * sin( radians( location_latitude ) ) ) ) AS distance,
-              (SELECT COUNT(ut.tag_id) FROM user_tags ut WHERE ut.user_id = u.id AND ut.tag_id IN (SELECT ut.tag_id FROM user_tags ut WHERE ut.user_id = ?)) AS nb_tag_in_common,
-              (SELECT g.label FROM genders g WHERE g.id = u.gender_id) as gender,
-              (SELECT JSON_ARRAYAGG(g.label) FROM user_preferences up JOIN genders g ON up.gender_id = g.id WHERE up.user_id = u.id) as preferences,
-              (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', t.id, 'name', t.name)) FROM user_tags ut JOIN tags t ON ut.tag_id = t.id WHERE ut.user_id = u.id GROUP BY ut.user_id) as tags,
-              (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', pp.id, 'file_path', pp.file_path, 'is_main', pp.is_main, 'uploaded_at', pp.uploaded_at)) FROM profile_pictures pp WHERE pp.user_id = u.id GROUP BY pp.user_id) as pictures,
-              TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) as age
-            FROM users u WHERE u.id != ? AND u.is_confirmed=true
-          `;
+        let query = getUserPreviewInfoSqlStatement + ` FROM users u WHERE u.id != ? AND u.is_confirmed=true`;
         
         // this SQL clause is responsible for only returning users client has not liked/is matched with
         query += ` AND u.id NOT IN (SELECT i.from_user_id from interactions i where i.to_user_id = ?)`

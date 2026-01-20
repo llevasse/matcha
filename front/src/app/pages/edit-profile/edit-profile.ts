@@ -7,10 +7,12 @@ import { User } from '../../core/class/user';
 import { InterestDropdown } from "./interest-dropdown/interest-dropdown";
 import { Interest } from '../../core/class/interest';
 import { Router } from '@angular/router';
+import { BlockOrReportService } from '../../../services/blockOrReportService';
+import { ProfilePreview } from "../../profile-preview/profile-preview";
 
 @Component({
 	selector: 'app-edit-profile',
-	imports: [Dropdown, ProfileImageInput, InterestDropdown],
+	imports: [Dropdown, ProfileImageInput, InterestDropdown, ProfilePreview],
 	templateUrl: './edit-profile.html',
 	styleUrl: './edit-profile.scss',
 
@@ -27,6 +29,7 @@ export class EditProfile {
 	userSearchCityListStr =  signal<string[]>([]);
 
 	errorMessages = signal<string[]>([]);
+	blockedProfiles = signal<User[]>([]);
 
 	locationInputContainer = viewChild<Dropdown>('locationInputContainer');
 	interestDropdown = viewChild<InterestDropdown>('interestDropdownContainer');
@@ -35,6 +38,28 @@ export class EditProfile {
 	maxBirthDay = new Date();
 
 	allowedGenders = ['woman','man', 'non-binary', 'other','prefer not to say'];
+
+	constructor(
+	  private userService: UserService,
+	  private blockService: BlockOrReportService,
+	  private interestService: InterestService,
+	  private router: Router){
+		this.user.photos = [];
+		this.getUserProfile();
+
+		afterEveryRender(()=>{
+      if (!this.loaded && this.imagesInput() && this.interestDropdown()){
+        this.imagesInput()!.images.set(this.user.photos);
+
+        this.interestDropdown()!.originalUserInterest.set(Array.from(this.user.interest));
+        this.interestDropdown()!.selectedValues.set(Array.from(this.user.interest));
+        this.interestDropdown()!.activeSearchResultInSelectedValues.set(Array.from(this.user.interest));
+        this.interestDropdown()!.placeholder.set(this.user.interest.join(", "));
+        this.loaded = true;
+      }
+    });
+	}
+	ngOnInit(){}
 
 	async getUserProfile(){
     var tmpUser: User|null = await this.userService.getClientUser();
@@ -55,29 +80,15 @@ export class EditProfile {
 		else{ // call if city was not set by user last time
       this.userCity.set(tmpUser.cityStr);
 		}
+		await this.getBlockedProfiles();
+
     this.loading.set(false);
 	}
 
-	constructor(
-	  private userService: UserService,
-	  private interestService: InterestService,
-	  private router: Router){
-		this.user.photos = [];
-		this.getUserProfile();
 
-		afterEveryRender(()=>{
-      if (!this.loaded && this.imagesInput() && this.interestDropdown()){
-        this.imagesInput()!.images.set(this.user.photos);
 
-        this.interestDropdown()!.originalUserInterest.set(Array.from(this.user.interest));
-        this.interestDropdown()!.selectedValues.set(Array.from(this.user.interest));
-        this.interestDropdown()!.activeSearchResultInSelectedValues.set(Array.from(this.user.interest));
-        this.interestDropdown()!.placeholder.set(this.user.interest.join(", "));
-        this.loaded = true;
-      }
-    });
-	}
-	ngOnInit(){
+	async getBlockedProfiles(){
+    this.blockedProfiles.set(await this.blockService.getBlockedUsers())
 	}
 
 	async processForm(event: SubmitEvent) {

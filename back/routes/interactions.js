@@ -2,7 +2,7 @@ const express = require('express');
 const db = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
 const { sendMessage, messageType } = require('../websockets/wsServer');
-const { getUserPublicInfoByIdSqlStatement } = require('../utils/users');
+const { getUserPublicInfoByIdSqlStatement, getUserPreviewInfoSqlStatement } = require('../utils/users');
 const { performUnlike } = require('../services/interactionService');
 
 const router = express.Router();
@@ -121,22 +121,13 @@ router.get('/matches', authenticateToken, async (req, res) => {
         userLat = userLocation[0][0].location_latitude;
         userLng = userLocation[0][0].location_longitude;
         
-        const [matches] = await db.execute(`
-            SELECT u.id, u.username, u.bio, u.location_latitude, u.location_longitude, u.fame,
-                   i.created_at as matched_at,
-                   (6371 * acos ( cos ( radians( ? ) ) * cos( radians( location_latitude ) ) 
-                            * cos( radians( location_longitude ) - radians( ? ) ) 
-                              + sin ( radians( ? ) ) * sin( radians( location_latitude ) ) ) ) AS distance,
-                  (SELECT g.label FROM genders g WHERE g.id = u.gender_id) as gender,
-                  (SELECT JSON_ARRAYAGG(g.label) FROM user_preferences up JOIN genders g ON up.gender_id = g.id WHERE up.user_id = u.id GROUP BY up.user_id) as preferences,
-                  (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', t.id, 'name', t.name)) FROM user_tags ut JOIN tags t ON ut.tag_id = t.id WHERE ut.user_id = u.id GROUP BY ut.user_id) as tags,
-                  (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', pp.id, 'file_path', pp.file_path, 'is_main', pp.is_main, 'uploaded_at', pp.uploaded_at)) FROM profile_pictures pp WHERE pp.user_id = u.id GROUP BY pp.user_id) as pictures,
-                  TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) as age              
-            FROM interactions i
-            JOIN users u ON u.id = i.to_user_id
-            WHERE i.from_user_id = ? AND i.is_match = TRUE
-            ORDER BY i.created_at DESC
-        `, [userLat, userLng, userLat, req.user.id]);
+        let query = getUserPreviewInfoSqlStatement + `, i.created_at as matched_at 
+          FROM interactions i
+          JOIN users u ON u.id = i.to_user_id
+          WHERE i.from_user_id = ? AND i.is_match = TRUE
+          ORDER BY i.created_at DESC`
+        
+        const [matches] = await db.execute(query, [userLat, userLng, userLat, req.user.id, req.user.id]);
 
         res.json(matches);
     } catch (error) {
@@ -182,22 +173,13 @@ router.get('/likes-received', authenticateToken, async (req, res) => {
         userLat = userLocation[0][0].location_latitude;
         userLng = userLocation[0][0].location_longitude;
 
-        const [likes] = await db.execute(`
-            SELECT u.id, u.username, u.bio, u.location_latitude, u.location_longitude, u.fame,
-                   i.created_at as liked_at,
-                   (6371 * acos ( cos ( radians( ? ) ) * cos( radians( location_latitude ) ) 
-                            * cos( radians( location_longitude ) - radians( ? ) ) 
-                              + sin ( radians( ? ) ) * sin( radians( location_latitude ) ) ) ) AS distance,
-                  (SELECT g.label FROM genders g WHERE g.id = u.gender_id) as gender,
-                  (SELECT JSON_ARRAYAGG(g.label) FROM user_preferences up JOIN genders g ON up.gender_id = g.id WHERE up.user_id = u.id GROUP BY up.user_id) as preferences,
-                  (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', t.id, 'name', t.name)) FROM user_tags ut JOIN tags t ON ut.tag_id = t.id WHERE ut.user_id = u.id GROUP BY ut.user_id) as tags,
-                  (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', pp.id, 'file_path', pp.file_path, 'is_main', pp.is_main, 'uploaded_at', pp.uploaded_at)) FROM profile_pictures pp WHERE pp.user_id = u.id GROUP BY pp.user_id) as pictures,
-                  TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) as age              
-            FROM interactions i
-            JOIN users u ON u.id = i.from_user_id
-            WHERE i.to_user_id = ? AND i.is_match = FALSE
-            ORDER BY i.created_at DESC
-        `, [userLat, userLng, userLat, req.user.id]);
+        let query = getUserPreviewInfoSqlStatement + `, i.created_at as liked_at 
+          FROM interactions i
+          JOIN users u ON u.id = i.from_user_id
+          WHERE i.to_user_id = ? AND i.is_match = FALSE
+          ORDER BY i.created_at DESC`
+
+        const [likes] = await db.execute(query, [userLat, userLng, userLat, req.user.id, req.user.id]);
 
         res.json(likes);
     } catch (error) {

@@ -49,7 +49,7 @@
 - [ ] A client must be able to block a user
   - [x] A blocked user must not be shown in the search result
   - [x] will not be able to generate notification
-  - [ ] prevent conversation
+  - [x] prevent conversation
   - [ ] must be unblock on the profile page
 
 # Chat 

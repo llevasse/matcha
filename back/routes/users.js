@@ -428,8 +428,6 @@ router.get('/search', authenticateToken, async (req, res) => {
         
         query += ` ORDER BY ${order_by} ${order} LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;
         const [users] = await db.execute(query,params);
-        console.log("request done, length : ", users.length);
-        console.log(users);
         res.json(users);
     } catch (error) {
         throw error;

@@ -18,6 +18,7 @@ import { ProfilePreview } from "../../profile-preview/profile-preview";
   encapsulation: ViewEncapsulation.None,
 })
 export class EditProfile {
+
 	loading = signal<boolean>(true)
 	loaded = false;
 	user: User = new User();
@@ -84,8 +85,6 @@ export class EditProfile {
 
     this.loading.set(false);
 	}
-
-
 
 	async getBlockedProfiles(){
     this.blockedProfiles.set(await this.blockService.getBlockedUsers())
@@ -196,10 +195,15 @@ export class EditProfile {
 		return false;
 	}
 
+	removeProfile(user: User){
+    this.blockedProfiles.update((list)=>{
+      return list.filter((blockedUser)=>{return blockedUser.id != user.id});
+    })
+  }
+
 	setGender(map: Map<string, any>){
 		this.tmpUser.update((user)=>{user.gender = map.get('value'); return user});
 	}
-
 
 	setOrientation(map: Map<string, any>){
 		this.tmpUser.update((user)=>{user.preferences = map.get('list'); return user});
@@ -221,9 +225,9 @@ export class EditProfile {
 		this.tmpUser.update((user)=>{user.email = ((event as InputEvent).target as HTMLInputElement).value; return user});
 	}
 
-  setBirthday(event: Event){
-		this.tmpUser.update((user)=>{user.birthday = ((event as InputEvent).target as HTMLInputElement).value; return user});
-  }
+	setBirthday(event: Event){
+			this.tmpUser.update((user)=>{user.birthday = ((event as InputEvent).target as HTMLInputElement).value; return user});
+	}
 
 	setBio(event: Event){
 		this.tmpUser.update((user)=>{user.bio = ((event as InputEvent).target as HTMLInputElement).value; return user});

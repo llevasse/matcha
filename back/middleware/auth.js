@@ -11,10 +11,14 @@ const authenticateToken = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
-        // Vérifier que l'utilisateur existe toujours
         const [users] = await db.execute(
-            'SELECT id, username, email, gender_id FROM users WHERE id = ?',
+            'SELECT id, \
+            username, \
+            email, \
+            gender_id, \
+            is_valid, \
+            location_latitude, \
+            location_longitude FROM users WHERE id = ?',
             [decoded.userId]
         );
 
@@ -23,9 +27,10 @@ const authenticateToken = async (req, res, next) => {
         }
 
         req.user = users[0];
+        console.log("auth ok : ", req.user);
         next();
     } catch (error) {
-        return res.status(403).json({ error: 'Invalid token' });
+        return res.status(403).json({ error: 'Invalid token : ' + error.message });
     }
 };
 

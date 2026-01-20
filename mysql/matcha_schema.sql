@@ -38,6 +38,7 @@ CREATE TABLE users (
     location_latitude DECIMAL(9,6),
     location_longitude DECIMAL(9,6),
     is_confirmed BOOLEAN DEFAULT FALSE,
+    is_valid BOOLEAN DEFAULT FALSE,
     is_admin BOOLEAN DEFAULT FALSE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (gender_id) REFERENCES genders(id)

@@ -32,11 +32,11 @@ router.post('/create-users', adminAuthenticateToken, async (req, res) => {
 
     const interestQuerry = await db.query(`SELECT JSON_ARRAYAGG(id) as ids FROM tags`);
     let interestIds = interestQuerry[0][0]['ids'];
-    
+
     const genderQuerry = await db.query(`SELECT JSON_ARRAYAGG(id) as ids FROM genders`);
     let genderIds = genderQuerry[0][0]['ids'];
-    
-    
+
+
     for (let i = 0; i < number_of_users; i++){
       let values = [];
       

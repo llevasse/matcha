@@ -1,2 +1,5 @@
 .env
 db/
+back/node_modules/*
+back/node_modules/.package-lock.json
+front/package-lock.json

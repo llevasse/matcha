@@ -47,6 +47,10 @@
   - [x] User last connection time
 - [ ] A client must be able to report a profile
 - [ ] A client must be able to block a user
+  - [x] A blocked user must not be shown in the search result
+  - [x] will not be able to generate notification
+  - [ ] prevent conversation
+  - [ ] must be unblock on the profile page
 
 # Chat 
 - [x] If two user matched, they must be able to chat in real time
@@ -65,5 +69,7 @@ chores :
 
 Remove french comment (or anything french)
 Remove todo in back folder
+Add 500 for every failed db transaction and 400 when it's just a bad request
+fix all errors, warnings and notices from the web console (must be empty)
 Self test
 test on real mobile device

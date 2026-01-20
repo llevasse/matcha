@@ -21,11 +21,12 @@ $(NAME):
 # 	mkdir --mode=777 -p db/ # bien verif lors du passage au machine 42
 # 	rm -f db/mysql.sock
 	npm install --prefix ./front
+	rm -rf ./front/node_modules/ front/package-lock.json
 	$(DC) up --build
 
 # Start backend without docker
 back:
-	sudo systemctl start mysql
+# 	sudo systemctl start mysql
 	cd back && npm install
 	cd back && npm start
 

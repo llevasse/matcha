@@ -54,6 +54,7 @@ router.get('/', authenticateToken, async (req, res) => {
 
 // Obtenir les photos de profil d'un utilisateur
 router.get('/:user_id', authenticateToken, async (req, res) => {
+
     try {
         const [pictures] = await db.execute(
             'SELECT id, file_path, is_main, uploaded_at FROM profile_pictures WHERE user_id = ? ORDER BY is_main DESC, uploaded_at DESC',

@@ -3,6 +3,7 @@ const db = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
 const { sendMessage, messageType } = require('../websockets/wsServer');
 const { getUserPublicInfoByIdSqlStatement } = require('../utils/users');
+const { performUnlike } = require('../services/interactionService');
 
 const router = express.Router();
 
@@ -86,79 +87,28 @@ router.post('/like', authenticateToken, async (req, res) => {
     }
 });
 
-// Unliker un utilisateur
+
 router.post('/unlike', authenticateToken, async (req, res) => {
     try {
         const { to_user_id } = req.body;
 
-        if (to_user_id == req.user.id) {
-            return res.status(400).json({ error: 'Cannot unlike yourself' });
-        }
-
-        // Vérifier si l'utilisateur cible existe
-        const [targetUser] = await db.execute(
-            'SELECT id FROM users WHERE id = ?',
-            [to_user_id]
-        );
-
+        const [targetUser] = await db.execute('SELECT id FROM users WHERE id = ?', [to_user_id]);
         if (targetUser.length === 0) {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        // Vérifier si l'interaction existe
-        const [existingInteraction] = await db.execute(
-            'SELECT id FROM interactions WHERE from_user_id = ? AND to_user_id = ?',
-            [req.user.id, to_user_id]
-        );
+        await performUnlike(req.user.id, to_user_id);
 
-        if (existingInteraction.length == 0) {          
-            return res.status(400).json({ error: 'No likes present' });
-        }
-
-        // Vérifier si l'autre utilisateur nous a liké
-        const [reverseInteraction] = await db.execute(
-            'SELECT id FROM interactions WHERE from_user_id = ? AND to_user_id = ?',
-            [to_user_id, req.user.id]
-        );
-
-        const isMatch = reverseInteraction.length > 0;
-
-        // Créer l'interaction
-        await db.execute(
-            'DELETE FROM interactions WHERE id = ?',
-            [existingInteraction[0].id]
-        );
-
-        // Si c'est un match, mettre à jour l'interaction inverse
-        if (isMatch) {
-            await db.execute(
-                'UPDATE interactions SET is_match = FALSE WHERE from_user_id = ? AND to_user_id = ?',
-                [to_user_id, req.user.id]
-            );
-        }
-        
-        // mettre a jour la fame de l'utilisateur liké
-        await db.execute(
-            'UPDATE users SET fame = fame - 10 WHERE id = ?',
-            [to_user_id]
-        );
-
-        // mettre a jour la fame de l'utilisateur qui like
-        await db.execute(
-            'UPDATE users SET fame = fame - 3 WHERE id = ?',
-            [req.user.id]
-        );
-        
         sendMessage(req.user.id, to_user_id, null, messageType.UNLIKED);
-        
-        res.json({
-            message: 'Unlike sent successfully',
-        });
+
+        res.json({ message: 'Unlike sent successfully' });
     } catch (error) {
-        throw error;
+        if (error.status) {
+            return res.status(error.status).json({ error: error.message });
+        }
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
-
 
 // Obtenir la liste des matchs
 router.get('/matches', authenticateToken, async (req, res) => {

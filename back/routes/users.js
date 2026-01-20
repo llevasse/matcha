@@ -4,6 +4,7 @@ const db = require('../config/database');
 const { validateProfileUpdate } = require('../middleware/validation');
 const { authenticateToken } = require('../middleware/auth');
 const { getUserPrivateInfoByIdSqlStatement, getUserPublicInfoByIdSqlStatement } = require('../utils/users');
+const { hasBeenBlockedByOrIsBlocking } = require('../services/blockService');
 
 const router = express.Router();
 router.get('/profile', authenticateToken, async (req, res) => {
@@ -22,8 +23,13 @@ router.get('/profile', authenticateToken, async (req, res) => {
 });
 
 // Obtenir les info d'un utilisateur
-router.get('/profile/:user_id', async (req, res) => {
+router.get('/profile/:user_id', authenticateToken, async (req, res) => {
     try {
+        const { user_id } = req.params;
+        if (await hasBeenBlockedByOrIsBlocking(user_id, req.user.id)){
+          return res.status(404).json({ error: 'User not found' });
+        }
+
         const [users] = await db.execute(getUserPublicInfoByIdSqlStatement, [req.params.user_id]);
         if (users.length === 0) {
             return res.status(404).json({ error: 'User not found' });
@@ -365,8 +371,27 @@ router.get('/search', authenticateToken, async (req, res) => {
         query += ` AND u.gender_id IN (SELECT up.gender_id FROM user_preferences up WHERE up.user_id = ?)`
         // This SQL clause is responsible for only return users that are attracted to the req.user gender
         query += ` AND u.id IN (SELECT up.user_id FROM user_preferences up where up.gender_id = ?)`
-        const params = [searchOriginLat, searchOriginLon, searchOriginLat, req.user.id, req.user.id, req.user.id, req.user.id, req.user.gender_id];
-        
+
+        //This filters blocked users ( or the users that have blocked the user)
+        query += ` AND u.id NOT IN (
+            SELECT to_user_id FROM blocks WHERE from_user_id = ?
+            UNION
+            SELECT from_user_id FROM blocks WHERE to_user_id = ?
+        )`;
+
+        const params = [
+            searchOriginLat, 
+            searchOriginLon, 
+            searchOriginLat,
+            req.user.id, 
+            req.user.id, 
+            req.user.id, 
+            req.user.id, 
+            req.user.gender_id,
+            req.user.id,
+            req.user.id
+        ];       
+
         if (interest_whitelist_user_id_list.length > 0){
           var tokens = new Array(interest_whitelist_user_id_list.length).fill('?').join(',');
         
@@ -397,7 +422,7 @@ router.get('/search', authenticateToken, async (req, res) => {
         if (city) {
           query += ' AND u.city LIKE ?';
           params.push(`%${city}%`);
-        }
+        }        
         
         // Every query adition from here are in the HAVING clause
         
@@ -415,6 +440,8 @@ router.get('/search', authenticateToken, async (req, res) => {
         
         query += ` ORDER BY ${order_by} ${order} LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;
         const [users] = await db.execute(query,params);
+        console.log("request done, length : ", users.length);
+        console.log(users);
         res.json(users);
     } catch (error) {
         throw error;

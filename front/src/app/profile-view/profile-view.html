@@ -1,5 +1,8 @@
 <div class="container">
   @if (loaded()) {
+    <div id="buttons-container" class="block-and-report-buttons">
+        <button (click)="openBlockPopup()">🚫</button>
+    </div>
     <div class="name-container desktop">
       <span>{{user().firstName}}</span>
       <span>'{{user().username}}'</span>
@@ -56,8 +59,36 @@
         }
       </div>
     }
+
   }
   @else {
     <h2>Loading...</h2>
   }
 </div>
+@if (blockPopup()) {
+  <div class="popup-overlay">
+    <div class="popup-block-report">
+      
+      @if (!blockPopupResults()) {
+        <p>Are you sure you want to block this user?</p>
+
+        @if (errorMessage()) {
+          <p class="error-message" style="color: red; font-weight: bold;">
+            {{ errorMessage() }}
+          </p>
+        }
+
+        <div class="actions">
+          <button (click)="blockUser()">Block</button>
+          <button (click)="reportUser()">Block and report</button>
+          <button (click)="closeBlockPopup()">Cancel</button>
+        </div>
+      } 
+      @else {
+        <p>Action completed successfully.</p>
+        <button (click)="closeBlockPopupAndRedirect()">Close</button>
+      }
+
+    </div>
+  </div>
+}

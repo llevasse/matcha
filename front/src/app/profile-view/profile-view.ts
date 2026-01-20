@@ -6,6 +6,7 @@ import { UserService } from '../../services/userService';
 import { Chat } from './chat/chat';
 import { createNotificationFromWsObject } from '../core/class/notification';
 import { notifType } from '../utilities/utils';
+import { BlockOrReportService } from '../../services/blockOrReportService';
 
 @Component({
   selector: 'app-profile-view',
@@ -14,6 +15,14 @@ import { notifType } from '../utilities/utils';
   styleUrl: './profile-view.scss'
 })
 export class ProfileView {
+
+  blockPopup = signal<boolean>(false);
+  blockPopupResults = signal<boolean>(false);
+  reportPopup = signal<boolean>(false);
+
+  confirmBlock = signal(false);
+  failBlock = signal(false);
+
   loaded = signal(false);
   userId = input.required<number>()
   withChat = input(false)
@@ -45,7 +54,7 @@ export class ProfileView {
   private activatedRoute = inject(ActivatedRoute);
   private ref = inject(ElementRef);
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private blockOrReportService: BlockOrReportService) {
     //TODO call API to add profile to user history
     userService.getClientUser().then((user)=>{
       if (user){
@@ -72,7 +81,8 @@ export class ProfileView {
 
     })
     this.ref.nativeElement.addEventListener('click', (e: any)=>{
-      if ((e.target as HTMLElement).closest('app-profile-view > .container') == null){
+      if ((e.target as HTMLElement).closest('app-profile-view > .container') == null
+      && (e.target as HTMLElement).closest('app-profile-view .popup-block-report') == null ){ 
         this.onClickOutside.emit();
       }
     });
@@ -112,4 +122,50 @@ export class ProfileView {
   ignoreUser(){
     this.onIgnore.emit();
   }
+
+  openBlockPopup(){
+    this.blockPopup.set(true);
+  }
+
+errorMessage = signal<string | null>(null);
+
+async blockUser() {
+  this.errorMessage.set(null);
+  try {
+    const response = await this.blockOrReportService.blockUser(this.userId());
+    if (response.ok) {
+      this.blockPopupResults.set(true);
+    } else {
+      this.errorMessage.set("An error occurred while blocking the user.");
+    }
+  } catch (error) {
+    this.errorMessage.set("Network error. Please try again later.");
+  }
+}
+
+async reportUser() {
+  this.errorMessage.set(null);
+  try {
+    const response = await this.blockOrReportService.reportUser(this.userId());
+    if (response.ok) {
+      this.blockPopupResults.set(true);
+    } else {
+      this.errorMessage.set("An error occurred while reporting the user.");
+    }
+  } catch (error) {
+    this.errorMessage.set("Network error. Please try again later.");
+  }
+}
+
+closeBlockPopup() {
+  this.blockPopup.set(false);
+  this.blockPopupResults.set(false);
+  this.errorMessage.set(null);
+}
+
+closeBlockPopupAndRedirect(){
+  this.closeBlockPopup();
+  window.location.href = '/';
+}
+
 }

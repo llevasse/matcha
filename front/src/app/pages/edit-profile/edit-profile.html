@@ -69,8 +69,6 @@
             <textarea (input)="setBio($event)"  [value]="tmpUser().bio" id="bio-input" placeholder="Bio :" rows="4"  minlength="10"></textarea>
           </label>
 
-
-
           <profile-image-input #imageContainer></profile-image-input>
           <button>Save</button>
         </form>
@@ -83,17 +81,26 @@
       <h1>Liked profiles</h1>
       <div class="dropdown inactive">
         <h1>List of profiles you liked</h1>
+        @if(likedProfiles()){
+          <div class="profile-list-container">
+            @for (item of likedProfiles(); track $index) {
+              <app-profile-preview [allowUnlike]="true" (onDestroy)="destroyLikedProfile(item)" [allowLike]="false" [allowIgnore]="false" [user]="item" [id]="$index"></app-profile-preview>
+            }
+          </div>
+        }
       </div>
     </div>
     <div class="dropdown-container" id="blocked-profiles-container" (click)="toggleDropdown($event)">
       <h1>Blocked profiles</h1>
       <div class="dropdown inactive">
         <h1>List of profiles you blocked</h1>
-        <div class="profile-list-container">
-        @for (item of blockedProfiles(); track $index) {
-          <app-profile-preview [allowUnblock]="true" [allowLike]="false" [allowIgnore]="false" [user]="item" [id]="$index"></app-profile-preview>
+        @if(blockedProfiles()){
+          <div class="profile-list-container">
+            @for (item of blockedProfiles(); track $index) {
+              <app-profile-preview [allowUnblock]="true" [allowLike]="false" [allowIgnore]="false" [user]="item" [id]="$index"></app-profile-preview>
+            }
+          </div>
         }
-        </div>
       </div>
     </div>
   }

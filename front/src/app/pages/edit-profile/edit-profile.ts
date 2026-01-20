@@ -1,3 +1,4 @@
+import { LikesService } from './../../../services/likesService';
 import { InterestService } from './../../../services/interestService';
 import { UserService } from './../../../services/userService';
 import { afterEveryRender, Component, signal, viewChild, ViewEncapsulation } from '@angular/core';
@@ -30,6 +31,7 @@ export class EditProfile {
 
 	errorMessages = signal<string[]>([]);
 	blockedProfiles = signal<User[]>([]);
+	likedProfiles = signal<User[]>([]);
 
 	locationInputContainer = viewChild<Dropdown>('locationInputContainer');
 	interestDropdown = viewChild<InterestDropdown>('interestDropdownContainer');
@@ -42,6 +44,7 @@ export class EditProfile {
 	constructor(
 	  private userService: UserService,
 	  private blockService: BlockOrReportService,
+	  private likeService: LikesService,
 	  private interestService: InterestService,
 	  private router: Router){
 		this.user.photos = [];
@@ -80,16 +83,27 @@ export class EditProfile {
 		else{ // call if city was not set by user last time
       this.userCity.set(tmpUser.cityStr);
 		}
+
 		await this.getBlockedProfiles();
+		await this.getLikedProfiles();
 
     this.loading.set(false);
 	}
 
-
-
 	async getBlockedProfiles(){
     this.blockedProfiles.set(await this.blockService.getBlockedUsers())
 	}
+
+	async getLikedProfiles(){
+    this.likedProfiles.set(await this.likeService.getUsersLikedByClient())
+	}
+
+  destroyLikedProfile(user: User){
+    this.likedProfiles.update((list)=>{
+      return list.filter((checkedUser)=>{return checkedUser.id != user.id})
+      ;
+    })
+  }
 
 	async processForm(event: SubmitEvent) {
 		event.preventDefault();

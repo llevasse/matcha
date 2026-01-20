@@ -70,4 +70,14 @@ export class LikesService {
       return this.userListFromResponse(value);
     });
   }
+
+  getUsersLikedByClient(){
+    return fetch(`${this.interationUrl}/likes-given`, {
+      headers : {
+        "Authorization":"Bearer " + localStorage.getItem('token'),
+      },
+    }).then(async (value)=>{
+      return this.userListFromResponse(value);
+    });
+  }
 }

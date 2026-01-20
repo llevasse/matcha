@@ -21,6 +21,7 @@ export class ProfilePreview {
   allowLike = input(true);
   allowIgnore = input(true);
   allowUnblock = input(false);
+  allowUnlike = input(false);
 
   constructor(private likesService: LikesService){};
 
@@ -37,7 +38,12 @@ export class ProfilePreview {
     this.onDestroy.emit();
   }
 
-  dislikeUser(){
+  unlikeUser(){
+    this.likesService.setUserAsUnliked(this.user().id);
+    this.onDestroy.emit();
+  }
+
+  ignoreUser(){
     this.onDestroy.emit();
   }
 }

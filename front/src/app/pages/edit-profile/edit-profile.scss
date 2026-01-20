@@ -99,12 +99,6 @@ profile-image-input{
   width: 100%;
 }
 
-@media all and (max-width: v.$max-width-to-consider-mobile) {
-  .fields-containers{
-    flex-direction: column;
-  }
-}
-
 app-profile-preview .container{
   background: v.$background-deg !important;
 
@@ -112,3 +106,14 @@ app-profile-preview .container{
     background-color: v.$secondary-bg-color !important;
   }
 }
+
+.profile-list-container{
+  padding: 0 !important;
+}
+
+@media all and (max-width: v.$max-width-to-consider-mobile) {
+  .fields-containers{
+    flex-direction: column;
+  }
+}
+

@@ -187,6 +187,31 @@ router.get('/likes-received', authenticateToken, async (req, res) => {
     }
 });
 
+router.get('/likes-given', authenticateToken, async (req, res) => {
+    try {
+        userLocation = await db.execute(`SELECT id, location_latitude, location_longitude FROM users WHERE id = ?`,
+          [req.user.id]);
+        if (userLocation.length == 0 || userLocation[0][0].location_latitude == undefined || userLocation[0][0].location_longitude == undefined){
+          throw ("could not get user location")
+        }
+        userLat = userLocation[0][0].location_latitude;
+        userLng = userLocation[0][0].location_longitude;
+
+        let query = getUserPreviewInfoSqlStatement + `, i.created_at as liked_at 
+          FROM interactions i
+          JOIN users u ON u.id = i.to_user_id
+          WHERE i.from_user_id = ? AND i.is_match = FALSE
+          ORDER BY i.created_at DESC`
+
+        const [likes] = await db.execute(query, [userLat, userLng, userLat, req.user.id, req.user.id]);
+
+        res.json(likes);
+    } catch (error) {
+        throw error;
+    }
+});
+
+
 router.get('/likes-received/:user_id', authenticateToken, async (req, res) => {
   try {
     const [likes] = await db.execute(

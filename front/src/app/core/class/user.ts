@@ -64,8 +64,8 @@ export class User{
     this.cityLat = obj.location_latitude;
     this.cityLon = obj.location_longitude;
     this.distance = obj.distance;
-    this.gender = obj.gender ?? "";
-    this.preferences = obj.preferences ?? [];
+    this.gender = obj.gender;
+    this.preferences = obj.preferences;
     this.bio = obj.bio ?? "";
     this.interest = obj.interest ?? [];
     this.photos = obj.photos ?? [];

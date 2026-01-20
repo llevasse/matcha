@@ -6,7 +6,7 @@
       </div>
     }
     @else {
-      <a>{{value() == null ? values() == null ? placeholder() : values()!.join(', ') : value()}}</a>
+      <a [className]="placeholderStyle() ? `placeholder` : ``">{{displayedValue()}}</a>
     }
     <div id="content" [style]="options().length == 0 ? 'display: none !important;' : ''" class="{{`content-`.concat(contentDirection())}}">
       @for (item of options(); track $index) {

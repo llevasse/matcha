@@ -47,12 +47,12 @@
           <div class="fields-containers">
             <label>
               <span>Gender</span>
-              <app-dropdown [placeholder]="'Gender'" style="z-index: 4; position: relative; width: 100%;"
-                (onSelected)="setGender($event)" [value]="tmpUser().gender ?? 'prefer not to say'" [options]="allowedGenders"/>
+              <app-dropdown #genderDropdown [placeholder]="'Gender'" style="z-index: 4; position: relative; width: 100%;"
+                 (onSelected)="setGender($event)" [value]="tmpUser().gender" [options]="allowedGenders"/>
             </label>
             <label>
               <span>Orientation</span>
-              <app-dropdown [placeholder]="'Orientation'" style="z-index: 3; position: relative; width: 100%;"
+              <app-dropdown #orientationDropdown [placeholder]="'Orientation'" style="z-index: 3; position: relative; width: 100%;"
                 (onSelected)="setOrientation($event)" [multiChoice]="true" [values]="tmpUser().preferences" [options]="allowedGenders"/>
             </label>
 

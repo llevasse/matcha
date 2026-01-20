@@ -36,6 +36,8 @@ export class EditProfile {
 
 	locationInputContainer = viewChild<Dropdown>('locationInputContainer');
 	interestDropdown = viewChild<InterestDropdown>('interestDropdownContainer');
+	genderDropdown = viewChild<Dropdown>('genderDropdown');
+	orientationDropdown = viewChild<Dropdown>('orientationDropdown');
 	imagesInput = viewChild<ProfileImageInput>('imageContainer');
 
 	maxBirthDay = new Date();
@@ -84,6 +86,7 @@ export class EditProfile {
 		else{ // call if city was not set by user last time
       this.userCity.set(tmpUser.cityStr);
 		}
+    console.log(this.tmpUser());
 
     if (this.user.isValid){
       await this.getBlockedProfiles();
@@ -225,6 +228,7 @@ export class EditProfile {
 
 	setOrientation(map: Map<string, any>){
 		this.tmpUser.update((user)=>{user.preferences = map.get('list'); return user});
+		this.orientationDropdown()?.setDisplayText();
 	}
 
 	setUsername(event: Event){

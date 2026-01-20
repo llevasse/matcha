@@ -13,6 +13,11 @@ export class Dropdown {
     this.e = this.ref.nativeElement;
     this.selectedValues = this.values() ?? [];
     this.selectedValue = this.value() ?? "";
+    this.setDisplayText(); 
+  }
+  
+  ngOnChanges(){
+    this.setDisplayText();
   }
 
   e:any = HTMLElement;
@@ -23,6 +28,8 @@ export class Dropdown {
   options = input<string[]>([]);
 
   placeholder = input.required<string>();
+  placeholderStyle = signal<boolean>(false);
+  displayedValue = signal<string>("");
 
   multiChoice = input(false);
   searchable = input(false);
@@ -40,6 +47,23 @@ export class Dropdown {
 
   onSearch = output<void>();
   onSelected = output<Map<string, any>>();
+  
+  setDisplayText(){
+    if (this.value() == null){
+      if (this.values() == null || this.values()?.length == 0){
+        this.displayedValue.set(this.placeholder());
+        this.placeholderStyle.set(true);
+      }
+      else{
+        this.displayedValue.set(this.values()!.join(', '));
+        this.placeholderStyle.set(false);
+      }
+    }
+    else{
+      this.displayedValue.set(this.value()!);
+      this.placeholderStyle.set(false);
+    }
+  }
 
   toggleDropDown(){
     if (this.contentClass() == ""  || this.options().length == 0){

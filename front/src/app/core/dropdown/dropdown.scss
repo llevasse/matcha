@@ -107,3 +107,8 @@ input::placeholder{
     color: v.$text-color;
   }
 }
+
+.placeholder{
+  opacity: .5;
+  font-size: .8em;
+}

@@ -80,7 +80,7 @@ export class Login {
             if (user == null){
               return ;
             }
-            this.router.navigate([user.isFilled() ? `/` : `/profile`]);
+            this.router.navigate([user.isValid ? `/` : `/profile`]);
           })
         }
         else{

@@ -6,42 +6,6 @@ import { Subscription } from "rxjs";
 export class User{
   private baseImgUrl = `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000`;
 
-  createDummy(){
-    this.id = 42;
-    this.lastName = "Doe"
-    this.firstName = "Jane"
-    this.username = "anon"
-    this.birthday = '2000-01-01'
-    this.gender = 'Prefer not to say'
-    this.preferences = ['woman', 'man']
-    this.bio = `Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\r\n
-Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\r\n
-Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.`
-    this.interest = [new Interest('#hiking', 0), new Interest('#trail-running', 0), new Interest('#running', 0), new Interest('#crochet', 0), new Interest('#reading', 0), new Interest('#knitting', 0)]
-    this.fame = 420;
-    this.cityLat = 45.781067835208646;
-    this.cityLon = 4.748013596686739;
-    this.cityStr = "charbonniere-les-bains"
-    this.photos = [
-      new ProfileImage('/assets/lambert_pfp.jpg'),
-      new ProfileImage('/assets/lambert1.jpg'),
-      new ProfileImage('/assets/lambert2.jpg'),
-      new ProfileImage('/assets/lambert3.jpg'),
-      new ProfileImage('/assets/lambert_lust.jpg'),
-      ]
-  }
-
-  hashCode(){
-    var hash = 0;
-    var s = this.toString();
-    for (var i = 0; i < s.length; i++) {
-        var code = s.charCodeAt(i);
-        hash = ((hash<<5)-hash)+code;
-        hash = hash & hash;
-    }
-    return hash;
-  }
-
   constructor(
     obj : {
       id: number,
@@ -64,6 +28,7 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
       last_connection_date: string | null,
       tags: {id: number, name: string}[],
       pictures: {id: number, file_path: string, is_main: number, uploaded_at: string}[];
+      isValid: boolean,
     } = {
       id: NaN,
       lastname: "",
@@ -84,7 +49,8 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
       photos: [],
       fame: NaN,
       tags: [],
-      pictures: []
+      pictures: [],
+      isValid: false,
     }
   ){
     this.id = obj.id ?? NaN;
@@ -122,6 +88,8 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
     this.photos.length = 5;
     this.photos.fill(new ProfileImage(), this.photos.length);
 
+    this.isValid = obj.isValid;
+
     // console.log(this);
   }
 
@@ -155,9 +123,8 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
 
   ws: WebSocketSubject<any> | null = null;
 
-  isFilled(){
-    return !(this.birthday == "" || this.gender == "" || this.preferences.length == 0 || this.photos.length == 0)
-  }
+  isAdmin: boolean = false;
+  isValid: boolean = false;
 }
 
 User.prototype.toString = function(){

@@ -3,19 +3,21 @@
     <main class="main">
       @if (isAuth()) {
         <ul id="navbar-desktop">
-          <li (click)="goHome()" class="navbar-title">MATCHA</li>
-          <li (click)="goProfile()">Profile</li>
-          <li (click)="goLikes()">Likes</li>
-          <li (click)="goMatches()">Matches</li>
-          <li (click)="goHistory()">History</li>
-          <div class="notif-dropdown-container">
-            <li (click)="toggleNotifDropdown($event)">Notif ({{notifList().length}})</li>
-            <div class="notif-content-container inactive">
-              @for (notif of notifList(); track $index) {
-                <app-notification [notification]="notif"></app-notification>
-              }
+          @if (clientUser && clientUser.isValid) {
+            <li (click)="goHome()" class="navbar-title">MATCHA</li>
+            <li (click)="goProfile()">Profile</li>
+            <li (click)="goLikes()">Likes</li>
+            <li (click)="goMatches()">Matches</li>
+            <li (click)="goHistory()">History</li>
+            <div class="notif-dropdown-container">
+              <li (click)="toggleNotifDropdown($event)">Notif ({{notifList().length}})</li>
+              <div class="notif-content-container inactive">
+                @for (notif of notifList(); track $index) {
+                  <app-notification [notification]="notif"></app-notification>
+                }
+              </div>
             </div>
-          </div>
+          }
           <li (click)="logout()">Log out</li>
         </ul>
 
@@ -23,26 +25,29 @@
           <li class="navbar-title">MATCHA</li>
         </ul>
         <ul id="navbar-mobile-fixed">
-          <li (click)="goHome()" class="navbar-title">MATCHA</li>
-          <div class="notif-dropdown-container">
-            <li (click)="toggleNotifDropdown($event)">Notif ({{notifList().length}})</li>
-            <div class="notif-content-container inactive">
-              @for (notif of notifList(); track $index) {
-                <app-notification [notification]="notif"></app-notification>
-              }
+          @if (clientUser && clientUser.isValid) {
+            <li (click)="goHome()" class="navbar-title">MATCHA</li>
+            <div class="notif-dropdown-container">
+              <li (click)="toggleNotifDropdown($event)">Notif ({{notifList().length}})</li>
+              <div class="notif-content-container inactive">
+                @for (notif of notifList(); track $index) {
+                  <app-notification [notification]="notif"></app-notification>
+                }
+              </div>
             </div>
-          </div>
+          }
           <li (click)="logout()">Log out</li>
         </ul>
 
         <router-outlet />
-
-        <ul id="bottom-navbar-mobile">
-          <li (click)="goMatches()">Matches</li>
-          <li (click)="goLikes()">Likes</li>
-          <li (click)="goProfile()">Profile</li>
-          <li (click)="goHistory()">History</li>
-        </ul>
+        @if (clientUser && clientUser.isValid) {
+          <ul id="bottom-navbar-mobile">
+            <li (click)="goMatches()">Matches</li>
+            <li (click)="goLikes()">Likes</li>
+            <li (click)="goProfile()">Profile</li>
+            <li (click)="goHistory()">History</li>
+          </ul>
+        }
       }
       @else {
         <router-outlet />

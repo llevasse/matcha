@@ -77,46 +77,48 @@
         }
       </div>
     </div>
-    <div class="dropdown-container" id="liked-profiles-container" (click)="toggleDropdown($event)">
-      <h1>Liked profiles</h1>
-      <div class="dropdown inactive">
-        <h1>List of profiles you liked</h1>
-        @if(likedProfiles().length > 0){
-          <div class="profile-list-container">
-            @for (item of likedProfiles(); track $index) {
-              <app-profile-preview
-              [allowUnlike]="true"
-              (onDestroy)="destroyLikedProfile(item)"
-              [allowLike]="false"
-              [allowIgnore]="false"
-              [user]="item"
-              [id]="$index">
-              </app-profile-preview>
-            }
-          </div>
-        }
+    @if(tmpUser().isValid){
+      <div class="dropdown-container" id="liked-profiles-container" (click)="toggleDropdown($event)">
+        <h1>Liked profiles</h1>
+        <div class="dropdown inactive">
+          <h1>List of profiles you liked</h1>
+          @if(likedProfiles().length > 0){
+            <div class="profile-list-container">
+              @for (item of likedProfiles(); track $index) {
+                <app-profile-preview
+                [allowUnlike]="true"
+                (onDestroy)="destroyLikedProfile(item)"
+                [allowLike]="false"
+                [allowIgnore]="false"
+                [user]="item"
+                [id]="$index">
+                </app-profile-preview>
+              }
+            </div>
+          }
+        </div>
       </div>
-    </div>
-    <div class="dropdown-container" id="blocked-profiles-container" (click)="toggleDropdown($event)">
-      <h1>Blocked profiles</h1>
-      <div class="dropdown inactive">
-        <h1>List of profiles you blocked</h1>
-        @if (blockedProfiles().length > 0){
-          <div class="profile-list-container">
-            @for (item of blockedProfiles(); track $index) {
-              <app-profile-preview
-              [allowUnblock]="true"
-              [allowLike]="false"
-              [allowIgnore]="false"
-              [user]="item"
-              [id]="$index"
-              (onDestroy)="removeBlockedProfile(item)"
-              >
-              </app-profile-preview>
-            }
-          </div>
-        }
+      <div class="dropdown-container" id="blocked-profiles-container" (click)="toggleDropdown($event)">
+        <h1>Blocked profiles</h1>
+        <div class="dropdown inactive">
+          <h1>List of profiles you blocked</h1>
+          @if (blockedProfiles().length > 0){
+            <div class="profile-list-container">
+              @for (item of blockedProfiles(); track $index) {
+                <app-profile-preview
+                [allowUnblock]="true"
+                [allowLike]="false"
+                [allowIgnore]="false"
+                [user]="item"
+                [id]="$index"
+                (onDestroy)="removeBlockedProfile(item)"
+                >
+                </app-profile-preview>
+              }
+            </div>
+          }
+        </div>
       </div>
-    </div>
+    } 
   }
 </div>

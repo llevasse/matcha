@@ -14,7 +14,12 @@ export class ProfileImageInput {
 
   private viewContainer = inject(ViewContainerRef);
 
-  constructor(){}
+  constructor(){
+    this.images.update((list)=>{
+      list.length = 5;
+      return list;
+    })
+  }
 
   ngAfterViewInit(){
     this.index = this.images().length;

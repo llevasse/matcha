@@ -90,8 +90,8 @@ app-image-viewer{
   }
 
   li:last-child{
-    position: absolute;
-    right: 0;
+    flex: 1;
+    text-align: end;
   }
 
   .notif-dropdown-container{

@@ -27,20 +27,29 @@ export class App {
       this.loaded.set(true);
       return;
     }
-    userService.createClientUser().then((user)=>{
-      if (user){
-        this.clientUser = user;
-        user.ws?.subscribe((obj)=>{
-          this.notificationHandler(obj);
-          this.loaded.set(false);
-          this.loaded.set(true);
-        })
-      }
-      this.loaded.set(true);
-    })
+    userService.createClientUser();
+
+    document.addEventListener("clientCreated", ()=>{
+      this.userService.getClientUser().then((user)=>{
+        if (user){
+          this.clientUser = user;
+          user.ws?.subscribe((obj)=>{
+            this.notificationHandler(obj);
+            this.loaded.set(false);
+            this.loaded.set(true);
+          })
+          if (!this.getCurrentPathName().startsWith("/profile") && !this.clientUser.isValid){
+            router.navigate(["/profile"])
+          }
+        }
+        this.loaded.set(true);
+      })
+    });
+
     document.addEventListener("logout", ()=>{
       this.loaded.set(false);
       this.loaded.set(true);
+      this.clientUser = null;
       this.notifList.set([]);
     })
 

@@ -29,6 +29,7 @@ export class UserService {
         this.clientUser.ws.subscribe();
         this.clientUser.ws.next({message: `init : ${id}`})
 
+        document.dispatchEvent(new Event("clientCreated"));
         return this.clientUser;
       }
       return null;

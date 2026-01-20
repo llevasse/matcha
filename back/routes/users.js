@@ -44,11 +44,11 @@ router.post('/add_to_history', authenticateToken, asyncHandler(async (req, res) 
 
 router.get('/history', authenticateToken, asyncHandler(async (req, res) => {
     const users = await getViewingHistory(req.user.id);
-    
+
     if (users.length === 0) {
         return res.status(204).json([]);
     }
-    
+
     res.json(users);
 }));
 

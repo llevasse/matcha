@@ -8,54 +8,54 @@ const router = express.Router();
 
 // Envoyer un message
 router.post('/', authenticateToken, validateMessage, asyncHandler(async (req, res) => {
-        const { receiver_id, content } = req.body;
+    const { receiver_id, content } = req.body;
 
-        // Vérifier que c'est un match
-        const [match] = await db.execute(`
+    // Vérifier que c'est un match
+    const [match] = await db.execute(`
             SELECT 1 FROM interactions 
             WHERE ((from_user_id = ? AND to_user_id = ?) OR (from_user_id = ? AND to_user_id = ?))
             AND is_match = TRUE
         `, [req.user.id, receiver_id, receiver_id, req.user.id]);
 
-        if (match.length === 0) {
-            return res.status(403).json({ error: 'Can only message matched users' });
-        }
+    if (match.length === 0) {
+        return res.status(403).json({ error: 'Can only message matched users' });
+    }
 
-        // Envoyer le message
-        const [result] = await db.execute(
-            'INSERT INTO messages (sender_id, receiver_id, content) VALUES (?, ?, ?)',
-            [req.user.id, receiver_id, content]
-        );
+    // Envoyer le message
+    const [result] = await db.execute(
+        'INSERT INTO messages (sender_id, receiver_id, content) VALUES (?, ?, ?)',
+        [req.user.id, receiver_id, content]
+    );
 
-        res.status(201).json({
-            id: result.insertId,
-            sender_id: req.user.id,
-            receiver_id,
-            content,
-            sent_at: new Date(),
-            message: 'Message sent successfully'
-        });
+    res.status(201).json({
+        id: result.insertId,
+        sender_id: req.user.id,
+        receiver_id,
+        content,
+        sent_at: new Date(),
+        message: 'Message sent successfully'
+    });
 }));
 
 // Obtenir la conversation avec un utilisateur
 router.get('/conversation/:user_id', authenticateToken, asyncHandler(async (req, res) => {
-        const otherUserId = req.params.user_id;
-        const { limit = 50, offset = 0 } = req.query;
+    const otherUserId = req.params.user_id;
+    const { limit = 50, offset = 0 } = req.query;
 
-        // Vérifier que c'est un match
-        const [match] = await db.execute(`
+    // Vérifier que c'est un match
+    const [match] = await db.execute(`
             SELECT 1 FROM interactions 
             WHERE ((from_user_id = ? AND to_user_id = ?) OR (from_user_id = ? AND to_user_id = ?))
             AND is_match = TRUE
         `, [req.user.id, otherUserId, otherUserId, req.user.id]);
 
-        if (match.length === 0) {
-            return res.status(403).json({ error: 'Not matched with this user' });
-        }
+    if (match.length === 0) {
+        return res.status(403).json({ error: 'Not matched with this user' });
+    }
 
-        // Récupérer les messages
-        // Messages need to be sorted by id (and date if possible), if only by date then mixup can appear
-        const [messages] = await db.execute(`
+    // Récupérer les messages
+    // Messages need to be sorted by id (and date if possible), if only by date then mixup can appear
+    const [messages] = await db.execute(`
             SELECT m.*, u.username as sender_username
             FROM messages m
             JOIN users u ON m.sender_id = u.id
@@ -64,12 +64,12 @@ router.get('/conversation/:user_id', authenticateToken, asyncHandler(async (req,
             LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}
         `, [req.user.id, otherUserId, otherUserId, req.user.id]);
 
-        res.json(messages.reverse());
+    res.json(messages.reverse());
 }));
 
 // Obtenir toutes les conversations
 router.get('/conversations', authenticateToken, asyncHandler(async (req, res) => {
-        const [conversations] = await db.execute(`
+    const [conversations] = await db.execute(`
             SELECT 
                 u.id, u.username, pp.file_path as profile_picture,
                 m.content as last_message,
@@ -97,7 +97,7 @@ router.get('/conversations', authenticateToken, asyncHandler(async (req, res) =>
             ORDER BY m.sent_at DESC
         `, [req.user.id, req.user.id, req.user.id, req.user.id, req.user.id, req.user.id, req.user.id, req.user.id]);
 
-        res.json(conversations);
+    res.json(conversations);
 }));
 
 module.exports = router;

@@ -24,7 +24,7 @@ async function getPublicProfile(requesterId, targetUserId) {
     }
 
     const [users] = await db.execute(getUserPublicInfoByIdSqlStatement, [targetUserId]);
-    
+
     if (users.length === 0) {
         const error = new Error('User not found');
         error.status = 404;
@@ -37,15 +37,15 @@ async function getPublicProfile(requesterId, targetUserId) {
 
 async function updateProfile(userId, profileData) {
     const connection = await db.getConnection();
-    
+
     try {
         const { username, firstname, lastname, email, bio, city, gender, preferences, birthdate, location_latitude, location_longitude } = profileData;
-        
+
         await connection.beginTransaction();
-        
+
         await _validateAge(birthdate);
         const genderId = await _getGenderId(connection, gender);
-        
+
         await connection.execute(
             `UPDATE users SET username = ?, firstname = ?, lastname = ?, email = ?, bio = ?, city = ?, gender_id = ?, birthdate = ?, location_latitude = ?, location_longitude = ? WHERE id = ?`,
             [username, firstname, lastname, email, bio, city, genderId, birthdate, location_latitude, location_longitude, userId]
@@ -53,7 +53,7 @@ async function updateProfile(userId, profileData) {
 
         await _updateUserPreferences(connection, userId, preferences);
         await updateProfileValidity(userId);
-        
+
         await connection.commit();
     } catch (error) {
         await connection.rollback();
@@ -139,12 +139,12 @@ async function searchUsers(userId, userGenderId, searchParams) {
 async function updateProfileValidity(userId) {
     let isConfirmed = true;
     const connection = await db.getConnection();
-    
+
     const [users] = await connection.execute(
         `SELECT id, username, firstname, lastname, birthdate FROM users WHERE id = ?`,
         [userId]
     );
-    
+
     if (users.length !== 0) {
         Object.values(users[0]).forEach((value) => {
             if (value == null || value == undefined) {
@@ -157,7 +157,7 @@ async function updateProfileValidity(userId) {
         'SELECT id FROM profile_pictures WHERE user_id = ? LIMIT 1',
         [userId]
     );
-    
+
     if (pictures.length === 0) {
         isConfirmed = false;
     }
@@ -170,7 +170,7 @@ async function updateProfileValidity(userId) {
 
 async function _throw404IfUserDoesNotExist(userId) {
     const [users] = await db.execute('SELECT id FROM users WHERE id = ?', [userId]);
-    
+
     if (users.length === 0) {
         const error = new Error('User does not exist');
         error.status = 404;
@@ -182,7 +182,7 @@ async function _validateAge(birthdate) {
     const dob = Date.parse(birthdate);
     const maxDob = new Date(Date.parse((new Date()).toDateString()));
     maxDob.setFullYear(maxDob.getFullYear() - 18);
-    
+
     if (dob - maxDob > 0) {
         throw new Error("User must be at least 18 years old.");
     }
@@ -193,11 +193,11 @@ async function _getGenderId(connection, gender) {
         `SELECT id FROM genders WHERE label = ?`,
         [gender]
     );
-    
+
     if (genderRows.length === 0) {
         throw new Error("Genre invalide.");
     }
-    
+
     return genderRows[0].id;
 }
 
@@ -212,11 +212,11 @@ async function _updateUserPreferences(connection, userId, preferences) {
             `SELECT id FROM genders WHERE label = ?`,
             [prefLabel]
         );
-        
+
         if (prefRows.length === 0) {
             throw new Error(`Préférence invalide: ${prefLabel}`);
         }
-        
+
         const prefId = prefRows[0].id;
         await connection.execute(
             `INSERT INTO user_preferences (user_id, gender_id) VALUES (?, ?)`,
@@ -230,7 +230,7 @@ async function _getInterestBlackWhiteList(whitelistInterest, blacklistInterest, 
     let interestBlacklistUserIdList = [];
     let whitelistInterestList = [];
     let blacklistInterestList = [];
-    
+
     if (whitelistInterest) {
         whitelistInterestList = whitelistInterest.split(",");
     }
@@ -270,17 +270,17 @@ async function _getUserIdsByInterests(interestList, userId) {
     interestList.forEach((value, index) => {
         interestList[index] = Number.parseInt(value);
     });
-    
+
     const tokens = new Array(interestList.length).fill('?').join(',');
     interestList.push(userId);
-    
+
     const interestQuery = `SELECT DISTINCT user_id FROM user_tags WHERE tag_id IN (${tokens}) AND user_id != ?`;
     const result = await db.execute(interestQuery, interestList);
-    
+
     result[0].forEach((element) => {
         userIdList.push(element['user_id']);
     });
-    
+
     return userIdList;
 }
 

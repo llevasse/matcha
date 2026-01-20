@@ -1,7 +1,7 @@
 const db = require('../config/database');
 const { performUnlike } = require('../services/interactionService');
 
-async function blockUser(userId, toUserId){
+async function blockUser(userId, toUserId) {
 
     await _throw404IfUserDoesNotExist(toUserId);
 
@@ -13,7 +13,7 @@ async function blockUser(userId, toUserId){
 
 }
 
-async function unblockUser(userId, toUserId){
+async function unblockUser(userId, toUserId) {
 
     await _throw404IfUserDoesNotExist(toUserId);
 
@@ -23,20 +23,20 @@ async function unblockUser(userId, toUserId){
 
 }
 
-async function reportUser(userId, toUserId){
+async function reportUser(userId, toUserId) {
 
     await _throw404IfUserDoesNotExist(toUserId);
 
     await _throw204IfReportAlreadyExist(userId, toUserId);
 
     await _addBlockToThisUser(userId, toUserId);
-    
+
     await _unlikeAndUnmatchUsers(userId, toUserId);
 
     await _addReportToThisUser(userId, toUserId);
 }
 
-async function hasBeenBlockedByOrIsBlocking(id1, id2){
+async function hasBeenBlockedByOrIsBlocking(id1, id2) {
 
     const [result] = await db.execute(
         `SELECT id FROM blocks 
@@ -53,11 +53,11 @@ async function _unlikeAndUnmatchUsers(userId, toUserId) {
     await _unlikeAndUnmatchUser(toUserId, userId);
 }
 
-async function _unlikeAndUnmatchUser(userId, toUserId){
-    try{
+async function _unlikeAndUnmatchUser(userId, toUserId) {
+    try {
         await performUnlike(userId, toUserId);
     } catch (error) {
-        if (error.status == 404){
+        if (error.status == 404) {
             return; //no existing like, it's ok
         }
         throw (error);
@@ -95,9 +95,9 @@ async function _throw204IfReportAlreadyExist(userId, toUserId) {
         throw error;
     };
 }
-  
+
 async function _addBlockToThisUser(userId, toUserId) {
-    if (! await _checkIfBlockAlreadyExist(userId, toUserId)){
+    if (! await _checkIfBlockAlreadyExist(userId, toUserId)) {
         await db.execute(
             'INSERT INTO blocks (from_user_id, to_user_id) VALUES (?, ?)',
             [userId, toUserId]
@@ -146,4 +146,4 @@ async function _checkIfUserExist(toUserId) {
     return (targetUser.length !== 0);
 }
 
-module.exports = { blockUser, unblockUser, reportUser, hasBeenBlockedByOrIsBlocking};
+module.exports = { blockUser, unblockUser, reportUser, hasBeenBlockedByOrIsBlocking };

@@ -42,118 +42,118 @@ const upload = multer({
 // Obtenir les photos de profil du client
 router.get('/', authenticateToken, asyncHandler(async (req, res) => {
 
-        const [pictures] = await db.execute(
-            'SELECT id, file_path, is_main, uploaded_at FROM profile_pictures WHERE user_id = ? ORDER BY is_main DESC, uploaded_at DESC',
-            [req.user.id]
-        );
+    const [pictures] = await db.execute(
+        'SELECT id, file_path, is_main, uploaded_at FROM profile_pictures WHERE user_id = ? ORDER BY is_main DESC, uploaded_at DESC',
+        [req.user.id]
+    );
 
-        res.json(pictures);
+    res.json(pictures);
 
 }));
 
 // Obtenir les photos de profil d'un utilisateur
 router.get('/:user_id', authenticateToken, asyncHandler(async (req, res) => {
 
-        const [pictures] = await db.execute(
-            'SELECT id, file_path, is_main, uploaded_at FROM profile_pictures WHERE user_id = ? ORDER BY is_main DESC, uploaded_at DESC',
-            [req.params.user_id]
-        );
+    const [pictures] = await db.execute(
+        'SELECT id, file_path, is_main, uploaded_at FROM profile_pictures WHERE user_id = ? ORDER BY is_main DESC, uploaded_at DESC',
+        [req.params.user_id]
+    );
 
-        res.json(pictures);
+    res.json(pictures);
 
 }));
 
 // Upload d'une photo de profil
 router.post('/upload', authenticateToken, upload.single('photo'), asyncHandler(async (req, res) => {
-        if (!req.file) {
-            return res.status(400).json({ error: 'No file uploaded' });
-        }
+    if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+    }
 
-        const filePath = `/uploads/profiles/${req.file.filename}`;
-        
-        // Si c'est la première photo, la définir comme principale
-        const [existingPictures] = await db.execute(
-            'SELECT COUNT(*) as count FROM profile_pictures WHERE user_id = ?',
-            [req.user.id]
-        );
+    const filePath = `/uploads/profiles/${req.file.filename}`;
 
-        const isMain = existingPictures[0].count === 0;
+    // Si c'est la première photo, la définir comme principale
+    const [existingPictures] = await db.execute(
+        'SELECT COUNT(*) as count FROM profile_pictures WHERE user_id = ?',
+        [req.user.id]
+    );
 
-        const [result] = await db.execute(
-            'INSERT INTO profile_pictures (user_id, file_path, is_main) VALUES (?, ?, ?)',
-            [req.user.id, filePath, isMain]
-        );
-        checkProfileValidity(req.user.id)
-        
-        res.status(201).json({
-            id: result.insertId,
-            file_path: filePath,
-            is_main: isMain,
-            message: 'Photo uploaded successfully'
-        });
+    const isMain = existingPictures[0].count === 0;
+
+    const [result] = await db.execute(
+        'INSERT INTO profile_pictures (user_id, file_path, is_main) VALUES (?, ?, ?)',
+        [req.user.id, filePath, isMain]
+    );
+    checkProfileValidity(req.user.id)
+
+    res.status(201).json({
+        id: result.insertId,
+        file_path: filePath,
+        is_main: isMain,
+        message: 'Photo uploaded successfully'
+    });
 }));
 
 // Définir une photo comme principale
 router.put('/:id/main', authenticateToken, asyncHandler(async (req, res) => {
-        const pictureId = req.params.id;
+    const pictureId = req.params.id;
 
-        // Vérifier que la photo appartient à l'utilisateur
-        const [pictures] = await db.execute(
-            'SELECT id FROM profile_pictures WHERE id = ? AND user_id = ?',
-            [pictureId, req.user.id]
-        );
+    // Vérifier que la photo appartient à l'utilisateur
+    const [pictures] = await db.execute(
+        'SELECT id FROM profile_pictures WHERE id = ? AND user_id = ?',
+        [pictureId, req.user.id]
+    );
 
-        if (pictures.length === 0) {
-            return res.status(404).json({ error: 'Picture not found' });
-        }
+    if (pictures.length === 0) {
+        return res.status(404).json({ error: 'Picture not found' });
+    }
 
-        // Retirer le statut principal de toutes les autres photos
-        await db.execute(
-            'UPDATE profile_pictures SET is_main = FALSE WHERE user_id = ?',
-            [req.user.id]
-        );
+    // Retirer le statut principal de toutes les autres photos
+    await db.execute(
+        'UPDATE profile_pictures SET is_main = FALSE WHERE user_id = ?',
+        [req.user.id]
+    );
 
-        // Définir cette photo comme principale
-        await db.execute(
-            'UPDATE profile_pictures SET is_main = TRUE WHERE id = ?',
-            [pictureId]
-        );
+    // Définir cette photo comme principale
+    await db.execute(
+        'UPDATE profile_pictures SET is_main = TRUE WHERE id = ?',
+        [pictureId]
+    );
 
-        res.json({ message: 'Main picture updated successfully' });
+    res.json({ message: 'Main picture updated successfully' });
 
 }));
 
 // Supprimer une photo
 router.delete('/:id', authenticateToken, asyncHandler(async (req, res) => {
-        const pictureId = req.params.id;
+    const pictureId = req.params.id;
 
-        // Récupérer les infos de la photo
-        const [pictures] = await db.execute(
-            'SELECT file_path FROM profile_pictures WHERE id = ? AND user_id = ?',
-            [pictureId, req.user.id]
-        );
+    // Récupérer les infos de la photo
+    const [pictures] = await db.execute(
+        'SELECT file_path FROM profile_pictures WHERE id = ? AND user_id = ?',
+        [pictureId, req.user.id]
+    );
 
-        if (pictures.length === 0) {
-            return res.status(404).json({ error: 'Picture not found' });
-        }
+    if (pictures.length === 0) {
+        return res.status(404).json({ error: 'Picture not found' });
+    }
 
-        const filePath = pictures[0].file_path;
+    const filePath = pictures[0].file_path;
 
-        // Supprimer de la base de données
-        await db.execute(
-            'DELETE FROM profile_pictures WHERE id = ?',
-            [pictureId]
-        );
+    // Supprimer de la base de données
+    await db.execute(
+        'DELETE FROM profile_pictures WHERE id = ?',
+        [pictureId]
+    );
 
-        // Supprimer le fichier physique
-        try {
-            const fullPath = path.join(__dirname, '..', filePath);
-            await fs.unlink(fullPath);
-        } catch (fileError) {
-            console.error('Error deleting file:', fileError);
-        }
+    // Supprimer le fichier physique
+    try {
+        const fullPath = path.join(__dirname, '..', filePath);
+        await fs.unlink(fullPath);
+    } catch (fileError) {
+        console.error('Error deleting file:', fileError);
+    }
 
-        res.json({ message: 'Picture deleted successfully' });
+    res.json({ message: 'Picture deleted successfully' });
 }));
 
 module.exports = router;

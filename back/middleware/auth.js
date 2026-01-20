@@ -44,7 +44,7 @@ const adminAuthenticateToken = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
+
         // Vérifier que l'utilisateur existe toujours
         const [users] = await db.execute(
             'SELECT id, is_admin, username, email FROM users WHERE id = ?',
@@ -55,8 +55,8 @@ const adminAuthenticateToken = async (req, res, next) => {
             return res.status(401).json({ error: 'Invalid token' });
         }
 
-        if (users[0].is_admin == false){
-            return res.status(403).json({ error: 'User is not admind' });        
+        if (users[0].is_admin == false) {
+            return res.status(403).json({ error: 'User is not admind' });
         }
         req.user = users[0];
         next();

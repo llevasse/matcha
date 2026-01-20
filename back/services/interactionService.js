@@ -34,7 +34,7 @@ async function performUnlike(fromUserId, toUserId) {
 
     await db.execute('UPDATE users SET fame = fame - 10 WHERE id = ?', [toUserId]);
     await db.execute('UPDATE users SET fame = fame - 3 WHERE id = ?', [fromUserId]);
-    
+
     console.log("performUnlike done");
 }
 

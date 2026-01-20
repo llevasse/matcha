@@ -78,7 +78,7 @@ const validateProfileUpdate = (req, res, next) => {
     }
     next();
 };
-    
+
 
 module.exports = {
     validateRegistration,

@@ -1,4 +1,4 @@
-  const express = require('express');
+const express = require('express');
 const db = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
 const asyncHandler = require('../middleware/asyncHandler');
@@ -7,8 +7,8 @@ const router = express.Router();
 
 // Obtenir tous les tags
 router.get('/', asyncHandler(async (req, res) => {
-        const [tags] = await db.execute('SELECT * FROM tags ORDER BY name');
-        res.json(tags);
+    const [tags] = await db.execute('SELECT * FROM tags ORDER BY name');
+    res.json(tags);
 }));
 
 // Créer un nouveau tag
@@ -40,54 +40,54 @@ router.post('/', authenticateToken, asyncHandler(async (req, res) => {
 
 // Obtenir les tags d'un utilisateur
 router.get('/user/:user_id', asyncHandler(async (req, res) => {
-        const userId = req.params.user_id;
+    const userId = req.params.user_id;
 
-        const [userTags] = await db.execute(`
+    const [userTags] = await db.execute(`
             SELECT t.id, t.name 
             FROM user_tags ut
             JOIN tags t ON ut.tag_id = t.id
             WHERE ut.user_id = ?
             ORDER BY t.name
         `, [userId]);
-        // (SELECT JSON_ARRAYAGG(t.id, t.name) FROM user_tags ut JOIN tags t ON ut.tag_id = t.id WHERE ut.user_id = ? GROUP BY ut.user_id) as tags
-        res.json(userTags);
+    // (SELECT JSON_ARRAYAGG(t.id, t.name) FROM user_tags ut JOIN tags t ON ut.tag_id = t.id WHERE ut.user_id = ? GROUP BY ut.user_id) as tags
+    res.json(userTags);
 
 }));
 
 // Ajouter un tag à l'utilisateur connecté
 router.post('/user', authenticateToken, asyncHandler(async (req, res) => {
-        const { tag_id } = req.body;
+    const { tag_id } = req.body;
 
-        // Vérifier que le tag existe
-        const [tags] = await db.execute('SELECT id FROM tags WHERE id = ?', [tag_id]);
-        if (tags.length === 0) {
-            return res.status(404).json({ error: 'Tag not found' });
-        }
+    // Vérifier que le tag existe
+    const [tags] = await db.execute('SELECT id FROM tags WHERE id = ?', [tag_id]);
+    if (tags.length === 0) {
+        return res.status(404).json({ error: 'Tag not found' });
+    }
 
-        // Ajouter le tag à l'utilisateur
-        await db.execute(
-            'INSERT IGNORE INTO user_tags (user_id, tag_id) VALUES (?, ?)',
-            [req.user.id, tag_id]
-        );
+    // Ajouter le tag à l'utilisateur
+    await db.execute(
+        'INSERT IGNORE INTO user_tags (user_id, tag_id) VALUES (?, ?)',
+        [req.user.id, tag_id]
+    );
 
-        res.json({ message: 'Tag added successfully' });
+    res.json({ message: 'Tag added successfully' });
 
 }));
 
 // Supprimer un tag de l'utilisateur connecté
 router.delete('/user/:tag_id', authenticateToken, asyncHandler(async (req, res) => {
-        const tagId = req.params.tag_id;
+    const tagId = req.params.tag_id;
 
-        const [result] = await db.execute(
-            'DELETE FROM user_tags WHERE user_id = ? AND tag_id = ?',
-            [req.user.id, tagId]
-        );
+    const [result] = await db.execute(
+        'DELETE FROM user_tags WHERE user_id = ? AND tag_id = ?',
+        [req.user.id, tagId]
+    );
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ error: 'Tag not found for this user' });
-        }
+    if (result.affectedRows === 0) {
+        return res.status(404).json({ error: 'Tag not found for this user' });
+    }
 
-        res.json({ message: 'Tag removed successfully' });
+    res.json({ message: 'Tag removed successfully' });
 }));
 
 module.exports = router;

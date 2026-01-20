@@ -1,4 +1,4 @@
-import { Component, inject, signal, viewChildren, ViewContainerRef, viewChild, HostListener } from '@angular/core';
+import { Component, inject, signal, viewChildren, ViewContainerRef, viewChild, HostListener, ComponentRef } from '@angular/core';
 import { ProfilePreview } from "../../profile-preview/profile-preview";
 import { User } from "../../core/class/user"
 import { ProfileView } from '../../profile-view/profile-view';
@@ -165,35 +165,38 @@ export class Home {
 
         profile.instance.onLike.subscribe(()=>{
           this.likeService.setUserAsLiked(userId);
-          window.history.pushState('','',`/`);
-          this.profiles.update((list)=>{
-            return list.filter((checkedUser)=>{return checkedUser.id != userId});
-          })
-          profile.destroy();
+          this.closeProfile(profile, returnedUser);
         })
 
         profile.instance.onIgnore.subscribe(()=>{
-          window.history.pushState('','',`/`);
-          this.profiles.update((list)=>{
-            return list.filter((checkedUser)=>{return checkedUser.id != userId});
-          })
-          profile.destroy();
+          this.closeProfile(profile, returnedUser);
         })
 
         profile.instance.onClickOutside.subscribe(()=>{
-          if (profile.instance.blockPopup()){
-            profile.instance.blockPopup.set(false);
-          }
-          else{
-            window.history.pushState('','',`/`);
-            profile.destroy();
-          }
+          this.closeProfile(profile, null);
+        });
+
+        profile.instance.onBlocked.subscribe(()=>{
+          this.closeProfile(profile, returnedUser);
         });
       }
       else{
         window.history.replaceState('','',`/`);
       }
     });
+  }
+
+  closeProfile(profileComponent: ComponentRef<ProfileView>, userToRemove: User|null){
+    if (userToRemove){
+      this.removeProfile(userToRemove);
+    }
+    if (profileComponent.instance.blockPopup()){
+      profileComponent.instance.blockPopup.set(false);
+    }
+    else{
+      window.history.pushState('','',`/`);
+      profileComponent.destroy();
+    }
   }
 
   seeProfile(user: User){

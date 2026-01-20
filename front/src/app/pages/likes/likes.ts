@@ -1,5 +1,5 @@
 import { LikesService } from './../../../services/likesService';
-import { Component, inject, signal, viewChildren, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, inject, signal, viewChildren, ViewContainerRef } from '@angular/core';
 import { User } from '../../core/class/user';
 import { ProfilePreview } from "../../profile-preview/profile-preview";
 import { ActivatedRoute, Router } from '@angular/router';
@@ -63,19 +63,30 @@ export class Likes {
         profile.instance.loaded.set(true);
 
         profile.instance.onClickOutside.subscribe(()=>{
-          if (profile.instance.blockPopup()){
-            profile.instance.blockPopup.set(false);
-          }
-          else{
-            window.history.pushState('','',`/likes`);
-            profile.destroy();
-          }
+          this.closeProfile(profile, null);
+        });
+
+        profile.instance.onBlocked.subscribe(()=>{
+          this.closeProfile(profile, returnedUser);
         });
       }
       else{
         window.history.replaceState('','',`/likes`);
       }
     })
+  }
+
+  closeProfile(profileComponent: ComponentRef<ProfileView>, userToRemove: User|null){
+    if (userToRemove){
+      this.removeProfile(userToRemove);
+    }
+    if (profileComponent.instance.blockPopup()){
+      profileComponent.instance.blockPopup.set(false);
+    }
+    else{
+      window.history.pushState('','',`/likes`);
+      profileComponent.destroy();
+    }
   }
 
   seeProfile(user: User){

@@ -72,25 +72,19 @@ export class Matches {
         this.profileView.setInput("withUnlike", true);
         this.profileView.instance.user.set(returnedUser);
         this.profileView.instance.loaded.set(true);
+
         this.profileView.instance.onUnlike.subscribe(()=>{
           this.likesService.setUserAsUnliked(userId).then(()=>{
-            window.history.pushState('','',`/matches`);
-            this.profiles.update((list)=>{
-              return list.filter((checkedProfile)=> checkedProfile.id != userId);
-            })
-            this.profileView?.destroy();
-            this.profileView = null;
+            this.closeProfile(returnedUser);
           })
-        })
+        });
+
         this.profileView.instance.onClickOutside.subscribe(()=>{
-          if (this.profileView?.instance.blockPopup()){
-            this.profileView?.instance.blockPopup.set(false);
-          }
-          else{
-            window.history.pushState('','',`/matches`);
-            this.profileView?.destroy();
-            this.profileView = null;
-          }
+          this.closeProfile(returnedUser)
+        });
+
+        this.profileView.instance.onBlocked.subscribe(()=>{
+          this.closeProfile(returnedUser)
         });
       }
       else{
@@ -102,5 +96,26 @@ export class Matches {
   seeProfile(user: User){
     window.history.pushState('','',`/matches/profile/${user.id}`);
     this.createProfilePopup(user.id);
+  }
+
+
+  closeProfile(userToRemove: User|null){
+    if (userToRemove){
+      this.removeProfile(userToRemove);
+    }
+    if (this.profileView?.instance.blockPopup()){
+      this.profileView?.instance.blockPopup.set(false);
+    }
+    else{
+      window.history.pushState('','',`/matches`);
+      this.profileView?.destroy();
+      this.profileView = null;
+    }
+  }
+
+  removeProfile(user: User){
+    this.profiles.update((list)=>{
+      return list.filter((checkedUser)=>{return checkedUser.id != user.id});
+    })
   }
 }

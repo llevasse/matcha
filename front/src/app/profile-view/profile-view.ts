@@ -40,6 +40,9 @@ export class ProfileView {
   onLike = output();
   onIgnore = output();
 
+  onBlocked = output();
+
+
   ngOnInit(){
     if (this.activatedRoute.snapshot.url.length > 3 && this.activatedRoute.snapshot.url[3].path == "chat"){
       this.openChat();
@@ -165,7 +168,7 @@ export class ProfileView {
 
   closeBlockPopupAndRedirect(){
     this.closeBlockPopup();
-    window.location.href = '/';
+    this.onBlocked.emit();
   }
 
 }

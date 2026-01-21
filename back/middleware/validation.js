@@ -17,6 +17,13 @@ const userRegistrationSchema = Joi.object({
 });
 
 const profileUpdateSchema = Joi.object({
+    firstname: Joi.string().max(50).required(),
+    lastname: Joi.string().max(50).required(),
+    username: Joi.string().alphanum().min(3).max(50).required(),
+    email: Joi.string().email().required(),
+    city: Joi.string().max(100).optional().allow(null).empty(""),
+    location_latitude: Joi.number().precision(9).optional().allow(null),
+    location_longitude: Joi.number().precision(9).optional().allow(null),
     // Genre unique sélectionné
     gender: Joi.string().valid(...allowedGenders).required(),
 
@@ -28,13 +35,6 @@ const profileUpdateSchema = Joi.object({
 
     birthdate: Joi.date().greater('1900-01-01').required(),
     bio: Joi.string().max(500).optional().allow(null).empty(""),
-    city: Joi.string().max(100).optional().allow(null).empty(""),
-    username: Joi.string().alphanum().min(3).max(50).required(),
-    firstname: Joi.string().max(50).required(),
-    lastname: Joi.string().max(50).required(),
-    email: Joi.string().email().required(),
-    location_latitude: Joi.number().precision(9).optional().allow(null),
-    location_longitude: Joi.number().precision(9).optional().allow(null),
 });
 
 const userLoginSchema = Joi.object({
@@ -74,6 +74,7 @@ const validateMessage = (req, res, next) => {
 const validateProfileUpdate = (req, res, next) => {
     const { error } = profileUpdateSchema.validate(req.body);
     if (error) {
+      console.log(error);
         return res.status(400).json({ error: error.details[0].message });
     }
     next();

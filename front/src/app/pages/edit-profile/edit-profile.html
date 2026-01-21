@@ -32,7 +32,7 @@
           <div class="fields-containers">
             <label>
               <span>Date of birth</span>
-              <input required (input)="setBirthday($event)" id="DOB-input" type="date" [value]="tmpUser().birthday" [max]="maxBirthDay.toISOString().substring(0,10)"/>
+              <input (input)="setBirthday($event)" id="DOB-input" type="date" [value]="tmpUser().birthday" [max]="maxBirthDay.toISOString().substring(0,10)"/>
             </label>
 
             <label>
@@ -66,14 +66,14 @@
 
           <label>
             <span>Bio</span>
-            <textarea (input)="setBio($event)"  [value]="tmpUser().bio" id="bio-input" placeholder="Bio :" rows="4"  minlength="10"></textarea>
+            <textarea (input)="setBio($event)"  [value]="tmpUser().bio" id="bio-input" placeholder="Bio :" rows="4" ></textarea>
           </label>
 
           <profile-image-input #imageContainer></profile-image-input>
           <button>Save</button>
         </form>
         @for (errors of errorMessages(); track $index) {
-          <span>{{errors}}</span>
+          <span class="error-messages">{{errors}}</span>
         }
       </div>
     </div>
@@ -119,6 +119,6 @@
           }
         </div>
       </div>
-    } 
+    }
   }
 </div>

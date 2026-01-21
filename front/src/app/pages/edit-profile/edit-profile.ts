@@ -210,7 +210,7 @@ export class EditProfile {
     if (!res.ok){
       const obj = await res.json();
       this.errorMessages.update((list)=>{
-        list.push(`Error while updating value : ${obj['error']}`);
+        list.push(obj['error']);
         return list;
       });
       this.loading.set(true);

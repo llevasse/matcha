@@ -67,8 +67,6 @@
 
 chores :
 
-Remove french comment (or anything french)
-Remove todo in back folder
 fix all errors, warnings and notices from the web console (must be empty)
 Self test
 test on real mobile device
@@ -76,7 +74,7 @@ test on real mobile device
 
 # Important issues discovered during the correction
 - [x] bug: distance.tofixed(0)
-- [ ] ajout pass policy stronger
+- [x] pass policy stronger
 - [?] liked profiles doesn't display
 - [?] like received doesn't work
 - [ ] preremplir la dropdown orientation avec woman et man

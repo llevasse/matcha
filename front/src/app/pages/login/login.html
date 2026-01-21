@@ -1,27 +1,29 @@
 <div class="container">
   <div id="header">
-    <login-selector class="selector" (onClick)="activateLoginForm()" [value]="'Login'"/>
-    <login-selector class="selector" (onClick)="activateSigninForm()" [value]="'Sign-in'"/>
+    <login-selector class="selector" (onClick)="activateLoginForm()" [value]="'Login'" />
+    <login-selector class="selector" (onClick)="activateSigninForm()" [value]="'Sign-in'" />
   </div>
   <form (submit)="loginApiCall($event)" id="loginForm">
-    <app-input [id]="'login-username-input'" [label]="'Username :'" [placeholder]="'Username :'"/>
-    <app-input [type]="'password'" [autocomplete]="'password'"  [label]="'Password :'" [id]="'login-password-input'" [placeholder]="'Password :'"/>
+    <app-input [id]="'login-username-input'" [label]="'Username :'" [placeholder]="'Username :'" />
+    <app-input [type]="'password'" [autocomplete]="'password'" [label]="'Password :'" [id]="'login-password-input'"
+      [placeholder]="'Password :'" />
     <button>Login</button>
     <a (click)="openPasswordForgottenPopup()" style="cursor: pointer;">Forgot password ?</a>
     @if (loginErrorMessage() != null) {
-      <a>{{loginErrorMessage()}}</a>
+    <a>{{loginErrorMessage()}}</a>
     }
 
   </form>
   <form (submit)="signInApiCall($event)" id="signinForm" class="inactive">
-    <app-input [id]="'register-username-input'" [label]="'Username :'" [placeholder]="'Username :'"/>
-    <app-input [id]="'register-first-name-input'" [label]="'First name :'" [placeholder]="'First name :'"/>
-    <app-input [id]="'register-last-name-input'" [label]="'Last name :'" [placeholder]="'Last name :'"/>
-    <app-input [id]="'register-mail-input'" [label]="'Mail :'" [placeholder]="'Mail :'"/>
-    <app-input [id]="'register-password-input'" [label]="'Password :'" [type]="'password'" [autocomplete]="'password'"  [placeholder]="'Password :'"/>
+    <app-input [id]="'register-username-input'" [label]="'Username :'" [placeholder]="'Username :'" />
+    <app-input [id]="'register-first-name-input'" [label]="'First name :'" [placeholder]="'First name :'" />
+    <app-input [id]="'register-last-name-input'" [label]="'Last name :'" [placeholder]="'Last name :'" />
+    <app-input [id]="'register-mail-input'" [label]="'Mail :'" [placeholder]="'Mail :'" />
+    <app-input [id]="'register-password-input'" [label]="'Password :'" [type]="'password'" [autocomplete]="'password'"
+      [placeholder]="'Password : (must be complex and > 8 chars)'" />
     <button>Sign-in</button>
     @if (registerErrorMessage() != null) {
-      <a>{{registerErrorMessage()}}</a>
+    <a class="error-messages">{{registerErrorMessage()}}</a>
     }
   </form>
   @if (emailConfirmationPopup()) {
@@ -32,19 +34,19 @@
       <button (click)="emailConfirmationPopup.set(false)">OK</button>
     </div>
   </div>
-}
+  }
   @if (passwordForgottenPopup()) {
   <div class="popup-overlay">
     <div class="popup">
       <form (submit)="forgottenPasswordApiCall($event)" id="forgottenPasswordForm">
-        <app-input [id]="'forgotten-password-email-input'" [label]="'Email :'" [placeholder]="'Email :'"/>
-      <button [id]="'ok-button'">OK</button>
+        <app-input [id]="'forgotten-password-email-input'" [label]="'Email :'" [placeholder]="'Email :'" />
+        <button [id]="'ok-button'">OK</button>
         @if (passwordForgottenButtonClicked()) {
-          <a> If this user exist, a link will be to reset the password.</a>
-          <button (click)="closePasswordForgottenPopup()">OK</button>
+        <a> If this user exist, a link will be to reset the password.</a>
+        <button (click)="closePasswordForgottenPopup()">OK</button>
         }
       </form>
-   </div>
+    </div>
   </div>
-}
+  }
 </div>

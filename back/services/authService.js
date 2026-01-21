@@ -9,6 +9,8 @@ async function registerUser(userData) {
     try {
         const { username, firstname, lastname, email, password } = userData;
 
+        _throw400IfPasswordIsNotStrongEnough(password);
+
         const saltRounds = 10;
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
@@ -87,6 +89,25 @@ async function requestPasswordReset(email) {
 }
 
 async function confirmPasswordReset(token, password) {
+    let userId = _throw400IfInvalidResetToken(token);
+
+    _throw400IfPasswordIsNotStrongEnough(password)
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
+    try {
+        await db.execute(
+            'UPDATE users SET password_hash = ? WHERE id = ?',
+            [passwordHash, userId]
+        );
+    } catch (error) {
+        const err = new Error('Password update error: ' + error.message);
+        err.status = 500;
+        throw err;
+    }
+}
+
+function _throw400IfInvalidResetToken(token) {
     if (!token) {
         const error = new Error('Token is required');
         error.status = 400;
@@ -108,20 +129,7 @@ async function confirmPasswordReset(token, password) {
         err.status = 400;
         throw err;
     }
-
-    const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(password, saltRounds);
-
-    try {
-        await db.execute(
-            'UPDATE users SET password_hash = ? WHERE id = ?',
-            [passwordHash, userId]
-        );
-    } catch (error) {
-        const err = new Error('Password update error: ' + error.message);
-        err.status = 500;
-        throw err;
-    }
+    return userId;
 }
 
 async function loginUser(username, password) {
@@ -166,6 +174,24 @@ async function loginUser(username, password) {
             isConfirmed: user.is_confirmed,
         }
     };
+}
+
+
+function _throw400IfPasswordIsNotStrongEnough(password) {
+    if (! _passwordIsValid(password)) {
+        const error = new Error('Password must be at least 8 characters long and contain letters, numbers, and special characters.');
+        error.status = 400;
+        throw error;
+    }
+}
+
+function _passwordIsValid(password){
+    const longEnough = password.length >= 8;
+    const hasNumbers = /\d/.test(password);
+    const hasLetters = /[a-zA-Z]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return  (longEnough && hasNumbers && hasLetters && hasSpecialChar)
 }
 
 async function _throw400IfUserAlreadyExists(connection, username, email) {

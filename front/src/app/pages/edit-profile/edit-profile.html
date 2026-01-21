@@ -69,9 +69,14 @@
             <textarea (input)="setBio($event)"  [value]="tmpUser().bio" id="bio-input" placeholder="Bio :" rows="4" ></textarea>
           </label>
 
-          <profile-image-input #imageContainer></profile-image-input>
+
+          <label>
+            <span>Pictures (*Leftmost picture will be your main profile picture)</span>
+            <profile-image-input #imageContainer></profile-image-input>
+          </label>
           <button>Save</button>
         </form>
+        <span>*To be considered a valid user, you need to have filled all fields (Except interest and bio), and have at least one picture</span>
         @for (errors of errorMessages(); track $index) {
           <span class="error-messages">{{errors}}</span>
         }

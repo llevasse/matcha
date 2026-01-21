@@ -66,6 +66,14 @@ export class Likes {
           this.closeProfile(profile, null);
         });
 
+        profile.instance.onLike.subscribe(()=>{
+          this.closeProfile(profile, returnedUser);
+        });
+
+        profile.instance.onIgnore.subscribe(()=>{
+          this.closeProfile(profile, returnedUser);
+        });
+
         profile.instance.onBlocked.subscribe(()=>{
           this.closeProfile(profile, returnedUser);
         });

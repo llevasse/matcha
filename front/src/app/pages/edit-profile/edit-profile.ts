@@ -218,8 +218,11 @@ export class EditProfile {
     }
     if (this.errorMessages().length === 0){
       this.userService.deleteClient();
-      await this.userService.createClientUser();
-      this.router.navigate([`/`]);
+      await this.userService.createClientUser().then((user)=>{
+        if (user?.isValid){
+          this.router.navigate([`/`]);
+        }
+      });
     }
 		return false;
 	}

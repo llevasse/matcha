@@ -55,7 +55,6 @@ export class HistoryPage {
         profile.instance.loaded.set(true);
 
         profile.instance.onLike.subscribe(()=>{
-          this.likeService.setUserAsLiked(userId);
           window.history.pushState('','',`/history`);
           profile.destroy();
         })

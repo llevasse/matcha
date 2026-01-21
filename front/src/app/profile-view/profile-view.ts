@@ -1,3 +1,4 @@
+import { LikesService } from './../../services/likesService';
 import { Component, ElementRef, inject, Inject, input, output, signal, ViewContainerRef, ViewRef } from '@angular/core';
 import { User } from '../core/class/user';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -57,7 +58,7 @@ export class ProfileView {
   private activatedRoute = inject(ActivatedRoute);
   private ref = inject(ElementRef);
 
-  constructor(private userService: UserService, private blockOrReportService: BlockOrReportService) {
+  constructor(private userService: UserService, private likesService: LikesService, private blockOrReportService: BlockOrReportService) {
     //TODO call API to add profile to user history
     userService.getClientUser().then((user)=>{
       if (user){
@@ -115,10 +116,12 @@ export class ProfileView {
   }
 
   unlikeUser(){
+    this.likesService.setUserAsUnliked(this.userId());
     this.onUnlike.emit();
   }
 
   likeUser(){
+    this.likesService.setUserAsLiked(this.userId());
     this.onLike.emit();
   }
 

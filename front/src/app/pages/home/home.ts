@@ -164,7 +164,6 @@ export class Home {
         profile.instance.loaded.set(true);
 
         profile.instance.onLike.subscribe(()=>{
-          this.likeService.setUserAsLiked(userId);
           this.closeProfile(profile, returnedUser);
         })
 

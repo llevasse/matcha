@@ -74,9 +74,7 @@ export class Matches {
         this.profileView.instance.loaded.set(true);
 
         this.profileView.instance.onUnlike.subscribe(()=>{
-          this.likesService.setUserAsUnliked(userId).then(()=>{
-            this.closeProfile(returnedUser);
-          })
+          this.closeProfile(returnedUser);
         });
 
         this.profileView.instance.onClickOutside.subscribe(()=>{

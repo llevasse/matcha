@@ -1,3 +1,4 @@
+import { adminGuard } from './../../admin-guard';
 import { Matches } from './pages/matches/matches';
 import { Routes } from '@angular/router';
 import { Login } from './pages/login/login';
@@ -25,11 +26,7 @@ export const routes: Routes = [
   {path: 'register', component: Login},
   {path: 'confirm-email', component: ConfirmEmail},
   {path: 'reset-password', component: ResetPassword},
-  {path: 'admin', loadComponent: ()=>{
-    const auth = inject(AuthService)
-    auth.verify();
-    return Home;
-  }},
+  {path: 'admin', canActivate: [adminGuard], component: Admin},
   {path: 'history', component: HistoryPage},
   {path: 'history/profile/:id', component: HistoryPage},
   {path: '**',  component: Error404Page}

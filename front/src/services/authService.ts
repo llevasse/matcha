@@ -61,9 +61,8 @@ export class AuthService {
     return fetch(`${this.authUrl}/verify`, {
       headers: {
         "Content-Type": "application/json",
+        "Authorization":"Bearer " + localStorage.getItem('token'),
       },
-    }).then((value)=>{
-      value.json().then((obj)=>{console.log(obj)});
     })
   }
 

@@ -1,8 +1,8 @@
 import { AuthService } from './src/services/authService';
 import { inject } from '@angular/core';
-import { type CanActivateFn } from '@angular/router';
+import { type CanMatchFn } from '@angular/router';
 
-export const adminGuard: CanActivateFn = async (route, state) => {
+export const adminGuard: CanMatchFn = async (route, state) => {
   const auth = inject(AuthService)
 
   return await auth.verify().then(async(value)=>{

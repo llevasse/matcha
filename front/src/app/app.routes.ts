@@ -4,14 +4,12 @@ import { Routes } from '@angular/router';
 import { Login } from './pages/login/login';
 import { Home } from './pages/home/home';
 import { EditProfile } from './pages/edit-profile/edit-profile';
-import { Error404Page} from './pages/error-pages/error-page';
+import { Error403Page, Error404Page} from './pages/error-pages/error-page';
 import { Likes } from './pages/likes/likes';
 import { Admin } from './pages/admin/admin';
 import { HistoryPage } from './pages/history/history';
 import { ConfirmEmail } from './pages/confirm-email/confirm-email';
 import { ResetPassword } from './pages/reset-password/reset-password';
-import { inject } from '@angular/core';
-import { AuthService } from '../services/authService';
 
 export const routes: Routes = [
   {path: '', component: Home},
@@ -26,7 +24,8 @@ export const routes: Routes = [
   {path: 'register', component: Login},
   {path: 'confirm-email', component: ConfirmEmail},
   {path: 'reset-password', component: ResetPassword},
-  {path: 'admin', canActivate: [adminGuard], component: Admin},
+  {path: 'admin', canMatch: [adminGuard], component: Admin},
+  {path: 'admin', component: Error403Page},
   {path: 'history', component: HistoryPage},
   {path: 'history/profile/:id', component: HistoryPage},
   {path: '**',  component: Error404Page}

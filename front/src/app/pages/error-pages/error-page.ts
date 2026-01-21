@@ -14,6 +14,19 @@ import { Component, input } from '@angular/core';
 export class Error404Page {}
 
 @Component({
+  selector: 'app-error-403-page',
+  imports: [],
+  template: `
+    <div style="display: flex; flex-direction: column; align-content: center; width: 100%;">
+      <h1>ERROR 403</h1>
+      <h2>Forbiden</h2>
+    </div>
+  `,
+  styleUrl: './error-page.scss'
+})
+export class Error403Page {}
+
+@Component({
   selector: 'app-error-503-page',
   imports: [],
   template: `

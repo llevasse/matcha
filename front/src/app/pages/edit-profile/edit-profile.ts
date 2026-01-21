@@ -42,7 +42,7 @@ export class EditProfile {
 
 	maxBirthDay = new Date();
 
-	allowedGenders = ['woman', 'man', 'non-binary', 'other', 'prefer not to say'];
+	allowedGenders = ['woman', 'man', 'non-binary', 'other'];
 
 	constructor(
 		private userService: UserService,

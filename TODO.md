@@ -84,13 +84,13 @@ test on real mobile device
 # less important
 - [ ] limit tags creation to 10 
 - [ ] create an error when confirming not existing account
-- [ ] rajouter un log pour reset password
+- [x] rajouter un log pour reset password
 - [ ] reset password: bouton ok qui disparait si email vide
 - [ ] la barre n'apparait pas tout de suite quand on save un profil qui vient de passer a is valid
 - [x] generate profiles should be valid (is valid)
 - [ ] unlike should lower fame
 - [ ] improve location autocompletex
 - [ ] message d'erreur avec preference -> orientation
-- [ ] enlever prefer-not-to-say
+- [x] enlever prefer-not-to-say
 - [ ] implem de checks entre whitelist et blacklist
 - [ ] report as fake account qui reste dans match (recharger la page)

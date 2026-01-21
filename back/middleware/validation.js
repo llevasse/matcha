@@ -5,7 +5,6 @@ const allowedGenders = [
     'woman',
     'non-binary',
     'other',
-    'prefer not to say'
 ];
 
 const userRegistrationSchema = Joi.object({

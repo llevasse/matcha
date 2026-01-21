@@ -178,20 +178,20 @@ async function loginUser(username, password) {
 
 
 function _throw400IfPasswordIsNotStrongEnough(password) {
-    if (! _passwordIsValid(password)) {
+    if (!_passwordIsValid(password)) {
         const error = new Error('Password must be at least 8 characters long and contain letters, numbers, and special characters.');
         error.status = 400;
         throw error;
     }
 }
 
-function _passwordIsValid(password){
+function _passwordIsValid(password) {
     const longEnough = password.length >= 8;
     const hasNumbers = /\d/.test(password);
     const hasLetters = /[a-zA-Z]/.test(password);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
-    return  (longEnough && hasNumbers && hasLetters && hasSpecialChar)
+    return (longEnough && hasNumbers && hasLetters && hasSpecialChar)
 }
 
 async function _throw400IfUserAlreadyExists(connection, username, email) {
@@ -264,6 +264,8 @@ async function _sendPasswordResetEmail(email, token) {
             <a href="${resetLink}">Reset My Password</a>
         `
     };
+
+    console.log("Sent mail to reset password : ", resetLink);
 
     await transporter.sendMail(mailOptions);
 }

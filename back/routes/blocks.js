@@ -41,8 +41,8 @@ router.post('/unblock', authenticateToken, asyncHandler(async (req, res) => {
 router.get('/', authenticateToken, asyncHandler(async (req, res) => {
     const blockedUsers = await _getBlockedUsersDetails(
         req.user.id,
-        userId.location_latitude,
-        userId.location_longitude);
+        req.user.id.location_latitude,
+        req.user.id.location_longitude);
     res.json(blockedUsers);
 }));
 

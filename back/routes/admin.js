@@ -120,7 +120,7 @@ router.post('/create-users', adminAuthenticateToken, asyncHandler(async (req, re
         await db.execute(userInterestInsertQuery, interestIdList);
       }
 
-      const pfpPath = `/default_profile_pictures/thisPersonDoesNotExist0${getRandomInt(1, 6)}.png`
+      const pfpPath = `/default_profile_pictures/thisPersonDoesNotExist0${getRandomInt(1, 7)}.png`
       await db.execute('INSERT INTO profile_pictures (user_id, file_path, is_main) VALUES (?, ?, TRUE)',
         [insertUserResult.insertId, pfpPath]
       );

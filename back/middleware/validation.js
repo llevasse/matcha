@@ -24,10 +24,10 @@ const profileUpdateSchema = Joi.object({
     city: Joi.string().max(100).optional().allow(null).empty(""),
     location_latitude: Joi.number().precision(9).optional().allow(null),
     location_longitude: Joi.number().precision(9).optional().allow(null),
-    // Genre unique sélectionné
+
     gender: Joi.string().valid(...allowedGenders).required(),
 
-    // Préférences multiples autorisées (array non vide de labels valides)
+
     preferences: Joi.array()
         .items(Joi.string().valid(...allowedGenders))
         .min(1)

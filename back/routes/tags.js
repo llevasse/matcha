@@ -5,13 +5,13 @@ const asyncHandler = require('../middleware/asyncHandler');
 
 const router = express.Router();
 
-// Obtenir tous les tags
+
 router.get('/', asyncHandler(async (req, res) => {
     const [tags] = await db.execute('SELECT * FROM tags ORDER BY name');
     res.json(tags);
 }));
 
-// Créer un nouveau tag
+
 router.post('/', authenticateToken, asyncHandler(async (req, res) => {
         const { name } = req.body;
 
@@ -31,7 +31,7 @@ router.post('/', authenticateToken, asyncHandler(async (req, res) => {
         });
 }));
 
-// Obtenir les tags d'un utilisateur
+
 router.get('/user/:user_id', asyncHandler(async (req, res) => {
     const userId = req.params.user_id;
 
@@ -47,17 +47,17 @@ router.get('/user/:user_id', asyncHandler(async (req, res) => {
 
 }));
 
-// Ajouter un tag à l'utilisateur connecté
+
 router.post('/user', authenticateToken, asyncHandler(async (req, res) => {
     const { tag_id } = req.body;
 
-    // Vérifier que le tag existe
+    
     const [tags] = await db.execute('SELECT id FROM tags WHERE id = ?', [tag_id]);
     if (tags.length === 0) {
         return res.status(404).json({ error: 'Tag not found' });
     }
 
-    // Ajouter le tag à l'utilisateur
+    
     await db.execute(
         'INSERT IGNORE INTO user_tags (user_id, tag_id) VALUES (?, ?)',
         [req.user.id, tag_id]
@@ -67,7 +67,7 @@ router.post('/user', authenticateToken, asyncHandler(async (req, res) => {
 
 }));
 
-// Supprimer un tag de l'utilisateur connecté
+
 router.delete('/user/:tag_id', authenticateToken, asyncHandler(async (req, res) => {
     const tagId = req.params.tag_id;
 

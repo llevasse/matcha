@@ -79,7 +79,7 @@ test on real mobile device
 - [?] like received doesn't work
 - [x] prefill orientation dropdown with woman and man
 - [ ] algo de preference
-- [ ] remove anything french 
+- [x] remove anything french 
 
 # less important
 - [ ] limit tags creation to 10 

@@ -45,7 +45,6 @@ const adminAuthenticateToken = async (req, res, next) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        // Vérifier que l'utilisateur existe toujours
         const [users] = await db.execute(
             'SELECT id, is_admin, username, email FROM users WHERE id = ?',
             [decoded.userId]

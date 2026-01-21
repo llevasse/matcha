@@ -17,10 +17,7 @@ export class UserService {
     console.log("call to create user");
     return this.profile().then(async (tmp)=>{
       var response = tmp as Response;
-      if (!response.ok){
-        this.router.navigate(['/login']);
-      }
-      else{
+      if (response.ok){
         this.clientUser = await this.userFromResponse(response);
         this.clientUser.ws = webSocket(`ws://${import.meta.env.NG_APP_BACKEND_HOST}:3000`);
 

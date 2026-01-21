@@ -27,7 +27,12 @@ export class App {
       this.loaded.set(true);
       return;
     }
-    userService.createClientUser();
+    userService.createClientUser().then((value)=>{
+      if(value == null){
+        router.navigate(["/login"]);
+        this.loaded.set(true);
+      }
+    });
 
     document.addEventListener("clientCreated", ()=>{
       this.userService.getClientUser().then((user)=>{
@@ -57,24 +62,23 @@ export class App {
       this.error503.set(false);
       this.error503.set(true);
     })
-
   }
 
   ngOnInit(){
     this.router.events.subscribe((event: Event)=>{
-      if (event instanceof NavigationEnd){  // TODO handle for liked and match notif
+      if (event instanceof NavigationEnd){
         if (RegExp("^\/matches\/profile\/.*\/chat$").test(event.url)){  // check if url leads to chat and clear related notif if need be
           const profileId: number = Number.parseInt(event.url.split("/")[3])
           this.removeNotif(new MatchaNotification("","", profileId, null, notifType.MESSAGE_SENT));
         }
-        if (RegExp("^\/matches.*$").test(event.url)){
+        if (RegExp("^\/matches.*$").test(event.url)){ // om match page, remove match notif
           this.notifList.set(
             this.notifList().filter((notif)=>{
               return notif.type != notifType.MATCH;
             })
           );
         }
-        if (RegExp("^\/likes.*$").test(event.url)){
+        if (RegExp("^\/likes.*$").test(event.url)){ // om like page, remove like notif
           this.notifList.set(
             this.notifList().filter((notif)=>{
               return notif.type != notifType.LIKED && notif.type != notifType.UNLIKED;
@@ -208,7 +212,7 @@ export class App {
               needPush = false;
             }
           })
-          if (needPush){
+          if (needPush){  // add notif if notif sender has not send another notif of the same type
             list.push(notif)
           }
           return list;

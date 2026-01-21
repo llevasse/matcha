@@ -56,7 +56,7 @@ export class EditProfile {
 		afterEveryRender(()=>{
       if (!this.loaded && this.imagesInput() && this.interestDropdown()){
         this.imagesInput()!.images.set(this.user.photos);
-        
+
         this.interestDropdown()!.originalUserInterest.set(Array.from(this.user.interest));
         this.interestDropdown()!.selectedValues.set(Array.from(this.user.interest));
         this.interestDropdown()!.activeSearchResultInSelectedValues.set(Array.from(this.user.interest));
@@ -86,13 +86,12 @@ export class EditProfile {
 		else{ // call if city was not set by user last time
       this.userCity.set(tmpUser.cityStr);
 		}
-    console.log(this.tmpUser());
 
     if (this.user.isValid){
       await this.getBlockedProfiles();
       await this.getLikedProfiles();
     }
-    
+
     this.loading.set(false);
 	}
 

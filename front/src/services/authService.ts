@@ -40,9 +40,6 @@ export class AuthService {
       },
       body: JSON.stringify(credentials),
     }).then(async (value)=>{
-      if (value.ok){
-        await this.login({username: credentials.username, password: credentials.password})
-      }
       return value;
     })
   }

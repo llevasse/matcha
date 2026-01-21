@@ -58,14 +58,19 @@ export class InterestDropdown {
     })
   }
 
+  setDisplayedValues(){
+    let str = "";
+    this.selectedValues().forEach((value, index)=>{
+      str += `${value.name}${index == this.selectedValues().length - 1 ? "" : ", "}`;
+    })
+    this.placeholder.set(str);
+    this.setDropdownValues();
+  }
+
   keydown(event: KeyboardEvent){
     var input =(event.target as HTMLInputElement).value;
     if (event.key === 'Enter' && this.allowInterestCreation()){
       input = input.trim().toLowerCase();
-      while (input.startsWith('#')){
-        input = input.substring(1)
-      }
-      input = "#" + input;
 
       this.interestService.createInterest(input).then((tmp)=>{
         var response: Response = tmp as Response;
@@ -75,12 +80,7 @@ export class InterestDropdown {
             var obj: Interest = new Interest(map.get("name"), map.get("id"));
             this.allInterest.update((list)=>{list.push(obj); return list});
             this.selectedValues.update((list)=>{list.push(obj); return list});
-            var str = "";
-            this.selectedValues().forEach((value, index)=>{
-              str += `${value.name}${index == this.selectedValues().length - 1 ? "" : ", "}`;
-            })
-            this.placeholder.set(str);
-            this.setDropdownValues();
+            this.setDisplayedValues();
           })
         }
       });
@@ -123,14 +123,9 @@ export class InterestDropdown {
       }
       return list;
     })
-    var str = "";
-    this.selectedValues().forEach((value, index)=>{
-      str += `${value.name}${index == this.selectedValues().length - 1 ? "" : ", "}`;
-    })
-    this.placeholder.set(str);
-    this.setDropdownValues()
+    this.setDisplayedValues();
 
-    this.onSelected.emit(new Map<string, any>([['value', str], ['list', this.selectedValues]]));
+    this.onSelected.emit(new Map<string, any>([['value', this.placeholder()], ['list', this.selectedValues]]));
   }
 
   @HostListener('document:mousedown', ['$event']) mousedown(event: any){

@@ -45,12 +45,12 @@
 - [x] See if a user is online, or the last time they were online
   - [x] User online status
   - [x] User last connection time
-- [ ] A client must be able to report a profile
-- [ ] A client must be able to block a user
+- [x] A client must be able to report a profile
+- [x] A client must be able to block a user
   - [x] A blocked user must not be shown in the search result
   - [x] will not be able to generate notification
   - [x] prevent conversation
-  - [ ] must be unblock on the profile page
+  - [x] must be unblock on the profile page
 
 # Chat 
 - [x] If two user matched, they must be able to chat in real time
@@ -73,16 +73,17 @@ fix all errors, warnings and notices from the web console (must be empty)
 Self test
 test on real mobile device
 
-basile :
-important 
-- bug: distance.tofixed(0)
-- ajout pass policy stronger
-- liked profiles doesn't display
-- like received doesn't work
-- preremplir la dropdown orientation avec woman et man
-- algo de preference
 
-less important
+# Important issues discovered during the correction
+- [x] bug: distance.tofixed(0)
+- [ ] ajout pass policy stronger
+- [?] liked profiles doesn't display
+- [?] like received doesn't work
+- [ ] preremplir la dropdown orientation avec woman et man
+- [ ] algo de preference
+- [ ] remove anything french 
+
+# less important
 limit tags creation to 10 
 create an error when confirming not existing account
 rajouter un log pour reset password

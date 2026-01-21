@@ -61,6 +61,17 @@ export class LikesService {
     });
   }
 
+    setUserAsDisliked(userIdToDislike:number){
+    return fetch(`${this.interationUrl}/dislike`, {
+    method: 'POST',
+      headers : {
+        "Authorization":"Bearer " + localStorage.getItem('token'),
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({to_user_id:userIdToDislike})
+    });
+  }
+
   getUsersWhoLikedClient(){
     return fetch(`${this.interationUrl}/likes-received`, {
       headers : {

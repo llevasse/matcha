@@ -88,7 +88,7 @@ test on real mobile device
 - [ ] reset password: bouton ok qui disparait si email vide
 - [ ] la barre n'apparait pas tout de suite quand on save un profil qui vient de passer a is valid
 - [x] generate profiles should be valid (is valid)
-- [ ] unlike should lower fame
+- [x] unlike should lower fame
 - [ ] improve location autocompletex
 - [ ] message d'erreur avec preference -> orientation
 - [x] enlever prefer-not-to-say

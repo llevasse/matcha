@@ -42,7 +42,7 @@ router.post('/create-users', adminAuthenticateToken, asyncHandler(async (req, re
     const insertQuerry = `INSERT INTO users (
           username, firstname, lastname, email, password_hash, bio,
           city, location_latitude, location_longitude,
-          gender_id, birthdate, is_confirmed, is_valid, fame, 
+          gender_id, birthdate, is_confirmed, is_valid, fame
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE, TRUE, ?)`
 
     const gender = genderIds[getRandomInt(0, genderIds.length - 1)];

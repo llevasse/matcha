@@ -32,12 +32,33 @@ async function performLike(fromUserId, toUserId) {
     return isMatch;
 }
 
-async function performUnlike(fromUserId, toUserId) {
-    if (fromUserId == toUserId) {
-        const error = new Error('Cannot unlike yourself');
+async function performDislike(fromUserId, toUserId) {
+
+    _throw400ifUsersIdsAreTheSame(fromUserId, toUserId);
+
+    const [existingInteraction] = await db.execute(
+        'SELECT id FROM interactions WHERE from_user_id = ? AND to_user_id = ?',
+        [fromUserId, toUserId]
+    );
+
+    if (existingInteraction.length !== 0) {
+        const error = new Error('Existing interaction for this users');
         error.status = 400;
         throw error;
     }
+
+    await db.execute(
+        'INSERT INTO interactions (from_user_id, to_user_id, is_like) VALUES (?, ?, FALSE)',
+        [fromUserId, toUserId]
+    );
+
+    await db.execute('UPDATE users SET fame = fame - 3 WHERE id = ?', [toUserId]);
+
+}
+
+async function performUnlike(fromUserId, toUserId) {
+
+    _throw400ifUsersIdsAreTheSame(fromUserId, toUserId);
 
     const [existingInteraction] = await db.execute(
         'SELECT id FROM interactions WHERE from_user_id = ? AND to_user_id = ?',
@@ -46,7 +67,7 @@ async function performUnlike(fromUserId, toUserId) {
 
     if (existingInteraction.length === 0) {
         const error = new Error('No existing interaction for this users');
-        error.status = 404;
+        error.status = 400;
         throw error;
     }
 
@@ -69,6 +90,14 @@ async function performUnlike(fromUserId, toUserId) {
     await db.execute('UPDATE users SET fame = fame - 3 WHERE id = ?', [fromUserId]);
 
     sendMessage(fromUserId, toUserId, null, messageType.UNLIKED);
+}
+
+function _throw400ifUsersIdsAreTheSame(fromUserId, toUserId) {
+    if (fromUserId == toUserId) {
+        const error = new Error('fromUserId == toUserId');
+        error.status = 400;
+        throw error;
+    }
 }
 
 async function getMatches(userId, userLocation) {
@@ -242,6 +271,7 @@ function _throw400IfUserHasNoLocation(userLocation) {
 module.exports = {
     performLike,
     performUnlike,
+    performDislike,
     getMatches,
     getMatchDetails,
     getLikesReceived,

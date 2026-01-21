@@ -44,7 +44,8 @@ export class ProfilePreview {
     this.onDestroy.emit();
   }
 
-  ignoreUser() {
+  dislikeUser() {
+    this.likesService.setUserAsDisliked(this.user().id);
     this.onDestroy.emit();
   }
 }

@@ -4,6 +4,7 @@ const asyncHandler = require('../middleware/asyncHandler');
 const {
   performLike,
   performUnlike,
+  performDislike,
   getMatches,
   getMatchDetails,
   getLikesReceived,
@@ -26,6 +27,13 @@ router.post('/like', authenticateToken, asyncHandler(async (req, res) => {
 router.post('/unlike', authenticateToken, asyncHandler(async (req, res) => {
   const { to_user_id } = req.body;
   await performUnlike(req.user.id, to_user_id);
+
+  res.json({ message: 'Unlike sent successfully' });
+}));
+
+router.post('/dislike', authenticateToken, asyncHandler(async (req, res) => {
+  const { to_user_id } = req.body;
+  await performDislike(req.user.id, to_user_id);
 
   res.json({ message: 'Unlike sent successfully' });
 }));

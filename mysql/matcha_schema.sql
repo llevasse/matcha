@@ -61,6 +61,7 @@ CREATE TABLE interactions (
     to_user_id INT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     is_match BOOLEAN DEFAULT FALSE,
+    is_like BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (from_user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (to_user_id) REFERENCES users (id) ON DELETE CASCADE
 );

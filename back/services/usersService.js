@@ -138,7 +138,7 @@ async function searchUsers(userId, userGenderId, searchParams) {
 }
 
 async function updateProfileValidity(userId) {
-    let isConfirmed = true;
+    let isValid = true;
     const connection = await db.getConnection();
 
     const [users] = await connection.execute(
@@ -149,7 +149,7 @@ async function updateProfileValidity(userId) {
     if (users.length !== 0) {
         Object.values(users[0]).forEach((value) => {
             if (value == null || value == undefined) {
-                isConfirmed = false;
+                isValid = false;
             }
         });
     }
@@ -160,12 +160,12 @@ async function updateProfileValidity(userId) {
     );
 
     if (pictures.length === 0) {
-        isConfirmed = false;
+        isValid = false;
     }
 
     await connection.execute(
         `UPDATE users SET is_valid = ? WHERE id = ?`,
-        [isConfirmed, userId]
+        [isValid, userId]
     );
     await connection.commit();
     connection.release();

@@ -65,6 +65,7 @@ router.get('/:user_id', authenticateToken, asyncHandler(async (req, res) => {
 
 // Upload d'une photo de profil
 router.post('/upload', authenticateToken, upload.single('photo'), asyncHandler(async (req, res) => {
+    console.log("upload");
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded' });
     }

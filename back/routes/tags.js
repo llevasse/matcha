@@ -13,7 +13,6 @@ router.get('/', asyncHandler(async (req, res) => {
 
 // Créer un nouveau tag
 router.post('/', authenticateToken, asyncHandler(async (req, res) => {
-    try {
         const { name } = req.body;
 
         if (!name || name.trim().length === 0) {
@@ -30,12 +29,6 @@ router.post('/', authenticateToken, asyncHandler(async (req, res) => {
             name: name.trim().toLowerCase(),
             message: 'Tag created successfully'
         });
-    } catch (error) {
-        if (error.code === 'ER_DUP_ENTRY') {
-            return res.status(400).json({ error: 'Tag already exists' });
-        }
-        throw error;
-    }
 }));
 
 // Obtenir les tags d'un utilisateur

@@ -69,7 +69,29 @@ chores :
 
 Remove french comment (or anything french)
 Remove todo in back folder
-Add 500 for every failed db transaction and 400 when it's just a bad request
 fix all errors, warnings and notices from the web console (must be empty)
 Self test
 test on real mobile device
+
+basile :
+important 
+- bug: distance.tofixed(0)
+- ajout pass policy stronger
+- liked profiles doesn't display
+- like received doesn't work
+- preremplir la dropdown orientation avec woman et man
+- algo de preference
+
+less important
+limit tags creation to 10 
+create an error when confirming not existing account
+rajouter un log pour reset password
+reset password: bouton ok qui disparait si email vide
+la barre n'apparait pas tout de suite quand on save un profil qui vient de passer a is valid
+page profil quand on se connect (invalid, doit etre la page d'accueil) pour les profiles générés
+refuse a like doesn't lower it's fame
+improve location autocompletex
+message d'erreur avec preference -> orientation
+enlever prefer-not-to-say
+implem de checks entre whitelist et blacklist
+report as fake account qui reste dans match (recharger la page)

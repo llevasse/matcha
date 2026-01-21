@@ -24,27 +24,27 @@ export class ProfilePreview {
   allowUnblock = input(false);
   allowUnlike = input(false);
 
-  constructor(private likesService: LikesService, private blockService: BlockOrReportService){};
+  constructor(private likesService: LikesService, private blockService: BlockOrReportService) { };
 
-  ngOnInit(){
+  ngOnInit() {
   }
 
-  likeUser(){
+  likeUser() {
     this.likesService.setUserAsLiked(this.user().id);
     this.onDestroy.emit();
   }
 
-  unblockUser(){
+  unblockUser() {
     this.blockService.unblockUser(this.user().id);
     this.onDestroy.emit();
   }
 
-  unlikeUser(){
+  unlikeUser() {
     this.likesService.setUserAsUnliked(this.user().id);
     this.onDestroy.emit();
   }
 
-  ignoreUser(){
+  ignoreUser() {
     this.onDestroy.emit();
   }
 }

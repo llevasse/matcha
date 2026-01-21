@@ -6,36 +6,36 @@
     </div>
     <div class="profile-info">
       <div class="profile-name-distance-container">
-        <a>{{user().username}}{{user().age ? ", "  : ""}}</a>
+        <a>{{user().username}}{{user().age ? ", " : ""}}</a>
         <a>{{user().age ? `${user().age} years old` : ""}}</a>
-        <a>~{{user().distance.toFixed(0)}}km away</a>
+        <a>{{user().distance ? `${user().distance.toFixed(0)} km away` : ""}}</a>
       </div>
       @if (user().bio.trim().length > 0) {
-        <a id="profile-bio">{{user().bio}}</a>
+      <a id="profile-bio">{{user().bio}}</a>
       }
       @if (user().interest.length > 0) {
-        <div class="profile-interest-container">
-          @for (item of user().interest; track $index) {
-            <span>{{item}}</span>
-          }
-        </div>
+      <div class="profile-interest-container">
+        @for (item of user().interest; track $index) {
+        <span>{{item}}</span>
+        }
+      </div>
       }
     </div>
   </div>
   @if (allowLike() || allowIgnore() || allowUnlike() || allowUnblock()) {
-    <div class="profile-interact-container">
-      @if (allowIgnore()) {
-        <button class="interact-button" (click)="ignoreUser()" id="dislike-button">X</button>
-      }
-      @if (allowLike()) {
-        <button class="interact-button" (click)="likeUser()" id="like-button"><3</button>
-      }
-      @if (allowUnlike()) {
-        <button class="interact-button" (click)="unlikeUser()" id="unlike-button">Unlike</button>
-      }
-      @if (allowUnblock()) {
-        <button class="interact-button" (click)="unblockUser()" id="unblock-button">Unblock</button>
-      }
-    </div>
+  <div class="profile-interact-container">
+    @if (allowIgnore()) {
+    <button class="interact-button" (click)="ignoreUser()" id="dislike-button">X</button>
+    }
+    @if (allowLike()) {
+    <button class="interact-button" (click)="likeUser()" id="like-button"><3</button>
+    }
+    @if (allowUnlike()) {
+    <button class="interact-button" (click)="unlikeUser()" id="unlike-button">Unlike</button>
+    }
+    @if (allowUnblock()) {
+    <button class="interact-button" (click)="unblockUser()" id="unblock-button">Unblock</button>
+    }
+  </div>
   }
 </div>

@@ -7,6 +7,7 @@ import { UserService } from '../../../services/userService';
 import { InterestDropdown } from "../edit-profile/interest-dropdown/interest-dropdown";
 import { Dropdown } from "../../core/dropdown/dropdown";
 import { LikesService } from '../../../services/likesService';
+import { Interest } from '../../core/class/interest';
 
 @Component({
   selector: 'app-home',
@@ -79,6 +80,30 @@ export class Home {
 
   ngAfterViewInit(){
     document.onscroll = ()=>{this.scrollChecker()};
+
+    // Remove added blocklist element from whitelist
+    this.interestBlacklistDropdown()?.onSelected.subscribe((value)=>{
+      const tagName = value.get('value');
+      this.interestWhitelistDropdown()?.selectedValues.update((list)=>{
+        return list.filter((checked_interest)=>{
+          return checked_interest.name != tagName;
+        })
+      });
+      this.interestWhitelistDropdown()?.setDisplayedValues();
+      this.setOptionPreview();
+    });
+
+    // Remove added whitelist element from blacklist
+    this.interestWhitelistDropdown()?.onSelected.subscribe((value)=>{
+      const tagName = value.get('value');
+      this.interestBlacklistDropdown()?.selectedValues.update((list)=>{
+        return list.filter((checked_interest)=>{
+          return checked_interest.name != tagName;
+        })
+      });
+      this.interestBlacklistDropdown()?.setDisplayedValues();
+      this.setOptionPreview();
+    });
   }
 
   ngOnDestroy(){

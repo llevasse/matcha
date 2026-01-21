@@ -82,15 +82,15 @@ test on real mobile device
 - [ ] remove anything french 
 
 # less important
-limit tags creation to 10 
-create an error when confirming not existing account
-rajouter un log pour reset password
-reset password: bouton ok qui disparait si email vide
-la barre n'apparait pas tout de suite quand on save un profil qui vient de passer a is valid
-page profil quand on se connect (invalid, doit etre la page d'accueil) pour les profiles générés
-refuse a like doesn't lower it's fame
-improve location autocompletex
-message d'erreur avec preference -> orientation
-enlever prefer-not-to-say
-implem de checks entre whitelist et blacklist
-report as fake account qui reste dans match (recharger la page)
+- [ ] limit tags creation to 10 
+- [ ] create an error when confirming not existing account
+- [ ] rajouter un log pour reset password
+- [ ] reset password: bouton ok qui disparait si email vide
+- [ ] la barre n'apparait pas tout de suite quand on save un profil qui vient de passer a is valid
+- [x] generate profiles should be valid (is valid)
+- [ ] unlike should lower fame
+- [ ] improve location autocompletex
+- [ ] message d'erreur avec preference -> orientation
+- [ ] enlever prefer-not-to-say
+- [ ] implem de checks entre whitelist et blacklist
+- [ ] report as fake account qui reste dans match (recharger la page)

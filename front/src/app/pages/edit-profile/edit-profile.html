@@ -53,7 +53,7 @@
             <label>
               <span>Orientation</span>
               <app-dropdown #orientationDropdown [placeholder]="'Orientation'" style="z-index: 3; position: relative; width: 100%;"
-                (onSelected)="setOrientation($event)" [multiChoice]="true" [values]="tmpUser().preferences" [options]="allowedGenders"/>
+                (onSelected)="setOrientation($event)" [multiChoice]="true" [values]="tmpUser().orientation" [options]="allowedGenders"/>
             </label>
 
             <label>

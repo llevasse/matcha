@@ -3,11 +3,11 @@ import { Interest } from "./interest";
 import { ProfileImage } from "./profile-image";
 import { Subscription } from "rxjs";
 
-export class User{
+export class User {
   private baseImgUrl = `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000`;
 
   constructor(
-    obj : {
+    obj: {
       id: number,
       lastname: string,
       firstname: string,
@@ -19,40 +19,40 @@ export class User{
       location_latitude: number,
       location_longitude: number,
       distance: number,
-      gender: string|null,
-      preferences: string[],
+      gender: string | null,
+      orientation: string[],
       bio: string,
       interest: Interest[],
       photos: ProfileImage[],
       fame: number,
       last_connection_date: string | null,
-      tags: {id: number, name: string}[],
-      pictures: {id: number, file_path: string, is_main: number, uploaded_at: string}[];
+      tags: { id: number, name: string }[],
+      pictures: { id: number, file_path: string, is_main: number, uploaded_at: string }[];
       is_valid: boolean,
     } = {
-      id: NaN,
-      lastname: "",
-      firstname: "",
-      username: "",
-      email: "",
-      birthdate: "",
-      age: null,
-      last_connection_date: null,
-      city: null,
-      location_latitude: NaN,
-      location_longitude: NaN,
-      distance: NaN,
-      gender: null,
-      preferences: [],
-      bio: "",
-      interest: [],
-      photos: [],
-      fame: NaN,
-      tags: [],
-      pictures: [],
-      is_valid: false,
-    }
-  ){
+        id: NaN,
+        lastname: "",
+        firstname: "",
+        username: "",
+        email: "",
+        birthdate: "",
+        age: null,
+        last_connection_date: null,
+        city: null,
+        location_latitude: NaN,
+        location_longitude: NaN,
+        distance: NaN,
+        gender: null,
+        orientation: [],
+        bio: "",
+        interest: [],
+        photos: [],
+        fame: NaN,
+        tags: [],
+        pictures: [],
+        is_valid: false,
+      }
+  ) {
     this.id = obj.id ?? NaN;
     this.lastName = obj.lastname ?? "";
     this.firstName = obj.firstname ?? "";
@@ -65,19 +65,19 @@ export class User{
     this.cityLon = obj.location_longitude;
     this.distance = obj.distance;
     this.gender = obj.gender;
-    this.preferences = obj.preferences;
+    this.orientation = obj.orientation;
     this.bio = obj.bio ?? "";
     this.interest = obj.interest ?? [];
     this.photos = obj.photos ?? [];
     this.fame = obj.fame ?? NaN;
     this.lastConectionDate = obj.last_connection_date == null ? null : new Date(Date.parse(obj.last_connection_date));
-    if (obj.tags && obj.tags.length > 0){
-      obj.tags.forEach(({id, name})=>{
+    if (obj.tags && obj.tags.length > 0) {
+      obj.tags.forEach(({ id, name }) => {
         this.interest.push(new Interest(name, id));
       });
     }
-    if (obj.pictures && obj.pictures.length > 0){
-      obj.pictures.forEach(({id, file_path, is_main, uploaded_at})=>{
+    if (obj.pictures && obj.pictures.length > 0) {
+      obj.pictures.forEach(({ id, file_path, is_main, uploaded_at }) => {
         let image = new ProfileImage(`${this.baseImgUrl}${file_path}`);
         image.id = id;
         image.isMain = is_main == 1;
@@ -112,7 +112,7 @@ export class User{
   distance: number = NaN;
 
   gender: string | null = null;
-  preferences: string[] = [];
+  orientation: string[] = [];
 
   bio: string = "";
   interest: Interest[] = [];
@@ -127,7 +127,7 @@ export class User{
   isValid: boolean = false;
 }
 
-User.prototype.toString = function(){
+User.prototype.toString = function () {
   return `id : ${this.id}
   lastName : ${this.lastName}
   firstName : ${this.firstName}
@@ -137,7 +137,7 @@ User.prototype.toString = function(){
   cityLat : ${this.cityLat}
   cityLon : ${this.cityLon}
   gender : ${this.gender}
-  orientation : ${this.preferences}
+  orientation : ${this.orientation}
   bio : ${this.bio}
   interest : ${this.interest}
   photosUrls : ${this.photos}

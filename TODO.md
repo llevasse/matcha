@@ -90,7 +90,7 @@ test on real mobile device
 - [x] generate profiles should be valid (is valid)
 - [x] unlike should lower fame
 - [ ] improve location autocompletex
-- [ ] message d'erreur avec preference -> orientation
+- [x] message d'erreur avec preference -> orientation
 - [x] enlever prefer-not-to-say
 - [ ] implem de checks entre whitelist et blacklist
 - [ ] report as fake account qui reste dans match (recharger la page)

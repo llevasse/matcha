@@ -36,7 +36,7 @@
       <div id="detail-container">
         <span>Birthday : {{user().birthday.substring(0,10)}}</span>
         <span>Gender : {{user().gender}}</span>
-        <span>Orientation : {{user().preferences.join(", ")}}</span>
+        <span>Orientation : {{user().orientation.join(", ")}}</span>
         <span>City : {{user().cityStr}}</span>
         <span id="interest-container">Interest : @for (item of user().interest; track $index) {
           <span class="interest-span">{{item}}</span>

@@ -31,4 +31,4 @@ const getUserPreviewInfoSqlStatement = `SELECT u.id, u.username, u.bio, u.birthd
 (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', pp.id, 'file_path', pp.file_path, 'is_main', pp.is_main, 'uploaded_at', pp.uploaded_at)) FROM profile_pictures pp WHERE pp.user_id = u.id GROUP BY pp.user_id) as pictures,
 TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) as age`
 
-module.exports = {getUserPrivateInfoByIdSqlStatement, getUserPublicInfoByIdSqlStatement, getUserPublicInfoSqlStatement, getUserPreviewInfoSqlStatement}
+module.exports = { getUserPrivateInfoByIdSqlStatement, getUserPublicInfoByIdSqlStatement, getUserPublicInfoSqlStatement, getUserPreviewInfoSqlStatement }

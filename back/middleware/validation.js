@@ -27,7 +27,7 @@ const profileUpdateSchema = Joi.object({
     gender: Joi.string().valid(...allowedGenders).required(),
 
 
-    preferences: Joi.array()
+    orientation: Joi.array()
         .items(Joi.string().valid(...allowedGenders))
         .min(1)
         .required(),
@@ -73,7 +73,7 @@ const validateMessage = (req, res, next) => {
 const validateProfileUpdate = (req, res, next) => {
     const { error } = profileUpdateSchema.validate(req.body);
     if (error) {
-      console.log(error);
+        console.log(error);
         return res.status(400).json({ error: error.details[0].message });
     }
     next();

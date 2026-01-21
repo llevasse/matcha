@@ -39,20 +39,20 @@ async function updateProfile(userId, profileData) {
     const connection = await db.getConnection();
 
     try {
-        const { username, firstname, lastname, email, bio, city, gender, preferences, birthdate, location_latitude, location_longitude } = profileData;
+        const { username, firstname, lastname, email, bio, city, gender, orientation, birthdate, location_latitude, location_longitude } = profileData;
 
         await connection.beginTransaction();
 
         await _validateAge(birthdate);
         const genderId = await _getGenderId(connection, gender);
-        
+
         await connection.execute(
             `UPDATE users SET username = ?, firstname = ?, lastname = ?, email = ?, bio = ?, city = ?, gender_id = ?, birthdate = ?, location_latitude = ?, location_longitude = ? WHERE id = ?`,
             [username, firstname, lastname, email, bio, city, genderId, birthdate, location_latitude, location_longitude, userId]
         );
         await connection.commit();
 
-        await _updateUserPreferences(connection, userId, preferences);
+        await _updateUserPreferences(connection, userId, orientation);
         await updateProfileValidity(userId);
 
         await connection.commit();
@@ -204,13 +204,13 @@ async function _getGenderId(connection, gender) {
     return genderRows[0].id;
 }
 
-async function _updateUserPreferences(connection, userId, preferences) {
+async function _updateUserPreferences(connection, userId, orientation) {
     await connection.execute(
         `DELETE FROM user_preferences WHERE user_id = ?`,
         [userId]
     );
 
-    for (const prefLabel of preferences) {
+    for (const prefLabel of orientation) {
         const [prefRows] = await connection.execute(
             `SELECT id FROM genders WHERE label = ?`,
             [prefLabel]

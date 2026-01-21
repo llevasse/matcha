@@ -75,9 +75,8 @@ export class EditProfile {
 			return;
 		}
 
-		//init orientation/preferences
-		if (!tmpUser.preferences) {
-			tmpUser.preferences = ["man", "woman"];
+		if (!tmpUser.orientation) {
+			tmpUser.orientation = ["man", "woman"];
 		}
 
 		this.user = tmpUser;
@@ -211,7 +210,7 @@ export class EditProfile {
 			city: this.userCity(),
 			location_latitude: this.tmpUser().cityLat || this.user.cityLat,
 			location_longitude: this.tmpUser().cityLon || this.user.cityLon,
-			preferences: this.tmpUser().preferences || this.user.preferences
+			orientation: this.tmpUser().orientation || this.user.orientation
 		});
 		if (!res.ok) {
 			const obj = await res.json();
@@ -244,7 +243,7 @@ export class EditProfile {
 	}
 
 	setOrientation(map: Map<string, any>) {
-		this.tmpUser.update((user) => { user.preferences = map.get('list'); return user });
+		this.tmpUser.update((user) => { user.orientation = map.get('list'); return user });
 		this.orientationDropdown()?.setDisplayText();
 	}
 

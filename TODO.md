@@ -77,7 +77,7 @@ test on real mobile device
 - [x] pass policy stronger
 - [?] liked profiles doesn't display
 - [?] like received doesn't work
-- [ ] preremplir la dropdown orientation avec woman et man
+- [x] prefill orientation dropdown with woman and man
 - [ ] algo de preference
 - [ ] remove anything french 
 

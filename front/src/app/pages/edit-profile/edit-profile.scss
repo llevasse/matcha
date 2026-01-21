@@ -1,6 +1,6 @@
 @use '../../utilities/variables.scss' as v;
 
-.page-container{
+.page-container {
   width: 60vw;
   display: flex;
   flex-direction: column;
@@ -9,19 +9,20 @@
 
   transition: all 300ms allow-discrete;
 
-  h1{
+  h1 {
     user-select: none;
     text-align: center;
     color: v.$text-color;
   }
 
-  .dropdown-container{
+  .dropdown-container {
     overflow: hidden;
     background: v.$secondary-bg-color;
     border-radius: v.$border-radius-default;
     padding: 2em;
   }
-  .dropdown{
+
+  .dropdown {
     transition: max-height 300ms allow-discrete, opacity 300ms allow-discrete;
     height: fit-content;
     max-height: 100vh;
@@ -35,27 +36,29 @@
   }
 }
 
-.dropdown.inactive{
+.dropdown.inactive {
   max-height: 0px !important;
   opacity: 0 !important;
 }
 
-app-input, app-dropdown{
+app-input,
+app-dropdown {
   width: 100%;
 }
 
-app-dropdown, app-interest-dropdown{
+app-dropdown,
+app-interest-dropdown {
   height: 42px;
 }
 
-.flexColumn{
+.flexColumn {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
 }
 
-.fields-containers{
+.fields-containers {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -63,7 +66,7 @@ app-dropdown, app-interest-dropdown{
   width: 100%;
 }
 
-textarea{
+textarea {
   background: v.$primary-bg-color;
   width: 100%;
 
@@ -79,46 +82,46 @@ textarea{
   color: v.$text-color;
 }
 
-#location-input-container{
+#location-input-container {
   position: relative;
   z-index: 4;
 }
 
 
-textarea::placeholder{
+textarea::placeholder {
   color: v.$text-color;
   font-style: italic;
   opacity: .7;
 }
 
-profile-image-input{
+profile-image-input {
   width: 100%;
 }
 
 
-#interest-container{
+#interest-container {
   display: flex;
   flex-direction: row;
   width: 100%;
 }
 
-app-profile-preview .container{
+app-profile-preview .container {
   background: v.$background-deg !important;
 
-  .interact-button:hover{
+  .interact-button:hover {
     background-color: v.$secondary-bg-color !important;
   }
 }
 
-.profile-list-container{
+.profile-list-container {
   padding: 0 !important;
 }
 
-.error-messages{
+.error-messages {
   display: block;
   justify-self: center;
 
-  background: red;
+  background: rgba(255, 0, 0, 0.5);
   padding: 1em;
   border-radius: 1em;
   color: white;
@@ -127,23 +130,23 @@ app-profile-preview .container{
 }
 
 @keyframes open-error-message {
-  0%{
+  0% {
     opacity: 0;
   }
 
-  100%{
+  100% {
     opacity: 1;
   }
 }
 
 @media all and (max-width: v.$max-width-to-consider-mobile) {
-  .fields-containers{
+  .fields-containers {
     flex-direction: column;
   }
 }
 
 @media all and (max-width: 960px) {
-  .page-container{
+  .page-container {
     width: 90vw;
   }
 }

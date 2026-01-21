@@ -16,9 +16,9 @@ export class AuthService {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(credentials),
-    }).then(async (value)=>{
-      if (value.ok){
-        await value.clone().json().then((value)=>{
+    }).then(async (value) => {
+      if (value.ok) {
+        await value.clone().json().then((value) => {
           localStorage.setItem('token', value['token'])
         })
       }
@@ -31,7 +31,9 @@ export class AuthService {
     firstname: string;
     lastname: string;
     email: string;
-    password: string; }): Promise<any> {
+    password: string;
+    consentLocation: boolean
+  }): Promise<any> {
     this.logout();
     return fetch(`${this.authUrl}/register`, {
       method: "POST",
@@ -39,7 +41,7 @@ export class AuthService {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(credentials),
-    }).then(async (value)=>{
+    }).then(async (value) => {
       return value;
     })
   }
@@ -57,11 +59,11 @@ export class AuthService {
     return !!this.getToken();
   }
 
-  verify(){
+  verify() {
     return fetch(`${this.authUrl}/verify`, {
       headers: {
         "Content-Type": "application/json",
-        "Authorization":"Bearer " + localStorage.getItem('token'),
+        "Authorization": "Bearer " + localStorage.getItem('token'),
       },
     })
   }
@@ -77,7 +79,7 @@ export class AuthService {
   }
 
   resetPassword(passwordInput: string, token: string | null) {
-    return this.http.post(`${this.authUrl}/reset-password/confirm`, { password: passwordInput, token: token});
+    return this.http.post(`${this.authUrl}/reset-password/confirm`, { password: passwordInput, token: token });
   }
 
 }

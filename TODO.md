@@ -80,6 +80,7 @@ test on real mobile device
 - [x] prefill orientation dropdown with woman and man
 - [ ] algo de preference
 - [x] remove anything french 
+- [x] user must consent explicitly the retrival of its localisation 
 
 # less important
 - [ ] limit tags creation to 10 

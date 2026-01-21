@@ -16,12 +16,12 @@ export class Login {
   passwordForgottenPopup = signal<boolean>(false);
   passwordForgottenButtonClicked = signal<boolean>(false);
 
-  constructor(private authService: AuthService, private router: Router, private userService: UserService){
+  constructor(private authService: AuthService, private router: Router, private userService: UserService) {
     authService.logout();
   }
 
-  ngAfterViewInit(){
-    if (window.location.pathname.startsWith('/register')){
+  ngAfterViewInit() {
+    if (window.location.pathname.startsWith('/register')) {
       this.activateSigninForm();
     }
   }
@@ -29,65 +29,65 @@ export class Login {
   loginErrorMessage = signal<String | null>(null);
   registerErrorMessage = signal<String | null>(null);
 
-  activateLoginForm(){
+  activateLoginForm() {
     document.querySelector("#loginForm")?.classList.remove('inactive');
     document.querySelector("#signinForm")?.classList.add('inactive');
-    history.replaceState('','', "/login");
+    history.replaceState('', '', "/login");
   }
 
-  activateSigninForm(){
+  activateSigninForm() {
     document.querySelector("#loginForm")?.classList.add('inactive');
     document.querySelector("#signinForm")?.classList.remove('inactive');
-    history.replaceState('','', "/register");
+    history.replaceState('', '', "/register");
   }
 
-  async signInApiCall(event: SubmitEvent){
+  async signInApiCall(event: SubmitEvent) {
     event.preventDefault();
+    this.registerErrorMessage.set(null);
     var first_name = (document.querySelector("#register-first-name-input") as HTMLInputElement).value;
     var last_name = (document.querySelector("#register-last-name-input") as HTMLInputElement).value;
     var username = (document.querySelector("#register-username-input") as HTMLInputElement).value;
     var email = (document.querySelector("#register-mail-input") as HTMLInputElement).value;
     var password = (document.querySelector("#register-password-input") as HTMLInputElement).value;
-    if (username && first_name && last_name && email && password){
-      this.authService.register({username, firstname: first_name, lastname: last_name, email, password}).then((value)=>{
-        let response: Response = value;
-        if (response.ok){
-          this.emailConfirmationPopup.set(true);
-        }
-        else{
-          response.json().then((obj)=>{
-            if (obj['error'] != null){
-              this.registerErrorMessage.set(obj['error']);
-            }
-            else{
-              this.registerErrorMessage.set(obj['message']);
-            }
-          })
-        }
-      });
-    }
+    var consentLocation = (document.querySelector('#register-location-consent') as HTMLInputElement).checked;
+    this.authService.register({ username, firstname: first_name, lastname: last_name, email, password, consentLocation }).then((value) => {
+      let response: Response = value;
+      if (response.ok) {
+        this.emailConfirmationPopup.set(true);
+      }
+      else {
+        response.json().then((obj) => {
+          if (obj['error'] != null) {
+            this.registerErrorMessage.set(obj['error']);
+          }
+          else {
+            this.registerErrorMessage.set(obj['message']);
+          }
+        })
+      }
+    });
   }
 
-  async loginApiCall(event: SubmitEvent){
+  async loginApiCall(event: SubmitEvent) {
     event.preventDefault();
     var username = (document.querySelector("#login-username-input") as HTMLInputElement).value;
     var password = (document.querySelector("#login-password-input") as HTMLInputElement).value;
-    if (username && password){
-      this.authService.login({username: username, password}).then((value)=>{
-        if (value.ok){
-          this.userService.createClientUser().then((user)=>{
-            if (user == null){
-              return ;
+    if (username && password) {
+      this.authService.login({ username: username, password }).then((value) => {
+        if (value.ok) {
+          this.userService.createClientUser().then((user) => {
+            if (user == null) {
+              return;
             }
             this.router.navigate([user.isValid ? `/` : `/profile`]);
           })
         }
-        else{
-          (value as Response).json().then((value)=>{
-            if (value['error'] != null){
+        else {
+          (value as Response).json().then((value) => {
+            if (value['error'] != null) {
               this.loginErrorMessage.set(value['error']);
             }
-            else{
+            else {
               this.loginErrorMessage.set(value['message']);
             }
           })
@@ -96,11 +96,11 @@ export class Login {
     }
   }
 
-  openPasswordForgottenPopup(){
+  openPasswordForgottenPopup() {
     this.passwordForgottenPopup.set(true);
   }
 
-  closePasswordForgottenPopup(){
+  closePasswordForgottenPopup() {
     this.passwordForgottenPopup.set(false);
     this.passwordForgottenButtonClicked.set(false);
   }
@@ -109,9 +109,9 @@ export class Login {
     event.preventDefault();
     var email = (document.querySelector("#forgotten-password-email-input") as HTMLInputElement).value;
     document.querySelector("#ok-button")?.classList.add('inactive');
-    if (email){
-      this.authService.passwordForgotten(email).then((value)=>{
-        if (value.ok){
+    if (email) {
+      this.authService.passwordForgotten(email).then((value) => {
+        if (value.ok) {
           this.passwordForgottenButtonClicked.set(true);
         }
       });
@@ -121,14 +121,14 @@ export class Login {
 }
 @Component({
   selector: 'login-selector',
-  template : `<a (click)="click()">{{value()}}</a>`,
+  template: `<a (click)="click()">{{value()}}</a>`,
   styleUrl: './login.scss'
 })
 
-export class LoginSelector{
+export class LoginSelector {
   onClick = output<void>();
   value = input.required<String>();
-  click(){
+  click() {
     this.onClick.emit();
   }
 }

@@ -57,6 +57,16 @@ export class AuthService {
     return !!this.getToken();
   }
 
+  verify(){
+    return fetch(`${this.authUrl}/verify`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((value)=>{
+      value.json().then((obj)=>{console.log(obj)});
+    })
+  }
+
   passwordForgotten(email: string) {
     return fetch(`${this.authUrl}/reset-password`, {
       method: "POST",

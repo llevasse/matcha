@@ -14,7 +14,6 @@ export class UserService {
   constructor(private router: Router) {}
 
   createClientUser(): Promise<User | null>{
-    console.log("call to create user");
     return this.profile().then(async (tmp)=>{
       var response = tmp as Response;
       if (response.ok){

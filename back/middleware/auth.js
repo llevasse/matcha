@@ -17,6 +17,7 @@ const authenticateToken = async (req, res, next) => {
             email, \
             gender_id, \
             is_valid, \
+            is_admin \
             location_latitude, \
             location_longitude FROM users WHERE id = ?',
             [decoded.userId]

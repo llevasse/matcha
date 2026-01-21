@@ -69,7 +69,7 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: ./back/uploads/profile
+      device: ./back/uploads/profiles
       
 
 networks:

@@ -45,11 +45,12 @@ async function updateProfile(userId, profileData) {
 
         await _validateAge(birthdate);
         const genderId = await _getGenderId(connection, gender);
-
+        
         await connection.execute(
             `UPDATE users SET username = ?, firstname = ?, lastname = ?, email = ?, bio = ?, city = ?, gender_id = ?, birthdate = ?, location_latitude = ?, location_longitude = ? WHERE id = ?`,
             [username, firstname, lastname, email, bio, city, genderId, birthdate, location_latitude, location_longitude, userId]
         );
+        await connection.commit();
 
         await _updateUserPreferences(connection, userId, preferences);
         await updateProfileValidity(userId);
@@ -153,7 +154,7 @@ async function updateProfileValidity(userId) {
         });
     }
 
-    const [pictures] = await db.execute(
+    const [pictures] = await connection.execute(
         'SELECT id FROM profile_pictures WHERE user_id = ? LIMIT 1',
         [userId]
     );
@@ -166,6 +167,8 @@ async function updateProfileValidity(userId) {
         `UPDATE users SET is_valid = ? WHERE id = ?`,
         [isConfirmed, userId]
     );
+    await connection.commit();
+    connection.release();
 }
 
 async function _throw404IfUserDoesNotExist(userId) {

@@ -129,9 +129,10 @@ export class EditProfile {
 
     if (this.imagesInput() && this.imagesInput()?.images().length != 0 && this.imagesInput()!.images().at(0)){
       this.imagesInput()!.images().at(0)!.isMain = true;
-      this.imagesInput()!.images().forEach((file)=>{
-        if (file.isNew){
-          this.userService.uploadPhotos(file.file!).then(async (value)=>{
+
+      for (let file of this.imagesInput()!.images()){
+        if (file && file.isNew){
+          await this.userService.uploadPhotos(file.file!).then(async (value)=>{
             const res = value as Response;
             if (!res.ok){
               this.errorMessages.update((list)=>{
@@ -153,9 +154,10 @@ export class EditProfile {
                 }
               }
             }
+            return null;
           });
         }
-      })
+      }
     }
 
 		var interestToAdd: Interest[] = this.interestDropdown()!.selectedValues().filter((interest)=>{
@@ -215,6 +217,8 @@ export class EditProfile {
       this.loading.set(false);
     }
     if (this.errorMessages().length === 0){
+      this.userService.deleteClient();
+      await this.userService.createClientUser();
       this.router.navigate([`/`]);
     }
 		return false;

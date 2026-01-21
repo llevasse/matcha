@@ -83,7 +83,7 @@ router.post('/upload', authenticateToken, upload.single('photo'), asyncHandler(a
         'INSERT INTO profile_pictures (user_id, file_path, is_main) VALUES (?, ?, ?)',
         [req.user.id, filePath, isMain]
     );
-    checkProfileValidity(req.user.id)
+    await checkProfileValidity(req.user.id)
 
     res.status(201).json({
         id: result.insertId,

@@ -9,6 +9,8 @@ import { Admin } from './pages/admin/admin';
 import { HistoryPage } from './pages/history/history';
 import { ConfirmEmail } from './pages/confirm-email/confirm-email';
 import { ResetPassword } from './pages/reset-password/reset-password';
+import { inject } from '@angular/core';
+import { AuthService } from '../services/authService';
 
 export const routes: Routes = [
   {path: '', component: Home},
@@ -23,7 +25,11 @@ export const routes: Routes = [
   {path: 'register', component: Login},
   {path: 'confirm-email', component: ConfirmEmail},
   {path: 'reset-password', component: ResetPassword},
-  {path: 'admin', component: Admin},
+  {path: 'admin', loadComponent: ()=>{
+    const auth = inject(AuthService)
+    auth.verify();
+    return Home;
+  }},
   {path: 'history', component: HistoryPage},
   {path: 'history/profile/:id', component: HistoryPage},
   {path: '**',  component: Error404Page}

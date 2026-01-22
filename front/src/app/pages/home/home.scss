@@ -1,10 +1,11 @@
 @use '../../utilities/variables.scss' as v;
-h1{
+
+h1 {
   color: v.$text-color;
   text-align: center;
 }
 
-#search-container{
+#search-container {
   display: flex;
   flex-direction: column;
   margin: 0 6rem;
@@ -18,35 +19,37 @@ h1{
 }
 
 @media all and (max-width: v.$max-width-to-consider-mobile) {
-  #search-container{
+  #search-container {
     margin: 1rem;
   }
 }
 
-#search-option-container{
+#search-option-container {
   display: flex;
   max-height: 0px;
   flex-direction: column;
   overflow: hidden;
   gap: 1rem;
-  div{
+
+  div {
     gap: 1rem;
   }
+
   transition: all 500ms allow-discrete;
 }
 
-.options-container{
+.options-container {
   display: flex;
   flex-direction: row;
 
 
-  button{
+  button {
     font-size: 1em;
   }
 }
 
 @media all and (max-width: v.$max-width-to-consider-mobile) {
-  .options-container{
+  .options-container {
     flex-direction: column;
   }
 }
@@ -55,16 +58,16 @@ h1{
   border: 1px solid v.$text-color;
 }
 
-.active-sort-selector.ascending::after{
+.active-sort-selector.ascending::after {
   content: " ↗";
 }
 
-.active-sort-selector.descending::after{
+.active-sort-selector.descending::after {
   content: " ↘";
 }
 
-.display-search-options{
-    max-height: 100vh !important;
-  overflow:visible !important;
+.display-search-options {
+  max-height: 100vh !important;
+  overflow: visible !important;
 
 }

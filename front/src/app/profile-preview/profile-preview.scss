@@ -6,7 +6,7 @@ $--padding-width: 1rem;
 $--picture-size: 20rem;
 
 
-.picture-preview{
+.picture-preview {
   height: $--picture-size;
   width: $--picture-size;
   position: relative;
@@ -21,7 +21,7 @@ $--picture-size: 20rem;
   background-position: center;
 }
 
-.container{
+.container {
   width: fit-content;
   color: v.$text-color;
   background-color: v.$secondary-bg-color;
@@ -41,16 +41,16 @@ $--picture-size: 20rem;
   z-index: 1;
 }
 
-.container > div{
+.container>div {
   max-width: 20em;
 }
 
-.container:hover{
+.container:hover {
   scale: 105%;
   z-index: 2;
 }
 
-.profile-info{
+.profile-info {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -58,7 +58,7 @@ $--picture-size: 20rem;
   gap: .5em;
 }
 
-.profile-name-distance-container{
+.profile-name-distance-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -66,38 +66,40 @@ $--picture-size: 20rem;
   flex-wrap: wrap;
   column-gap: 1ch;
 
-  :last-child{
+  :last-child {
     text-align: end;
     flex: 1;
   }
 }
 
 
-.profile-interest-container{
+.profile-interest-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   width: 20em;
-  white-space-collapse:preserve;
+  white-space-collapse: preserve;
   color: v.$secondary-text-color;
   line-height: 1em;
-  span{
+
+  span {
     width: fit-content;
   }
 }
-.profile-interest-container span:not(span:last-child)::after{
+
+.profile-interest-container span:not(span:last-child)::after {
   content: ", ";
 }
 
-.profile-interest-container span:nth-child(4):not(span:last-child)::after{
+.profile-interest-container span:nth-child(4):not(span:last-child)::after {
   content: ", ..." !important;
 }
 
-.profile-interest-container span:nth-child(n+5){
+.profile-interest-container span:nth-child(n+5) {
   display: none;
 }
 
-.fame-container{
+.fame-container {
   position: absolute;
   background-color: v.$primary-bg-color;
   top: -1em;
@@ -108,7 +110,7 @@ $--picture-size: 20rem;
   box-sizing: border-box;
 }
 
-.profile-interact-container{
+.profile-interact-container {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -116,7 +118,7 @@ $--picture-size: 20rem;
   border-top: solid 1px v.$secondary-text-color;
 }
 
-.interact-button{
+.interact-button {
   margin-top: $--padding-width;
   flex: 1;
   align-self: center;
@@ -132,11 +134,11 @@ $--picture-size: 20rem;
   border-radius: .3em;
 }
 
-.interact-button:hover{
+.interact-button:hover {
   background-color: v.$primary-bg-color;
 }
 
-#profile-bio{
+#profile-bio {
   max-height: 2em;
   line-height: 1em;
   max-width: $--picture-size;
@@ -145,7 +147,5 @@ $--picture-size: 20rem;
 }
 
 @media all and (max-width: v.$max-width-to-consider-mobile) {
-  .profile-name-distance-container{
-    
-  }
+  .profile-name-distance-container {}
 }

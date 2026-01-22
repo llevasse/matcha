@@ -2,7 +2,7 @@
 
 $--picture-size: 15rem;
 
-.container{
+.container {
   width: 90vw;
   max-height: 80vh;
   color: v.$text-color;
@@ -20,7 +20,7 @@ $--picture-size: 15rem;
   overflow: auto;
 }
 
-.name-container{
+.name-container {
   display: none;
   flex-direction: row;
   width: fit-content;
@@ -32,11 +32,13 @@ $--picture-size: 15rem;
   word-break: break-all;
 }
 
-.name-container span:nth-child(2){
+.name-container span:nth-child(2) {
   font-weight: bold;
 }
 
-#picture-container, #bio-container, #detail-container{
+#picture-container,
+#bio-container,
+#detail-container {
   padding: 1rem;
   // margin: 1rem;
   background-color: rgba(255, 255, 255, .2);
@@ -44,7 +46,7 @@ $--picture-size: 15rem;
   box-sizing: border-box;
 }
 
-#picture-container{
+#picture-container {
   display: flex;
   flex-direction: row;
 
@@ -54,7 +56,7 @@ $--picture-size: 15rem;
   min-height: fit-content;
 
 
-  .picture-viewer{
+  .picture-viewer {
     height: $--picture-size;
     width: $--picture-size;
     min-width: $--picture-size;
@@ -72,7 +74,7 @@ $--picture-size: 15rem;
   }
 }
 
-#info-container{
+#info-container {
   user-select: none;
   display: flex;
   flex-direction: row;
@@ -81,62 +83,63 @@ $--picture-size: 15rem;
 
   gap: 1rem;
 
-  div{
+  div {
     width: 100%;
     height: fit-content;
   }
 }
 
-#detail-container{
-    width: 30%;
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-  }
+#detail-container {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
 
-#interest-container{
+#interest-container {
   display: flex !important;
   flex-direction: row;
   flex-wrap: wrap;
   max-height: 10rem;
 }
 
-.interest-span{
+.interest-span {
   width: fit-content;
 }
 
-.interest-span:not(:last-child)::after{
+.interest-span:not(:last-child)::after {
   content: ", ";
 }
 
-#buttons-container{
+#buttons-container {
   display: flex;
   flex-direction: row;
   gap: 1rem;
 }
 
 @media all and (max-width: v.$max-width-to-consider-mobile) {
-  .name-container.mobile{
+  .name-container.mobile {
     display: flex;
     font-size: 2rem;
     flex-direction: column;
     align-items: center;
 
-    span{
+    span {
       width: fit-content;
     }
   }
 
-  #info-container{
+  #info-container {
     flex-direction: column;
   }
 
-  #buttons-container{
+  #buttons-container {
     flex-direction: column-reverse;
   }
 }
+
 @media all and (min-width: v.$max-width-to-consider-mobile) {
-  .name-container.desktop{
+  .name-container.desktop {
     display: flex;
     font-size: 4rem;
   }
@@ -148,7 +151,7 @@ $--picture-size: 15rem;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -181,7 +184,7 @@ $--picture-size: 15rem;
   cursor: pointer;
 }
 
-.block-and-report-buttons button{
+.block-and-report-buttons button {
   display: flex;
   width: fit-content;
   flex-direction: row;

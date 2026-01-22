@@ -1,6 +1,6 @@
 @use '../../../utilities/variables.scss' as v;
 
-.container{
+.container {
   background: v.$primary-bg-color;
   width: 100%;
 
@@ -24,21 +24,22 @@
 
   // user-select: none;
 
-  input{
+  input {
     height: 42px;
   }
 }
 
 
-.flexRow{
+.flexRow {
   display: flex;
   flex-direction: row;
 }
-.container>a{
+
+.container>a {
   pointer-events: none;
 }
 
-#content{
+#content {
   display: flex;
   flex-wrap: wrap;
   gap: .25em;
@@ -46,37 +47,38 @@
   padding-top: 0px;
 }
 
-.content-column{
+.content-column {
   flex-direction: column;
 
 }
-.content-row{
+
+.content-row {
   flex-direction: row;
   gap: .5em !important;
 }
 
-.inactive{
+.inactive {
   height: 42px;
 }
 
-.inactive #content{
+.inactive #content {
   display: none !important;
 }
 
-.options-container{
+.options-container {
   font-size: 1em;
   font-style: normal;
 }
 
-.options-container-selected{
+.options-container-selected {
   color: rgba($color: v.$secondary-text-color, $alpha: .8);
 }
 
-.options-container:hover{
+.options-container:hover {
   color: black;
 }
 
-input{
+input {
   background: none;
   border: 0;
   color: v.$text-color;
@@ -86,21 +88,22 @@ input{
   height: 42;
 }
 
-input::placeholder{
+input::placeholder {
   font-style: italic;
   font-weight: lighter;
   color: v.$text-color;
 
 }
 
-#input-container{
+#input-container {
   border-bottom: solid 1px v.$text-color;
   user-select: auto;
 
-  input{
+  input {
     width: 100%;
   }
-  button{
+
+  button {
     width: 50%;
     background: transparent;
     border: 0;
@@ -109,6 +112,6 @@ input::placeholder{
   }
 }
 
-.inactive #input-container{
+.inactive #input-container {
   border-bottom: transparent;
 }

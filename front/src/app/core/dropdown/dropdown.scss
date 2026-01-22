@@ -1,6 +1,6 @@
 @use '../../utilities/variables.scss' as v;
 
-.container{
+.container {
   background: v.$primary-bg-color;
   width: 100%;
 
@@ -24,22 +24,23 @@
 
   user-select: none;
 
-  a{
+  a {
     height: 42px;
     padding: 0 1em;
     align-content: center;
   }
 }
 
-.flexRow{
+.flexRow {
   display: flex;
   flex-direction: row;
 }
-.container>a{
+
+.container>a {
   pointer-events: none;
 }
 
-#content{
+#content {
   display: flex;
   flex-wrap: wrap;
   gap: .25em;
@@ -48,33 +49,34 @@
   border-top: solid 1px v.$text-color;
 }
 
-.content-column{
+.content-column {
   flex-direction: column;
 
 }
-.content-row{
+
+.content-row {
   flex-direction: row;
   gap: .5em !important;
 }
 
-.inactive{
+.inactive {
   height: 42px;
 }
 
-.inactive #content{
+.inactive #content {
   display: none !important;
 }
 
-.options-container{
+.options-container {
   font-size: 1em;
   font-style: normal;
 }
 
-.options-container:hover{
+.options-container:hover {
   color: black;
 }
 
-input{
+input {
   background: none !important;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -86,20 +88,21 @@ input{
   height: 42;
 }
 
-input::placeholder{
+input::placeholder {
   font-style: italic;
   font-weight: lighter;
   color: v.$text-color;
 
 }
 
-#input-container{
+#input-container {
   user-select: auto;
 
-  input{
+  input {
     width: 100%;
   }
-  button{
+
+  button {
     width: 50%;
     background: transparent;
     border: 0;
@@ -108,7 +111,7 @@ input::placeholder{
   }
 }
 
-.placeholder{
+.placeholder {
   opacity: .5;
   font-size: .8em;
 }

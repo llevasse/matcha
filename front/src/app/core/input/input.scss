@@ -1,7 +1,7 @@
 @use '../../utilities/variables.scss' as v;
 
 
-input{
+input {
   background: v.$primary-bg-color;
   width: 100%;
 
@@ -16,14 +16,14 @@ input{
   outline: none;
 }
 
-input:is(:autofill, :-webkit-autofill, :focus){
+input:is(:autofill, :-webkit-autofill, :focus) {
   background: v.$primary-bg-color !important;
   color: v.$text-color !important;
   -webkit-text-fill-color: v.$text-color !important;
   -webkit-box-shadow: 0 0 0px 1000px v.$primary-bg-color inset;
 }
 
-input::placeholder{
+input::placeholder {
   color: v.$text-color;
   font-style: italic;
   opacity: .7;

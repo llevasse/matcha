@@ -1,5 +1,6 @@
 @use '../../utilities/variables.scss' as v;
-h1{
+
+h1 {
   color: v.$text-color;
   text-align: center;
 }

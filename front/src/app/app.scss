@@ -6,7 +6,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.center-block{
+.center-block {
   margin: 5em auto;
   display: block;
   width: fit-content;
@@ -16,19 +16,23 @@ body {
   font-style: italic;
 }
 
-app-dropdown, app-interest-dropdown{
+app-dropdown,
+app-interest-dropdown {
   height: 42px;
   display: block;
   position: relative;
 }
 
 @media all and (max-width: v.$max-width-to-consider-mobile) {
-  app-dropdown, app-interest-dropdown{
+
+  app-dropdown,
+  app-interest-dropdown {
     height: auto;
   }
 }
 
-app-profile-view, app-chat{
+app-profile-view,
+app-chat {
   position: fixed;
   z-index: 10;
   top: 0;
@@ -40,10 +44,10 @@ app-profile-view, app-chat{
   align-items: center;
   justify-content: center;
 
-  background-color: rgba(0,0,0,.4);
+  background-color: rgba(0, 0, 0, .4);
 }
 
-button{
+button {
   background: v.$primary-bg-color;
   width: 100%;
 
@@ -52,18 +56,22 @@ button{
   padding: .5em;
   box-sizing: border-box;
 
-  color: v.$text-color;;
+  color: v.$text-color;
+  ;
   font-size: 2em;
   opacity: 100%;
   transition: opacity 300ms;
 }
 
-app-image-viewer{
+app-image-viewer {
   position: fixed;
   z-index: 10;
 }
 
-#navbar-desktop, #navbar-mobile, #navbar-mobile-fixed, #bottom-navbar-mobile{
+#navbar-desktop,
+#navbar-mobile,
+#navbar-mobile-fixed,
+#bottom-navbar-mobile {
   display: flex;
 
   // height: 1em;
@@ -77,7 +85,7 @@ app-image-viewer{
   position: relative;
   z-index: 12;
 
-  li{
+  li {
     padding: 1em;
     display: block;
     user-select: none;
@@ -85,31 +93,31 @@ app-image-viewer{
     transition: color 300ms;
   }
 
-  li:hover{
+  li:hover {
     color: v.$text-color;
   }
 
-  li:last-child{
+  li:last-child {
     flex: 1;
     text-align: end;
   }
 
-  .notif-dropdown-container{
+  .notif-dropdown-container {
     height: 0em;
     display: flex;
     flex-direction: column;
     width: fit-content;
   }
 
-  .notif-content-container.inactive{
+  .notif-content-container.inactive {
     display: none !important;
   }
 
-  .notif-content-container:empty{
+  .notif-content-container:empty {
     display: none !important;
   }
 
-  .notif-dropdown-container .notif-content-container{
+  .notif-dropdown-container .notif-content-container {
     padding: .5em;
     z-index: 2;
     display: flex;
@@ -123,64 +131,68 @@ app-image-viewer{
     position: absolute;
     top: 3em;
 
-    app-notification{
+    app-notification {
       user-select: none;
     }
   }
 }
 
-#navbar-mobile-fixed, #navbar-mobile{
+#navbar-mobile-fixed,
+#navbar-mobile {
   top: 0;
   position: relative;
   width: -webkit-fill-available;
 
 
-  li:last-child{
+  li:last-child {
     position: relative;
     flex: 1;
     text-align: right;
   }
 }
 
-#navbar-mobile-fixed{
+#navbar-mobile-fixed {
   position: fixed;
 }
 
-#bottom-navbar-mobile{
+#bottom-navbar-mobile {
   bottom: 0;
   position: fixed;
   width: -webkit-fill-available;
   justify-content: space-between;
 
-  li:last-child{
+  li:last-child {
     position: relative;
   }
 }
 
 @media all and (max-width: v.$max-width-to-consider-mobile) {
-  #navbar-desktop{
+  #navbar-desktop {
     display: none;
   }
 }
 
 @media all and (min-width: v.$max-width-to-consider-mobile) {
-  #navbar-mobile, #navbar-mobile-fixed, #bottom-navbar-mobile{
+
+  #navbar-mobile,
+  #navbar-mobile-fixed,
+  #bottom-navbar-mobile {
     display: none;
   }
 }
 
-label{
+label {
   color: v.$text-color;
   width: 100%;
 
-  span{
+  span {
     position: relative;
     padding-left: .5rem;
 
   }
 }
 
-input{
+input {
   background: v.$primary-bg-color;
   width: 100%;
 
@@ -197,20 +209,20 @@ input{
   outline: none;
 }
 
-input:is(:autofill, :-webkit-autofill, :focus){
+input:is(:autofill, :-webkit-autofill, :focus) {
   background: v.$primary-bg-color !important;
   color: v.$text-color !important;
   -webkit-text-fill-color: v.$text-color !important;
   -webkit-box-shadow: 0 0 0px 1000px v.$primary-bg-color inset;
 }
 
-input::placeholder{
+input::placeholder {
   color: v.$text-color;
   font-style: italic;
   opacity: .7;
 }
 
-.profile-list-container{
+.profile-list-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -220,21 +232,21 @@ input::placeholder{
 
   justify-content: center;
 
-  app-profile-preview{
+  app-profile-preview {
     width: fit-content;
     display: block;
   }
 }
 
-app-edit-profile{
-    padding-bottom: 5em;
-    overflow: auto;
-    // height: 100vh;
-    display: block;
-  }
+app-edit-profile {
+  padding-bottom: 5em;
+  overflow: auto;
+  // height: 100vh;
+  display: block;
+}
 
 @media all and (max-width: v.$max-width-to-consider-mobile) {
-  .profile-list-container{
+  .profile-list-container {
     padding: unset;
     padding-bottom: 6em;
   }

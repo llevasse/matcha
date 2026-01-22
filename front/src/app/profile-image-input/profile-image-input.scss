@@ -1,6 +1,6 @@
 @use '../utilities/variables.scss' as v;
 
-.container{
+.container {
   overflow: auto;
   width: 100%;
   height: fit-content;
@@ -9,7 +9,7 @@
   gap: 2em;
 }
 
-#images-preview{
+#images-preview {
   background-color: rgba(0, 0, 0, .2);
   display: flex;
   gap: .5em;
@@ -17,12 +17,13 @@
   min-width: fit-content;
   justify-content: space-around;
 
-  div{
+  div {
     // width: 100%;
   }
 }
 
-#images-preview img, .picture-preview{
+#images-preview img,
+.picture-preview {
   height: 13em;
   width: 13em;
   position: relative;
@@ -37,25 +38,25 @@
   background-position: center;
 }
 
-#images-preview input{
+#images-preview input {
   display: none;
 }
 
-app-image-input{
+app-image-input {
   width: 100%;
   height: 13em;
 }
 
 @media all and (max-width: v.$max-width-to-consider-mobile) {
-  #images-preview{
+  #images-preview {
     flex-direction: column;
     width: -webkit-fill-available;
 
-    div{
+    div {
       width: -webkit-fill-available;
     }
 
-    .picture-preview{
+    .picture-preview {
       width: -webkit-fill-available;
     }
   }

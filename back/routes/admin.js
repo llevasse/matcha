@@ -95,7 +95,7 @@ router.post('/create-users', adminAuthenticateToken, asyncHandler(async (req, re
         userPrefencesInsertQuery += "(?, ?)";
       }
     }
-    console.log("Set user gender preferences with values : ", gendersIdAttractedTo);
+    console.log("Set user gender orientation with values : ", gendersIdAttractedTo);
 
     await db.execute(userPrefencesInsertQuery, gendersIdAttractedTo);
 

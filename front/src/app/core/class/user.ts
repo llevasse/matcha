@@ -1,7 +1,6 @@
 import { WebSocketSubject } from "rxjs/webSocket";
 import { Interest } from "./interest";
 import { ProfileImage } from "./profile-image";
-import { Subscription } from "rxjs";
 
 export class User {
   private baseImgUrl = `http://${import.meta.env.NG_APP_BACKEND_HOST}:3000`;

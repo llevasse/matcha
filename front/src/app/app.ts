@@ -37,6 +37,7 @@ export class App {
     document.addEventListener("clientCreated", ()=>{
       this.userService.getClientUser().then((user)=>{
         if (user){
+          this.loaded.set(false);
           this.clientUser = user;
           user.ws?.subscribe((obj)=>{
             this.notificationHandler(obj);

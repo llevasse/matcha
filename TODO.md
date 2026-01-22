@@ -87,11 +87,11 @@ test on real mobile device
 - [ ] create an error when confirming not existing account
 - [x] rajouter un log pour reset password
 - [ ] reset password: bouton ok qui disparait si email vide
-- [ ] la barre n'apparait pas tout de suite quand on save un profil qui vient de passer a is valid
+- [x] la barre n'apparait pas tout de suite quand on save un profil qui vient de passer a is valid
 - [x] generate profiles should be valid (is valid)
 - [x] unlike should lower fame
 - [ ] improve location autocompletex
 - [x] message d'erreur avec preference -> orientation
 - [x] enlever prefer-not-to-say
-- [ ] implem de checks entre whitelist et blacklist
+- [x] implem de checks entre whitelist et blacklist
 - [ ] report as fake account qui reste dans match (recharger la page)

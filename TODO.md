@@ -86,7 +86,7 @@ test on real mobile device
 - [ ] limit tags creation to 10 
 - [ ] create an error when confirming not existing account
 - [x] rajouter un log pour reset password
-- [ ] reset password: bouton ok qui disparait si email vide
+- [x] reset password: ok btn dissapearing if no email
 - [x] la barre n'apparait pas tout de suite quand on save un profil qui vient de passer a is valid
 - [x] generate profiles should be valid (is valid)
 - [x] unlike should lower fame

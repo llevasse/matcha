@@ -10,6 +10,13 @@ import { Interest } from '../../core/class/interest';
 import { Router } from '@angular/router';
 import { BlockOrReportService } from '../../../services/blockOrReportService';
 import { ProfilePreview } from "../../profile-preview/profile-preview";
+import { LocationService } from '../../../services/locationService';
+
+type cityObj = {city: string | undefined;
+            state: string | undefined;
+            country: string | undefined;
+            lat: number; lon: number}
+
 
 @Component({
 	selector: 'app-edit-profile',
@@ -27,7 +34,7 @@ export class EditProfile {
 
 	userCity = signal("");
 
-	userSearchCityList = signal<Map<string, any>[]>([]);
+	userSearchCityList = signal<cityObj[]>([]);
 	userSearchCityListStr = signal<string[]>([]);
 
 	errorMessages = signal<string[]>([]);
@@ -49,6 +56,7 @@ export class EditProfile {
 		private blockService: BlockOrReportService,
 		private likeService: LikesService,
 		private interestService: InterestService,
+		private locationService: LocationService,
 		private router: Router) {
 		this.user.photos = [];
 		this.getUserProfile();
@@ -272,32 +280,24 @@ export class EditProfile {
 	}
 
 	async getUserCity() {
-		var API_KEY = import.meta.env.NG_APP_GEOCODING_API_KEY;
-		const url = `https://api.geoapify.com/v1/ipinfo?&apiKey=${API_KEY}`;
-		try {
-			if (Number.isNaN(this.user.cityLat) || Number.isNaN(this.user.cityLon) || this.user.cityLat == null || this.user.cityLon == null) {
-				const response = await fetch(url);
-				if (!response.ok) {
-					throw new Error(`Response status: ${response.status}`);
-				}
-				const result = await response.json();
-
-				this.user.cityStr = `${result['city']['name']}, ${result['country']['name']}`;
-				this.user.cityLon = result['location']['longitude'];
-				this.user.cityLat = result['location']['latitude'];
-				this.userCity.set(this.user.cityStr!);
-			}
-		} catch (error: any) {
-			console.error(error.message);
-		}
+    this.locationService.getIpLocation((cityObj:cityObj)=>{
+      let cityText = "";
+      if (cityObj.city) cityText+= cityObj.city + ", ";
+      if (cityObj.state) cityText+= cityObj.state + ", ";
+      cityText+= cityObj.country
+  		this.user.cityStr = cityText;
+  		this.user.cityLon = cityObj.lon;
+  		this.user.cityLat = cityObj.lat;
+  		this.userCity.set(this.user.cityStr!);
+    });
 	}
 
 	setSelectedCity(map: Map<string, any>) {
 		this.userCity.set(this.userSearchCityListStr()[map.get('index')])
 		this.tmpUser.update((user) => {
 			user.cityStr = this.userSearchCityListStr()[map.get('index')];
-			user.cityLon = this.userSearchCityList()[map.get('index')].get('lon') as number;
-			user.cityLat = this.userSearchCityList()[map.get('index')].get('lat') as number;
+			user.cityLon = this.userSearchCityList()[map.get('index')].lon;
+			user.cityLat = this.userSearchCityList()[map.get('index')].lat;
 			return user
 		});
 		this.userSearchCityList.set([]);
@@ -307,34 +307,33 @@ export class EditProfile {
 
 	async searchCity() {
 		var e: HTMLInputElement = document.querySelector("#location-input")!;
-		var API_KEY = import.meta.env.NG_APP_GEOCODING_API_KEY;
 		this.userSearchCityList.set([]);
 		this.userSearchCityListStr.set([]);
 		this.locationInputContainer()?.toggleDropDown();
 		if (e.value != null && e.value.length > 3) { // todo make api call from back
-			const geocodingUrl = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(e.value)}&apiKey=${API_KEY}`;
-			fetch(geocodingUrl).then(response => response.json())
-				.then(result => {
-					Object.values(result['features']).forEach((value) => {
-						var obj = (value as any)['properties'];
-						this.userSearchCityList.update((list) => {
-							list.push(new Map([
-								['city', obj['city']],
-								['state', obj['state']],
-								['country', obj['country']],
-								['lon', obj['lon']],
-								['lat', obj['lat']],
-							]));
-							return list;
-						})
-						this.userSearchCityListStr.update((list) => {
-							list.push(`${obj['city']}, ${obj['state']}, ${obj['country']}`);
-							return list;
-						})
-					});
-					this.locationInputContainer()?.toggleDropDown();
-				})
-				.catch(error => console.log('error', error));
+      this.locationService.searchCity(e.value).then((response)=>{
+        if (response.ok){
+          response.json().then((obj)=>{
+            const cities = obj['cities']
+            Object.values(cities).forEach((city)=>{
+              let cityObj = city as cityObj
+              this.userSearchCityList.update((list) => {
+                list.push(cityObj);
+                return list;
+              })
+              let cityText = "";
+              if (cityObj.city) cityText+= cityObj.city + ", ";
+              if (cityObj.state) cityText+= cityObj.state + ", ";
+              cityText+= cityObj.country;
+              this.userSearchCityListStr.update((list) => {
+                list.push(cityText);
+                return list;
+              })
+            })
+        		this.locationInputContainer()?.toggleDropDown();
+          })
+        }
+      })
 		}
 	}
 

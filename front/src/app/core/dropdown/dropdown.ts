@@ -13,9 +13,9 @@ export class Dropdown {
     this.e = this.ref.nativeElement;
     this.selectedValues = this.values() ?? [];
     this.selectedValue = this.value() ?? "";
-    this.setDisplayText(); 
+    this.setDisplayText();
   }
-  
+
   ngOnChanges(){
     this.setDisplayText();
   }
@@ -33,6 +33,8 @@ export class Dropdown {
 
   multiChoice = input(false);
   searchable = input(false);
+  searchButtonText = input<string|null>(null);
+  onSearchButtonClick = output<void>();
   required = input(false);
   contentDirection = input('column');
 
@@ -47,7 +49,7 @@ export class Dropdown {
 
   onSearch = output<void>();
   onSelected = output<Map<string, any>>();
-  
+
   setDisplayText(){
     if (this.value() == null){
       if (this.values() == null || this.values()?.length == 0){
@@ -119,6 +121,10 @@ export class Dropdown {
     if ((this.multiChoice() == true && event.target.classList.contains('container')) || this.multiChoice() == false){
       this.toggleDropDown();
     }
+  }
+
+  buttonClick(){
+    this.onSearchButtonClick.emit();
   }
 
   @HostListener('document:mousedown', ['$event']) closeDropdown(event: any){

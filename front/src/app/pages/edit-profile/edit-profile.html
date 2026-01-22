@@ -37,10 +37,10 @@
 
             <label>
               <span>Location</span>
-              <app-dropdown style="z-index: 4;" #locationInputContainer
-                id="#location-input-container" [inputId]="'location-input'" [placeholder]="'Location'"
-                [options]="userSearchCityListStr()" [value]="userCity()" (onSelected)="setSelectedCity($event)"
-                [searchable]="true" (onSearch)="searchCity()"></app-dropdown>
+                <app-dropdown style="z-index: 4;" #locationInputContainer
+                  id="#location-input-container" [inputId]="'location-input'" [placeholder]="'Location'"
+                  [options]="userSearchCityListStr()" [value]="userCity()" (onSelected)="setSelectedCity($event)"
+                  [searchable]="true" (onSearch)="searchCity()" (onSearchButtonClick)="getUserCity()" [searchButtonText]="'locate'"></app-dropdown>
             </label>
           </div>
 

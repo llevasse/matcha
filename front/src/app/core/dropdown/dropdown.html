@@ -3,6 +3,9 @@
     @if (searchable()) {
       <div class="flexRow" id="input-container" >
         <input autocomplete="off" (input)="search()"  id="{{inputId()}}" [placeholder]="placeholder()" [value]="value()"/>
+        @if(searchButtonText()){
+          <button type="button" (click)="buttonClick()">{{searchButtonText()}}</button>
+        }
       </div>
     }
     @else {

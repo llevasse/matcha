@@ -15,6 +15,7 @@ const tagRoutes = require('./routes/tags');
 const adminRoutes = require('./routes/admin');
 const blockRoutes = require('./routes/blocks');
 const reportRoutes = require('./routes/reports');
+const locationRoutes = require('./routes/location');
 
 // middleware d'erreur
 const errorHandler = require('./middleware/errorHandler');
@@ -72,6 +73,7 @@ app.use('/api/tags', tagRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/block', blockRoutes);
 app.use('/api/report', reportRoutes);
+app.use('/api/location', locationRoutes);
 
 // Route de test
 app.get('/api/health', (req, res) => {

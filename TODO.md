@@ -94,4 +94,4 @@ test on real mobile device
 - [x] message d'erreur avec preference -> orientation
 - [x] enlever prefer-not-to-say
 - [x] implem de checks entre whitelist et blacklist
-- [ ] report as fake account qui reste dans match (recharger la page)
+- [x] report as fake account qui reste dans match (recharger la page)

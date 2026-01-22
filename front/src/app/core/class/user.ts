@@ -28,6 +28,7 @@ export class User {
       tags: { id: number, name: string }[],
       pictures: { id: number, file_path: string, is_main: number, uploaded_at: string }[];
       is_valid: boolean,
+      matchingScore?: number;
     } = {
         id: NaN,
         lastname: "",
@@ -63,6 +64,7 @@ export class User {
     this.cityLat = obj.location_latitude;
     this.cityLon = obj.location_longitude;
     this.distance = obj.distance;
+    this.matchingScore = obj.matchingScore;
     this.gender = obj.gender;
     this.orientation = obj.orientation;
     this.bio = obj.bio ?? "";
@@ -109,6 +111,7 @@ export class User {
   cityLon: number = NaN;
 
   distance: number = NaN;
+  matchingScore?: number;
 
   gender: string | null = null;
   orientation: string[] = [];

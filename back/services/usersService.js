@@ -3,6 +3,10 @@ const bcrypt = require('bcryptjs');
 const { getUserPrivateInfoByIdSqlStatement, getUserPublicInfoByIdSqlStatement, getUserPreviewInfoSqlStatement } = require('../utils/users');
 const { hasBeenBlockedByOrIsBlocking } = require('./blockService');
 
+const TAGS_POINTS = 10;
+const DISTANCE_MALUS_COEFF = -5; //per km away
+const COEFF_FAME = 1;
+
 async function getPrivateProfile(userId) {
     const [users] = await db.execute(getUserPrivateInfoByIdSqlStatement, [userId]);
 
@@ -135,6 +139,15 @@ async function searchUsers(userId, userGenderId, searchParams) {
 
     const [users] = await db.execute(query, params);
     return users;
+}
+
+function addMatchingScore(user, users) {
+    users.forEach(u => {
+        u.matchingScore =
+            (u.nb_tag_in_common ?? 0) * TAGS_POINTS +
+            (u.distance ?? 0) * DISTANCE_MALUS_COEFF +
+            u.fame * COEFF_FAME;
+    });
 }
 
 async function updateProfileValidity(userId) {
@@ -438,5 +451,6 @@ module.exports = {
     addToViewingHistory,
     getViewingHistory,
     searchUsers,
-    updateProfileValidity
+    updateProfileValidity,
+    addMatchingScore
 };

@@ -1,66 +1,65 @@
 @if (!error503()) {
-  @if (loaded()) {
-    <main class="main">
-      @if (isAuth()) {
-        <ul id="navbar-desktop">
-          @if (clientUser && clientUser.isValid) {
-            <li (click)="goHome()" class="navbar-title">MATCHA</li>
-            <li (click)="goProfile()">Profile</li>
-            <li (click)="goLikes()">Likes</li>
-            <li (click)="goMatches()">Matches</li>
-            <li (click)="goHistory()">History</li>
-            <div class="notif-dropdown-container">
-              <li (click)="toggleNotifDropdown($event)">Notif ({{notifList().length}})</li>
-              <div class="notif-content-container inactive">
-                @for (notif of notifList(); track $index) {
-                  <app-notification [notification]="notif"></app-notification>
-                }
-              </div>
-            </div>
-          }
-          <li (click)="logout()">Log out</li>
-        </ul>
-
-        <ul id="navbar-mobile">
-          <li class="navbar-title">MATCHA</li>
-        </ul>
-        <ul id="navbar-mobile-fixed">
-          @if (clientUser && clientUser.isValid) {
-            <li (click)="goHome()" class="navbar-title">MATCHA</li>
-            <div class="notif-dropdown-container">
-              <li (click)="toggleNotifDropdown($event)">Notif ({{notifList().length}})</li>
-              <div class="notif-content-container inactive">
-                @for (notif of notifList(); track $index) {
-                  <app-notification [notification]="notif"></app-notification>
-                }
-              </div>
-            </div>
-          }
-          <li (click)="logout()">Log out</li>
-        </ul>
-
-        <router-outlet />
-        @if (clientUser && clientUser.isValid) {
-          <ul id="bottom-navbar-mobile">
-            <li (click)="goMatches()">Matches</li>
-            <li (click)="goLikes()">Likes</li>
-            <li (click)="goProfile()">Profile</li>
-            <li (click)="goHistory()">History</li>
-          </ul>
+@if (loaded()) {
+<main class="main">
+  @if (isAuth()) {
+  <ul id="navbar-desktop">
+    @if (clientUser && clientUser.isValid) {
+    <li (click)="goHome()" class="navbar-title">MATCHA</li>
+    <li (click)="goProfile()">Profile</li>
+    <li (click)="goLikes()">Likes</li>
+    <li (click)="goMatches()">Matches</li>
+    <li (click)="goHistory()">History</li>
+    <div class="notif-dropdown-container">
+      <li (click)="toggleNotifDropdown($event)">Notif ({{notifList().length}})</li>
+      <div class="notif-content-container inactive">
+        @for (notif of notifList(); track $index) {
+        <app-notification [notification]="notif"></app-notification>
         }
-      }
-      @else {
-        <router-outlet />
-      }
-    </main>
+      </div>
+    </div>
+    }
+    <li (click)="logout()">Log out</li>
+  </ul>
 
+  <ul id="navbar-mobile">
+    <li class="navbar-title">MATCHA</li>
+  </ul>
+  <ul id="navbar-mobile-fixed">
+    @if (clientUser && clientUser.isValid) {
+    <li (click)="goHome()" class="navbar-title">MATCHA</li>
+    <div class="notif-dropdown-container">
+      <li (click)="toggleNotifDropdown($event)">Notif ({{notifList().length}})</li>
+      <div class="notif-content-container inactive">
+        @for (notif of notifList(); track $index) {
+        <app-notification [notification]="notif"></app-notification>
+        }
+      </div>
+    </div>
+    }
+    <li (click)="logout()">Log out</li>
+  </ul>
+
+  <router-outlet />
+  @if (clientUser && clientUser.isValid) {
+  <ul id="bottom-navbar-mobile">
+    <li (click)="goMatches()">Matches</li>
+    <li (click)="goLikes()">Likes</li>
+    <li (click)="goProfile()">Profile</li>
+    <li (click)="goHistory()">History</li>
+  </ul>
   }
-
+  }
   @else {
-    <h1>Loading...</h1>
+  <router-outlet />
   }
+</main>
+
+}
+
+@else {
+<h1>Loading...</h1>
+}
 }
 @else {
-  <app-error-503-page></app-error-503-page>
+<app-error-503-page></app-error-503-page>
 }
-

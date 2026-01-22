@@ -10,7 +10,8 @@ const {
     addToViewingHistory,
     getViewingHistory,
     searchUsers,
-    updateProfileValidity
+    updateProfileValidity,
+    addMatchingScore
 } = require('../services/usersService');
 
 const router = express.Router();
@@ -48,7 +49,8 @@ router.get('/history', authenticateToken, asyncHandler(async (req, res) => {
 }));
 
 router.get('/search', authenticateToken, asyncHandler(async (req, res) => {
-    const users = await searchUsers(req.user.id, req.user.gender_id, req.query);
+    var users = await searchUsers(req.user.id, req.user.gender_id, req.query);
+    addMatchingScore(req.user, users);
     res.json(users);
 }));
 

@@ -90,7 +90,7 @@ test on real mobile device
 - [x] la barre n'apparait pas tout de suite quand on save un profil qui vient de passer a is valid
 - [x] generate profiles should be valid (is valid)
 - [x] unlike should lower fame
-- [ ] improve location autocompletex
+- [x] improve location autocompletex
 - [x] message d'erreur avec preference -> orientation
 - [x] enlever prefer-not-to-say
 - [x] implem de checks entre whitelist et blacklist

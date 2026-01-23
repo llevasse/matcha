@@ -29,20 +29,8 @@ export class App {
       }
     });
 
-
-    if (this.getCurrentPathName().startsWith("/login") || this.getCurrentPathName().startsWith("/register")
-    || this.getCurrentPathName().startsWith("/confirm-email") || this.getCurrentPathName().startsWith("/reset-password")){
-      this.loaded.set(true);
-      return;
-    }
-    userService.createClientUser().then((value)=>{
-      if(value == null){
-        router.navigate(["/login"]);
-        this.loaded.set(true);
-      }
-    });
-
     document.addEventListener("clientCreated", ()=>{
+      console.log("cc");
       this.userService.getClientUser().then((user)=>{
         if (user){
           this.loaded.set(false);
@@ -71,6 +59,18 @@ export class App {
       this.error503.set(false);
       this.error503.set(true);
     })
+
+    if (this.getCurrentPathName().startsWith("/login") || this.getCurrentPathName().startsWith("/register")
+    || this.getCurrentPathName().startsWith("/confirm-email") || this.getCurrentPathName().startsWith("/reset-password")){
+      this.loaded.set(true);
+      return;
+    }
+    userService.createClientUser().then((value)=>{
+      if(value == null){
+        router.navigate(["/login"]);
+        this.loaded.set(true);
+      }
+    });
   }
 
   ngOnInit(){

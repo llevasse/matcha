@@ -26,7 +26,19 @@ export class LocationService {
       const { latitude, longitude } = position.coords;
       fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`).then((response)=>{
         response.json().then((obj)=>{
-          let cityName = (obj.address.suburb ? `${obj.address.suburb}, ` : "") + obj.address.city;
+          let cityName = ""
+          if (obj.address.suburb){
+            cityName += obj.address.suburb;
+          }
+          else if (obj.address.village){
+            cityName += obj.address.village;
+          }
+          if (obj.address.city){
+            if (cityName != ""){
+              cityName += ", "
+            }
+            cityName += obj.address.city;
+          }
           let cityValue:cityObj = {
             city: cityName,
             state: obj.address.state,

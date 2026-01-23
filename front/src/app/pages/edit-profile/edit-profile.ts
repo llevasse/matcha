@@ -288,7 +288,8 @@ export class EditProfile {
   		this.user.cityStr = cityText;
   		this.user.cityLon = cityObj.lon;
   		this.user.cityLat = cityObj.lat;
-  		this.userCity.set(this.user.cityStr!);
+  		this.userCity.set("");
+  		this.userCity.set(cityText);
     });
 	}
 

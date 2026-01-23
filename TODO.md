@@ -15,7 +15,7 @@
 - [x] A user profile is consider complete and okay to display to other user if they have 1 profile picture
 
 # Browsing
-- [ ] Only propose interesting profile (See subject)
+- [x] Only propose interesting profile (See subject)
 - [x] The list must be :
   - [x] Sortable by age|location|fame|tags
     - [x] age
@@ -78,7 +78,7 @@ test on real mobile device
 - [?] liked profiles doesn't display
 - [?] like received doesn't work
 - [x] prefill orientation dropdown with woman and man
-- [ ] algo de preference
+- [x] algo de preference
 - [x] remove anything french 
 - [x] user must consent explicitly the retrival of its localisation 
 
@@ -86,7 +86,7 @@ test on real mobile device
 - [ ] limit tags creation to 10 
 - [ ] create an error when confirming not existing account
 - [x] rajouter un log pour reset password
-- [ ] reset password: bouton ok qui disparait si email vide
+- [x] reset password: ok btn dissapearing if no email
 - [x] la barre n'apparait pas tout de suite quand on save un profil qui vient de passer a is valid
 - [x] generate profiles should be valid (is valid)
 - [x] unlike should lower fame

@@ -118,6 +118,7 @@ export class UserService {
         return [];
       }
       users = await this.userListFromResponse(value);
+      users.sort((a, b) => (b.matchingScore ?? 0) - (a.matchingScore ?? 0));
       return users;
     })
   }

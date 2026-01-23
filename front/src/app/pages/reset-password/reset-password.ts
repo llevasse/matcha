@@ -34,11 +34,11 @@ export class ResetPassword {
     }
 
     this.authService.resetPassword(passwordInput, this.token).subscribe({
-      next: (response) => {
+      next: () => {
         this.sucessPopup.set(true);
         console.log("Success");
       },  
-      error: (error) => {
+      error: () => {
         this.resetPasswordErrorMessage = "Error resetting password. Please try again.";
       }
     });

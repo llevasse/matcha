@@ -108,8 +108,8 @@ export class Login {
   forgottenPasswordApiCall(event: SubmitEvent) {
     event.preventDefault();
     var email = (document.querySelector("#forgotten-password-email-input") as HTMLInputElement).value;
-    document.querySelector("#ok-button")?.classList.add('inactive');
     if (email) {
+    document.querySelector("#ok-button")?.classList.add('inactive');
       this.authService.passwordForgotten(email).then((value) => {
         if (value.ok) {
           this.passwordForgottenButtonClicked.set(true);

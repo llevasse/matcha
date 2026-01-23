@@ -174,9 +174,16 @@ export class Home {
         this.surplusProfiles.set([]);
       }
       else{
-        this.surplusProfiles.update(list=>{
-          return list.concat(newProfiles);
-        })
+        if (this.sortBy.startsWith("compatibility")){
+          this.surplusProfiles.update(list=>{
+            return list.concat(newProfiles);
+          })
+        }
+        else{
+          this.profiles.update(list=>{
+            return list.concat(newProfiles);
+          })
+        }
       }
     }
     catch(e){

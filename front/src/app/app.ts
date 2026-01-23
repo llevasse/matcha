@@ -22,6 +22,14 @@ export class App {
   loaded = signal<boolean>(false);
   error503 = signal<boolean>(false);
   constructor(private authService: AuthService, private router: Router, private userService: UserService){
+    // Check and ask for location permission on each load of site
+    navigator.permissions.query({ name: "geolocation" }).then((result) => {
+      if (result.state === "prompt") {
+        navigator.geolocation.getCurrentPosition(()=>{});
+      }
+    });
+
+
     if (this.getCurrentPathName().startsWith("/login") || this.getCurrentPathName().startsWith("/register")
     || this.getCurrentPathName().startsWith("/confirm-email") || this.getCurrentPathName().startsWith("/reset-password")){
       this.loaded.set(true);

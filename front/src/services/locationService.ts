@@ -37,8 +37,25 @@ export class LocationService {
           successCallback.apply(this, [cityValue]);
         })
       })
-    }, error => {
-      console.log(error);
+    }, async error => {
+      const url = "http://ip-api.com/json/";
+      try {
+        const response = await fetch(url);
+        if (response.ok) {
+          response.json().then((obj)=>{
+            let cityValue:cityObj = {
+              city: obj['city'],
+              state: obj['state'],
+              country: obj['country'],
+              lat: Number.parseFloat(obj.lat),
+              lon: Number.parseFloat(obj.lon),
+            }
+            successCallback.apply(this, [cityValue]);
+          });
+        }
+      } catch (error: any) {
+        console.error(error.message);
+      }
     }, {enableHighAccuracy: true});
   }
 }

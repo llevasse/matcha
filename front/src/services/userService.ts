@@ -118,7 +118,12 @@ export class UserService {
         return [];
       }
       users = await this.userListFromResponse(value);
-      users.sort((a, b) => (b.matchingScore ?? 0) - (a.matchingScore ?? 0));
+      if (sortBy == "compatibility_descending"){
+        users.sort((a, b) => (b.matchingScore ?? 0) - (a.matchingScore ?? 0));
+      }
+      else if (sortBy == "compatibility_ascending"){
+        users.sort((a, b) => (a.matchingScore ?? 0) - (b.matchingScore ?? 0));
+      }
       return users;
     })
   }

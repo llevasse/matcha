@@ -5,8 +5,9 @@
     <label>
       <span>Sort by</span>
       <div class="options-container">
+        <button (click)="setSortBy($event, 'compatibility')" class="active-sort-selector ascending" >Compatibility</button>
         <button (click)="setSortBy($event, 'age')">Age</button>
-        <button (click)="setSortBy($event, 'distance')" class="active-sort-selector ascending">Distance</button>
+        <button (click)="setSortBy($event, 'distance')">Distance</button>
         <button (click)="setSortBy($event, 'interest')">Common interest</button>
         <button (click)="setSortBy($event, 'fame')">Fame</button>
       </div>
@@ -41,7 +42,7 @@
         <app-dropdown style="z-index: 2;" #locationInputContainer
           id="location-input-container" [inputId]="'location-input'" [placeholder]="'Location'"
           [options]="userSearchCityListStr()" [value]="selectedCityName() || ''" (onSelected)="setSelectedCity($event)"
-          [searchable]="true" (onSearch)="searchCity()"></app-dropdown>
+          [searchable]="true" (onSearch)="searchCity()" (onSearchButtonClick)="setCurrentLocationAsSearchOrigin()" [searchButtonText]="'locate'"></app-dropdown>
       </label>
     </div>
   </div>

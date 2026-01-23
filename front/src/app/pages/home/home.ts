@@ -8,6 +8,12 @@ import { InterestDropdown } from "../edit-profile/interest-dropdown/interest-dro
 import { Dropdown } from "../../core/dropdown/dropdown";
 import { LikesService } from '../../../services/likesService';
 import { Interest } from '../../core/class/interest';
+import { LocationService } from '../../../services/locationService';
+
+type cityObj = {city: string | undefined;
+            state: string | undefined;
+            country: string | undefined;
+            lat: number; lon: number}
 
 @Component({
   selector: 'app-home',
@@ -19,17 +25,17 @@ export class Home {
   profiles = signal<User[]>([]);
   nbFakeUser: number = 50;
 	user: User = new User();
-	radius: number | null = 42;
+	radius: number | null = null;
 	minAge: number | null = null;
 	maxAge: number | null = null;
 	minFame: number | null = null;
 	maxFame: number | null = null;
-	sortBy: string = "distance_ascending";
+	sortBy: string = "compatibility_ascending";
 	ascendingOrder:boolean = true;
 
 	selectedCityName = signal<string | null>(null);
 	selectedLocation = signal<{lat: number, lon: number}| null>(null);
-	userSearchCityList =	signal<Map<string, any>[]>([]);
+	userSearchCityList =	signal<cityObj[]>([]);
 	userSearchCityListStr =  signal<string[]>([]);
 	locationInputContainer = viewChild<Dropdown>('locationInputContainer');
 
@@ -45,6 +51,8 @@ export class Home {
 	  ['interest_descending', 'descending common interest'],
 	  ['fame_ascending', 'ascending fame'],
 	  ['fame_descending', 'descending fame'],
+	  ['compatibility_descending', 'descending compatibility'],
+	  ['compatibility_ascending', 'ascending compatibility'],
 	])
 
 	loading = signal<boolean>(true)
@@ -110,7 +118,7 @@ export class Home {
     document.onscroll = null;
   }
 
-  constructor(private userService: UserService, private likeService: LikesService) {
+  constructor(private userService: UserService, private locationService: LocationService) {
     this.getUserProfile();
     if (this.activatedRoute.snapshot.url.length > 0 && this.activatedRoute.snapshot.url[0].path == "profile"){
       this.createProfilePopup(Number.parseInt(this.activatedRoute.snapshot.url[1].path));
@@ -124,8 +132,6 @@ export class Home {
       return ;
     }
     this.user = tmpUser;
-    this.user = await this.getClientCity();
-    //TODO api call to get similar user as HttpClient
     await this.searchForProfile();
 	}
 
@@ -162,10 +168,10 @@ export class Home {
         blackListInterestId,
         this.selectedLocation(),
         this.sortBy);
+      if (offset == 0){
+        this.profiles.set([]);
+      }
       this.profiles.update((currentList)=>{
-        if(offset == 0){
-          return newProfiles;
-        }
         return currentList.concat(newProfiles);
       })
     }
@@ -338,32 +344,26 @@ export class Home {
     }
   }
 
-  async getClientCity() {
-    const url = "http://ip-api.com/json/";
-    try {
-      if (Number.isNaN(this.user.cityLat) || Number.isNaN(this.user.cityLon)){
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`Response status: ${response.status}`);
-        }
-        const result = await response.json();
-        this.user.cityStr = result['city'];
-        this.user.cityLon = result['lon'];
-        this.user.cityLat = result['lat'];
-      }
-    } catch (error: any) {
-      console.error(error.message);
-    }
-    return this.user;
+  async setCurrentLocationAsSearchOrigin() {
+    this.locationService.getIpLocation((cityObj:cityObj)=>{
+      let cityText = "";
+      if (cityObj.city) cityText+= cityObj.city + ", ";
+      if (cityObj.state) cityText+= cityObj.state + ", ";
+      cityText+= cityObj.country
+
+      this.selectedLocation.set({lat:cityObj.lat,lon:cityObj.lon});
+      this.selectedCityName.set(cityText);
+
+      this.userSearchCityList.set([]);
+      this.userSearchCityListStr.set([]);
+		  this.updateSearch();
+    })
   }
 
 
 	setSelectedCity(map: Map<string, any>){
 	  const loc = this.userSearchCityList()[map.get('index')];
-    this.selectedLocation.set({
-      lat: Number.parseFloat(loc.get('lat')),
-      lon:Number.parseFloat(loc.get('lon'))
-    });
+    this.selectedLocation.set({lat:loc.lat,lon:loc.lon});
     this.selectedCityName.set(this.userSearchCityListStr()[map.get('index')]);
 		this.userSearchCityList.set([]);
 		this.userSearchCityListStr.set([]);
@@ -372,33 +372,34 @@ export class Home {
 
 
 	async searchCity(){
-		var e:HTMLInputElement = document.querySelector("#location-input")!;
-		var API_KEY = import.meta.env.NG_APP_GEOCODING_API_KEY;
+    var e: HTMLInputElement = document.querySelector("#location-input")!;
 		this.userSearchCityList.set([]);
 		this.userSearchCityListStr.set([]);
 		this.locationInputContainer()?.toggleDropDown();
-		if (e.value != null && e.value.length > 3){ // todo make api call from back
-			const geocodingUrl = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(e.value)}&apiKey=${API_KEY}`;
-			 fetch(geocodingUrl).then(response => response.json())
-				.then(result => {
-					Object.values(result['features']).forEach((value)=>{
-						var obj = (value as any)['properties'];
-						this.userSearchCityList.update((list) => {
-							list.push(new Map([
-								['city', obj['city']],
-								['lon', obj['lon']],
-								['lat', obj['lat']],
-							]));
-							return list;
-						})
-						this.userSearchCityListStr.update((list) => {
-							list.push(`${obj['city']}, ${obj['state']}, ${obj['country']}`);
-							return list;
-						})
-					});
-					this.locationInputContainer()?.toggleDropDown();
-				})
-				.catch(error => console.log('error', error));
+		if (e.value != null && e.value.length > 3) { // todo make api call from back
+      this.locationService.searchCity(e.value).then((response)=>{
+        if (response.ok){
+          response.json().then((obj)=>{
+            const cities = obj['cities']
+            Object.values(cities).forEach((city)=>{
+              let cityObj = city as cityObj
+              this.userSearchCityList.update((list) => {
+                list.push(cityObj);
+                return list;
+              })
+              let cityText = "";
+              if (cityObj.city) cityText+= cityObj.city + ", ";
+              if (cityObj.state) cityText+= cityObj.state + ", ";
+              cityText+= cityObj.country;
+              this.userSearchCityListStr.update((list) => {
+                list.push(cityText);
+                return list;
+              })
+            })
+        		this.locationInputContainer()?.toggleDropDown();
+          })
+        }
+      })
 		}
 	}
 }

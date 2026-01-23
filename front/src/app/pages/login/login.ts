@@ -43,13 +43,15 @@ export class Login {
 
   async signInApiCall(event: SubmitEvent) {
     event.preventDefault();
+
     this.registerErrorMessage.set(null);
     var first_name = (document.querySelector("#register-first-name-input") as HTMLInputElement).value;
     var last_name = (document.querySelector("#register-last-name-input") as HTMLInputElement).value;
     var username = (document.querySelector("#register-username-input") as HTMLInputElement).value;
     var email = (document.querySelector("#register-mail-input") as HTMLInputElement).value;
     var password = (document.querySelector("#register-password-input") as HTMLInputElement).value;
-    var consentLocation = (document.querySelector('#register-location-consent') as HTMLInputElement).checked;
+    // var consentLocation = (document.querySelector('#register-location-consent') as HTMLInputElement).checked;
+    let consentLocation = true;
     this.authService.register({ username, firstname: first_name, lastname: last_name, email, password, consentLocation }).then((value) => {
       let response: Response = value;
       if (response.ok) {

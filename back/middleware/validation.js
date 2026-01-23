@@ -13,7 +13,6 @@ const userRegistrationSchema = Joi.object({
     password: Joi.string().min(8).required(),
     firstname: Joi.string().max(50).required(),
     lastname: Joi.string().max(50).required(),
-    consentLocation: Joi.bool().required(),
 });
 
 const profileUpdateSchema = Joi.object({

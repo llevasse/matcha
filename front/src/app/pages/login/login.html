@@ -21,11 +21,6 @@
     <app-input [id]="'register-mail-input'" [label]="'Mail :'" [placeholder]="'Mail :'" />
     <app-input [id]="'register-password-input'" [label]="'Password :'" [type]="'password'" [autocomplete]="'password'"
       [placeholder]="'Password : (must be complex and > 8 chars)'" />
-    <!-- TODO remove checker -->
-    <!-- <div class="checkbox-container">
-      <input type="checkbox" id="register-location-consent" class="custom-checkbox">
-      <label for="register-location-consent">I consent to share my location</label>
-    </div> -->
     <button>Sign-in</button>
     @if (registerErrorMessage() != null) {
     <a class="error-messages">{{registerErrorMessage()}}</a>

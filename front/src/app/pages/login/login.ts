@@ -50,9 +50,7 @@ export class Login {
     var username = (document.querySelector("#register-username-input") as HTMLInputElement).value;
     var email = (document.querySelector("#register-mail-input") as HTMLInputElement).value;
     var password = (document.querySelector("#register-password-input") as HTMLInputElement).value;
-    // var consentLocation = (document.querySelector('#register-location-consent') as HTMLInputElement).checked;
-    let consentLocation = true;
-    this.authService.register({ username, firstname: first_name, lastname: last_name, email, password, consentLocation }).then((value) => {
+    this.authService.register({ username, firstname: first_name, lastname: last_name, email, password }).then((value) => {
       let response: Response = value;
       if (response.ok) {
         this.emailConfirmationPopup.set(true);

@@ -32,7 +32,6 @@ export class AuthService {
     lastname: string;
     email: string;
     password: string;
-    consentLocation: boolean
   }): Promise<any> {
     this.logout();
     return fetch(`${this.authUrl}/register`, {

@@ -9,8 +9,6 @@ async function registerUser(userData) {
     try {
         const { username, firstname, lastname, email, password, consentLocation } = userData;
 
-        _throw400IfNoConsentLocation(consentLocation);
-
         _throw400IfPasswordIsNotStrongEnough(password);
 
         const saltRounds = 10;
@@ -270,14 +268,6 @@ async function _sendPasswordResetEmail(email, token) {
     console.log("Sent mail to reset password : ", resetLink);
 
     await transporter.sendMail(mailOptions);
-}
-
-function _throw400IfNoConsentLocation(consent) {
-    if (!consent) {
-        const error = new Error('Sharing your location with us is mandatory');
-        error.status = 400;
-        throw error;
-    }
 }
 
 module.exports = {

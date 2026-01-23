@@ -57,5 +57,18 @@
     }
   }
 </div>
+@if (surplusProfiles().length > 0){
+  <h1>Other profiles you might like</h1>
+  <div class="profile-list-container">
+    @if (loading()) {
+      <span>Loading...</span>
+    }
+    @else {
+      @for (item of surplusProfiles(); track $index) {
+        <app-profile-preview (onDestroy)="removeProfile(item)" (onClick)="seeProfile(item)" [user]="item" [id]="$index"></app-profile-preview>
+      }
+    }
+  </div>
+}
 
 

@@ -23,6 +23,7 @@ type cityObj = {city: string | undefined;
 })
 export class Home {
   profiles = signal<User[]>([]);
+  surplusProfiles = signal<User[]>([]);
   nbFakeUser: number = 50;
 	user: User = new User();
 	radius: number | null = null;
@@ -169,11 +170,14 @@ export class Home {
         this.selectedLocation(),
         this.sortBy);
       if (offset == 0){
-        this.profiles.set([]);
+        this.profiles.set(newProfiles);
+        this.surplusProfiles.set([]);
       }
-      this.profiles.update((currentList)=>{
-        return currentList.concat(newProfiles);
-      })
+      else{
+        this.surplusProfiles.update(list=>{
+          return list.concat(newProfiles);
+        })
+      }
     }
     catch(e){
       console.error(e);

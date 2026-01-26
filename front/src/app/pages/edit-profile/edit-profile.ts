@@ -12,10 +12,12 @@ import { BlockOrReportService } from '../../../services/blockOrReportService';
 import { ProfilePreview } from "../../profile-preview/profile-preview";
 import { LocationService } from '../../../services/locationService';
 
-type cityObj = {city: string | undefined;
-            state: string | undefined;
-            country: string | undefined;
-            lat: number; lon: number}
+type cityObj = {
+	city: string | undefined;
+	state: string | undefined;
+	country: string | undefined;
+	lat: number; lon: number
+}
 
 
 @Component({
@@ -94,13 +96,13 @@ export class EditProfile {
 		}
 
 		this.loading.set(false);
-		setTimeout(()=>{
-  		this.imagesInput()!.images.set(this.user.photos);
+		setTimeout(() => {
+			this.imagesInput()?.images.set(this.user?.photos ? [...this.user.photos] : []);
 
-      this.interestDropdown()!.originalUserInterest.set(Array.from(this.user.interest));
-      this.interestDropdown()!.selectedValues.set(Array.from(this.user.interest));
-      this.interestDropdown()!.activeSearchResultInSelectedValues.set(Array.from(this.user.interest));
-      this.interestDropdown()!.placeholder.set(this.user.interest.join(", "));
+			this.interestDropdown()!.originalUserInterest.set(Array.from(this.user.interest));
+			this.interestDropdown()!.selectedValues.set(Array.from(this.user.interest));
+			this.interestDropdown()!.activeSearchResultInSelectedValues.set(Array.from(this.user.interest));
+			this.interestDropdown()!.placeholder.set(this.user.interest.join(", "));
 
 		}, 1000)
 
@@ -278,17 +280,17 @@ export class EditProfile {
 	}
 
 	async getUserCity() {
-    this.locationService.getIpLocation((cityObj:cityObj)=>{
-      let cityText = "";
-      if (cityObj.city) cityText+= cityObj.city + ", ";
-      if (cityObj.state) cityText+= cityObj.state + ", ";
-      cityText+= cityObj.country
-  		this.user.cityStr = cityText;
-  		this.user.cityLon = cityObj.lon;
-  		this.user.cityLat = cityObj.lat;
-  		this.userCity.set("");
-  		this.userCity.set(cityText);
-    });
+		this.locationService.getIpLocation((cityObj: cityObj) => {
+			let cityText = "";
+			if (cityObj.city) cityText += cityObj.city + ", ";
+			if (cityObj.state) cityText += cityObj.state + ", ";
+			cityText += cityObj.country
+			this.user.cityStr = cityText;
+			this.user.cityLon = cityObj.lon;
+			this.user.cityLat = cityObj.lat;
+			this.userCity.set("");
+			this.userCity.set(cityText);
+		});
 	}
 
 	setSelectedCity(map: Map<string, any>) {
@@ -310,29 +312,29 @@ export class EditProfile {
 		this.userSearchCityListStr.set([]);
 		this.locationInputContainer()?.toggleDropDown();
 		if (e.value != null && e.value.length > 3) {
-      this.locationService.searchCity(e.value).then((response)=>{
-        if (response.ok){
-          response.json().then((obj)=>{
-            const cities = obj['cities']
-            Object.values(cities).forEach((city)=>{
-              let cityObj = city as cityObj
-              this.userSearchCityList.update((list) => {
-                list.push(cityObj);
-                return list;
-              })
-              let cityText = "";
-              if (cityObj.city) cityText+= cityObj.city + ", ";
-              if (cityObj.state) cityText+= cityObj.state + ", ";
-              cityText+= cityObj.country;
-              this.userSearchCityListStr.update((list) => {
-                list.push(cityText);
-                return list;
-              })
-            })
-        		this.locationInputContainer()?.toggleDropDown();
-          })
-        }
-      })
+			this.locationService.searchCity(e.value).then((response) => {
+				if (response.ok) {
+					response.json().then((obj) => {
+						const cities = obj['cities']
+						Object.values(cities).forEach((city) => {
+							let cityObj = city as cityObj
+							this.userSearchCityList.update((list) => {
+								list.push(cityObj);
+								return list;
+							})
+							let cityText = "";
+							if (cityObj.city) cityText += cityObj.city + ", ";
+							if (cityObj.state) cityText += cityObj.state + ", ";
+							cityText += cityObj.country;
+							this.userSearchCityListStr.update((list) => {
+								list.push(cityText);
+								return list;
+							})
+						})
+						this.locationInputContainer()?.toggleDropDown();
+					})
+				}
+			})
 		}
 	}
 

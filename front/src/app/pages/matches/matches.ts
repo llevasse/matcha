@@ -78,7 +78,7 @@ export class Matches {
         });
 
         this.profileView.instance.onClickOutside.subscribe(()=>{
-          this.closeProfile(returnedUser)
+          this.closeProfile(null)
         });
 
         this.profileView.instance.onBlocked.subscribe(()=>{

@@ -26,7 +26,6 @@ export class Likes {
   constructor(private userService: UserService, private likesService: LikesService) {;
     this.getUserProfile();
 
-    console.log(this.activatedRoute.snapshot.url);
     if (this.activatedRoute.snapshot.url.length > 1 && this.activatedRoute.snapshot.url[1].path == "profile"){
       this.createProfilePopup(Number.parseInt(this.activatedRoute.snapshot.url[2].path));
     }

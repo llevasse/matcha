@@ -36,7 +36,6 @@ export class Chat {
         if (this.chatContentContainer){
           this.chatContentContainer.addEventListener('scroll', ()=>{
             if (this.chatContentContainer!.scrollTop == 0){
-              console.log("get previous messages");
               this.chatService.getMessages(this.userId(), this.nbOfMessagesPerRequest, this.messages().length).then((response)=>{
                 this.processReceivedMessageListResponse(response).then((response)=>{
                   this.messages.set(response.concat(this.messages()));
@@ -54,11 +53,6 @@ export class Chat {
         this.needScrolling = false;
       }
     })
-  }
-
-  private scrollEventHandler(event: Event){
-    console.log((event.target as HTMLDivElement).scrollTop);
-
   }
 
   ngOnInit(){

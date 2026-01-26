@@ -133,8 +133,17 @@ router.post('/create-users', adminAuthenticateToken, asyncHandler(async (req, re
 }));
 
 router.post('/create-match', adminAuthenticateToken, asyncHandler(async (req, res) => {
-  await _tryPerformLike(req.body.to_user_id, req.body.from_user_id);
-  await _tryPerformLike(req.body.from_user_id, req.body.to_user_id);
+  console.log("creating match between ", req.body.username1, " and ", req.body.username2);
+  if (!req.body.username1 || !req.body.username2) {
+    return res.status(400).json({
+      message: 'Expect username1 and username2',
+    });
+  }
+  uid1 = await _getUserIdFromUsername(req.body.username1);
+  uid2 = await _getUserIdFromUsername(req.body.username2);
+  console.log("creating match between ", uid1, " and ", uid2);
+  await _tryPerformLike(uid1, uid2);
+  await _tryPerformLike(uid2, uid1);
 
   return res.status(201).json({
     message: 'Match created successfully',
@@ -151,5 +160,24 @@ async function _tryPerformLike(from_user_id, to_user_id) {
     if (error.status != '404')
       throw error;
   }
+}
+
+async function _getUserIdFromUsername(username) {
+  const [targetUser] = await db.execute('SELECT id FROM users WHERE username = ?', [username]);
+
+  if (targetUser.length === 0) {
+    const error = new Error('User not found');
+    error.status = 404;
+    throw error;
+  }
+
+  if (targetUser.length > 1) {
+    const error = new Error('Multiple users with this username');
+    error.status = 500;
+    throw error;
+  }
+
+  return targetUser[0].id;
+
 }
 

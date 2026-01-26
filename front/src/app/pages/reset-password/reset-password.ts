@@ -36,7 +36,6 @@ export class ResetPassword {
     this.authService.resetPassword(passwordInput, this.token).subscribe({
       next: () => {
         this.sucessPopup.set(true);
-        console.log("Success");
       },  
       error: () => {
         this.resetPasswordErrorMessage = "Error resetting password. Please try again.";

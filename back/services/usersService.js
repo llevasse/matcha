@@ -2,7 +2,6 @@ const db = require('../config/database');
 const bcrypt = require('bcryptjs');
 const { getUserPrivateInfoByIdSqlStatement, getUserPublicInfoByIdSqlStatement, getUserPreviewInfoSqlStatement } = require('../utils/users');
 const { hasBeenBlockedByOrIsBlocking } = require('./blockService');
-const { throw400IfUserAlreadyExists } = require('../services/authService');
 
 const TAGS_POINTS = 10;
 const DISTANCE_MALUS_COEFF = -5; //per km away
@@ -49,7 +48,7 @@ async function updateProfile(userId, profileData) {
         await connection.beginTransaction();
 
         await _validateAge(birthdate);
-        await throw400IfUserAlreadyExists();
+        await _throw400IfAnotherUserAlreadyExists(connection, username, email, userId);
         const genderId = await _getGenderId(connection, gender);
 
         await connection.execute(
@@ -444,6 +443,22 @@ function _buildSearchQuery(userId, userGenderId, searchOriginLat, searchOriginLo
 
     return { query, params };
 }
+
+async function _throw400IfAnotherUserAlreadyExists(connection, username, email, userId) {
+    const [duplicates] = await connection.execute(
+        `SELECT id FROM users WHERE username = ? OR email = ?`,
+        [username, email]
+    );
+
+    const conflict = duplicates.find(u => u.id !== userId);
+
+    if (conflict) {
+        const error = new Error("Username or email already exists");
+        error.status = 400;
+        throw error;
+    }
+}
+
 
 module.exports = {
     getPrivateProfile,

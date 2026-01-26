@@ -157,7 +157,7 @@ async function _tryPerformLike(from_user_id, to_user_id) {
     await performLike(from_user_id, to_user_id);
   }
   catch (error) {
-    if (error.status != '404')
+    if (error.status == '404')
       throw error;
   }
 }

@@ -20,7 +20,6 @@ const authenticateToken = async (req, res, next) => {
             is_admin, \
             location_latitude, \
             location_longitude \
-            tags \
             FROM users WHERE id = ?',
             [decoded.userId]
         );

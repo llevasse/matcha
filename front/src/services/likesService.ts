@@ -78,7 +78,10 @@ export class LikesService {
         "Authorization":"Bearer " + localStorage.getItem('token'),
       },
     }).then(async (value)=>{
-      return this.userListFromResponse(value);
+      if (value.ok){
+        return this.userListFromResponse(value);
+      }
+      return [];
     });
   }
 

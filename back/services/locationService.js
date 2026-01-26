@@ -19,4 +19,17 @@ async function searchCity(content) {
   .catch(error => console.log('error', error));
 }
 
-module.exports = { searchCity };
+async function searchCityByIp(ip) {
+  const API_KEY = process.env.NG_APP_GEOCODING_API_KEY;
+  const geocodingUrl = `https://api.geoapify.com/v1/ipinfo?ip=${ip}&apiKey=${API_KEY}`;
+  return fetch(geocodingUrl).then(response => response.json())
+    .then(result => {
+      let city = result['city'];
+      let country = result['country'];
+      let location = result['location'];
+      return {city, country, location};
+    })
+  .catch(error => console.log('error', error));
+}
+
+module.exports = { searchCity, searchCityByIp };

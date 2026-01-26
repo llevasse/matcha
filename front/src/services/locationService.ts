@@ -21,6 +21,17 @@ export class LocationService {
     })
   }
 
+  async getIP() {
+    try {
+      const response = await fetch('https://api.ipify.org?format=json');
+      const data = await response.json();
+      return data.ip
+    } catch (error) {
+      console.error('Error fetching IP address:', error);
+      return null
+    }
+  }
+
   async getIpLocation(successCallback: Function) {
     navigator.geolocation.getCurrentPosition(async position => {
       const { latitude, longitude } = position.coords;
@@ -50,24 +61,38 @@ export class LocationService {
         })
       })
     }, async error => {
-      const url = "http://ip-api.com/json/";
-      try {
-        const response = await fetch(url);
-        if (response.ok) {
-          response.json().then((obj)=>{
-            let cityValue:cityObj = {
-              city: obj['city'],
-              state: obj['state'],
-              country: obj['country'],
-              lat: Number.parseFloat(obj.lat),
-              lon: Number.parseFloat(obj.lon),
-            }
-            successCallback.apply(this, [cityValue]);
-          });
+      let ip = await this.getIP();
+      if (!ip) return;
+      var params = `&ip=${ip}`;
+
+      return fetch(`${this.locationUrl}/locate?${params}`, {
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem('token'),
         }
-      } catch (error: any) {
-        console.error(error.message);
-      }
+      }).then(response=>{
+        if (response.ok){
+          response.json().then(obj=>{
+            let locationObj = obj['location'];
+            if (locationObj){
+              let cityName = locationObj['city']['name'];
+              let countryName = locationObj['country']['name'];
+
+              let location = locationObj['location'];
+              let lat = location['latitude']
+              let lon = location['longitude']
+
+              let cityValue:cityObj = {
+                city: cityName,
+                state: undefined,
+                country: countryName,
+                lat: lat,
+                lon: lon,
+              }
+              successCallback.apply(this, [cityValue]);
+            }
+          })
+        }
+      })
     }, {enableHighAccuracy: true});
   }
 }

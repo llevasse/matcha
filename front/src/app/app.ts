@@ -30,7 +30,6 @@ export class App {
     });
 
     document.addEventListener("clientCreated", ()=>{
-      console.log("cc");
       this.userService.getClientUser().then((user)=>{
         if (user){
           this.loaded.set(false);

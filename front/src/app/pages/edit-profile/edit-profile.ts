@@ -28,7 +28,6 @@ type cityObj = {city: string | undefined;
 export class EditProfile {
 
 	loading = signal<boolean>(true)
-	loaded = false;
 	user: User = new User();
 	tmpUser = signal<User>(new User());
 
@@ -61,17 +60,6 @@ export class EditProfile {
 		this.user.photos = [];
 		this.getUserProfile();
 
-		afterEveryRender(() => {
-			if (!this.loaded && this.imagesInput() && this.interestDropdown()) {
-				this.imagesInput()!.images.set(this.user.photos);
-
-				this.interestDropdown()!.originalUserInterest.set(Array.from(this.user.interest));
-				this.interestDropdown()!.selectedValues.set(Array.from(this.user.interest));
-				this.interestDropdown()!.activeSearchResultInSelectedValues.set(Array.from(this.user.interest));
-				this.interestDropdown()!.placeholder.set(this.user.interest.join(", "));
-				this.loaded = true;
-			}
-		});
 	}
 	ngOnInit() { }
 
@@ -106,6 +94,16 @@ export class EditProfile {
 		}
 
 		this.loading.set(false);
+		setTimeout(()=>{
+  		this.imagesInput()!.images.set(this.user.photos);
+
+      this.interestDropdown()!.originalUserInterest.set(Array.from(this.user.interest));
+      this.interestDropdown()!.selectedValues.set(Array.from(this.user.interest));
+      this.interestDropdown()!.activeSearchResultInSelectedValues.set(Array.from(this.user.interest));
+      this.interestDropdown()!.placeholder.set(this.user.interest.join(", "));
+
+		}, 1000)
+
 	}
 
 	async getBlockedProfiles() {

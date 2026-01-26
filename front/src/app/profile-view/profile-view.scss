@@ -190,3 +190,11 @@ $--picture-size: 15rem;
   flex-direction: row;
   font-size: 1rem;
 }
+
+.block-and-report-buttons button img{
+  mask: url(/user-block.svg);
+  mask-size: 1.5em;
+  width: 1.5em;
+  height: 1.5em;
+  background: v.$text-color;
+}

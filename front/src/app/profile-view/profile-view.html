@@ -1,7 +1,9 @@
 <div class="container">
   @if (loaded()) {
     <div id="buttons-container" class="block-and-report-buttons">
-        <button (click)="openBlockPopup()">🚫</button>
+        <button (click)="openBlockPopup()">
+          <img/>
+        </button>
     </div>
     <div class="name-container desktop">
       <span>{{user().firstName}}</span>

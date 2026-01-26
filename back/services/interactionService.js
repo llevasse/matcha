@@ -182,7 +182,7 @@ async function getLikesGiven(userId) {
     const query = getUserPreviewInfoSqlStatement + `, i.created_at as liked_at 
         FROM interactions i
         JOIN users u ON u.id = i.to_user_id
-        WHERE i.from_user_id = ? AND i.is_match = FALSE
+        WHERE i.from_user_id = ? AND i.is_match = FALSE AND i.is_like = TRUE
         ORDER BY i.created_at DESC`;
 
     const [likes] = await db.execute(query, [userLat, userLng, userLat, userId, userId]);

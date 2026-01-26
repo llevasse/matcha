@@ -1,16 +1,16 @@
 <div class="container">
   @if (loaded()) {
-    <div id="chat-content-container">
-      <h2 id="chat-start">This is the beginning of your conversation</h2>
-      @for (message of messages(); track $index) {
-        <span class="message {{messages()[$index].senderId == userId() ? 'received' : 'sent'}}">{{message.content}}</span>
-      }
-    </div>
-    <div id="chat-input-container">
-      <input id="chat-input" placeholder="..." (keyup)="inputHandler($event)">
-    </div>
+  <div id="chat-content-container">
+    <h2 id="chat-start">This is the beginning of your conversation</h2>
+    @for (message of messages(); track $index) {
+    <span class="message {{messages()[$index].senderId == userId() ? 'received' : 'sent'}}">{{message.content}}</span>
+    }
+  </div>
+  <div id="chat-input-container">
+    <input id="chat-input" maxlength="100" placeholder="..." (keyup)="inputHandler($event)">
+  </div>
   }
   @else {
-    <h2>Loading...</h2>
+  <h2>Loading...</h2>
   }
 </div>

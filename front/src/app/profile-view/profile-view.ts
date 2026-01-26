@@ -33,25 +33,25 @@ export class ProfileView {
   withLike = input(false)
 
   user = signal<User>(new User());  // user should be set in parent for now !
-  clientUser:User|null = null;
+  clientUser: User | null = null;
   isOnline = signal(false);
 
   onClickOutside = output();
   onUnlike = output();
   onLike = output();
-  onIgnore = output();
+  onDislike = output();
 
   onBlocked = output();
 
 
-  ngOnInit(){
-    if (this.activatedRoute.snapshot.url.length > 3 && this.activatedRoute.snapshot.url[3].path == "chat"){
+  ngOnInit() {
+    if (this.activatedRoute.snapshot.url.length > 3 && this.activatedRoute.snapshot.url[3].path == "chat") {
       this.openChat();
     }
   }
 
-  ngOnDestroy(){
-    this.clientUser?.ws?.next({message: `unwatch : ${this.clientUser.id}->${this.userId()}`})
+  ngOnDestroy() {
+    this.clientUser?.ws?.next({ message: `unwatch : ${this.clientUser.id}->${this.userId()}` })
   }
 
   private viewContainer = inject(ViewContainerRef);
@@ -60,20 +60,20 @@ export class ProfileView {
 
   constructor(private userService: UserService, private likesService: LikesService, private blockOrReportService: BlockOrReportService) {
     //TODO call API to add profile to user history
-    userService.getClientUser().then((user)=>{
-      if (user){
+    userService.getClientUser().then((user) => {
+      if (user) {
         this.clientUser = user;
         userService.addProfileToHistory(this.userId());
-        this.clientUser.ws?.next({message: `watch : ${user.id}->${this.userId()}`})
-        this.clientUser.ws?.next({message: `viewed : ${user.id}->${this.userId()}`})
+        this.clientUser.ws?.next({ message: `watch : ${user.id}->${this.userId()}` })
+        this.clientUser.ws?.next({ message: `viewed : ${user.id}->${this.userId()}` })
         this.clientUser.ws?.asObservable().pipe().subscribe({
-          next: (msg)=>{
+          next: (msg) => {
             const notif = createNotificationFromWsObject(msg);
-            if (notif.senderId == this.userId()){
-              if (notif.type == notifType.ONLINE){
+            if (notif.senderId == this.userId()) {
+              if (notif.type == notifType.ONLINE) {
                 this.isOnline.set(true);
               }
-              else if (notif.type == notifType.OFFLINE){
+              else if (notif.type == notifType.OFFLINE) {
                 this.isOnline.set(false);
               }
               this.loaded.set(false);
@@ -84,52 +84,53 @@ export class ProfileView {
       }
 
     })
-    this.ref.nativeElement.addEventListener('click', (e: any)=>{
+    this.ref.nativeElement.addEventListener('click', (e: any) => {
       if ((e.target as HTMLElement).closest('app-profile-view > .container') == null
-      && (e.target as HTMLElement).closest('app-profile-view .popup-block-report') == null ){
+        && (e.target as HTMLElement).closest('app-profile-view .popup-block-report') == null) {
         this.onClickOutside.emit();
       }
     });
   }
 
-  viewImage(event: PointerEvent, index: number){
+  viewImage(event: PointerEvent, index: number) {
     event.preventDefault()
 
     var imageViewer = this.viewContainer.createComponent(ImageViewer);
     imageViewer.instance.image.set(this.user().photos[index]);
 
-    imageViewer.instance.onClickOutside.subscribe(()=>{
+    imageViewer.instance.onClickOutside.subscribe(() => {
       imageViewer.destroy();
     });
   }
 
-  openChat(){
-    history.pushState('','', `/matches/profile/${this.userId()}/chat`);
+  openChat() {
+    history.pushState('', '', `/matches/profile/${this.userId()}/chat`);
 
     var chat = this.viewContainer.createComponent(Chat);
     chat.setInput("userId", this.userId());
-    chat.instance.onClickOutside.subscribe(()=>{
+    chat.instance.onClickOutside.subscribe(() => {
       chat.destroy();
-      this.clientUser?.ws?.next({message: `unwatch : ${this.clientUser.id}->${this.userId()}`});
-      history.pushState('','', `/matches/profile/${this.userId()}`);
+      this.clientUser?.ws?.next({ message: `unwatch : ${this.clientUser.id}->${this.userId()}` });
+      history.pushState('', '', `/matches/profile/${this.userId()}`);
     });
   }
 
-  unlikeUser(){
+  unlikeUser() {
     this.likesService.setUserAsUnliked(this.userId());
     this.onUnlike.emit();
   }
 
-  likeUser(){
+  likeUser() {
     this.likesService.setUserAsLiked(this.userId());
     this.onLike.emit();
   }
 
-  ignoreUser(){
-    this.onIgnore.emit();
+  dislikeUser() {
+    this.likesService.setUserAsDisliked(this.user().id);
+    this.onDislike.emit();
   }
 
-  openBlockPopup(){
+  openBlockPopup() {
     this.blockPopup.set(true);
   }
 
@@ -169,7 +170,7 @@ export class ProfileView {
     this.errorMessage.set(null);
   }
 
-  closeBlockPopupAndRedirect(){
+  closeBlockPopupAndRedirect() {
     this.closeBlockPopup();
     this.onBlocked.emit();
   }

@@ -1,96 +1,97 @@
 <div class="container">
   @if (loaded()) {
-    <div id="buttons-container" class="block-and-report-buttons">
-        <button (click)="openBlockPopup()">
-          <img/>
-        </button>
-    </div>
-    <div class="name-container desktop">
-      <span>{{user().firstName}}</span>
-      <span>'{{user().username}}'</span>
-      <span>{{user().lastName}}</span>
-    </div>
-    <div class="name-container mobile">
-      <span>{{user().firstName}} {{user().lastName}}</span>
-      <span>'{{user().username}}'</span>
-    </div>
-    @if (isOnline()) {
-      <span style="text-align: center;">Online</span>
-    }
-    @else {
-      <span style="text-align: center;">Last connection : {{user().lastConectionDate?.toDateString()}} - {{user().lastConectionDate?.toLocaleTimeString() }}</span>
-    }
+  <div id="buttons-container" class="block-and-report-buttons">
+    <button (click)="openBlockPopup()">
+      <img />
+    </button>
+  </div>
+  <div class="name-container desktop">
+    <span>{{user().firstName}}</span>
+    <span>'{{user().username}}'</span>
+    <span>{{user().lastName}}</span>
+  </div>
+  <div class="name-container mobile">
+    <span>{{user().firstName}} {{user().lastName}}</span>
+    <span>'{{user().username}}'</span>
+  </div>
+  @if (isOnline()) {
+  <span style="text-align: center;">Online</span>
+  }
+  @else {
+  <span style="text-align: center;">Last connection : {{user().lastConectionDate?.toDateString()}} -
+    {{user().lastConectionDate?.toLocaleTimeString() }}</span>
+  }
 
-    <div id="picture-container">
-      @for (item of user().photos; track $index) {
-        @if (item && item.url) {
-          <div (click)="viewImage($event, $index)" class="picture-viewer" [style]="'background-image: url('+ item.url +');'"></div>
-        }
-      }
+  <div id="picture-container">
+    @for (item of user().photos; track $index) {
+    @if (item && item.url) {
+    <div (click)="viewImage($event, $index)" class="picture-viewer" [style]="'background-image: url('+ item.url +');'">
     </div>
+    }
+    }
+  </div>
 
-    <div id="info-container">
-      @if (user().bio.trim().length > 0) {
-        <div id="bio-container">
-          <span>{{user().bio}}</span>
-        </div>
-      }
-      <div id="detail-container">
-        <span>Birthday : {{user().birthday.substring(0,10)}}</span>
-        <span>Gender : {{user().gender}}</span>
-        <span>Orientation : {{user().orientation.join(", ")}}</span>
-        <span>City : {{user().cityStr}}</span>
-        <span id="interest-container">Interest : @for (item of user().interest; track $index) {
-          <span class="interest-span">{{item}}</span>
+  <div id="info-container">
+    @if (user().bio.trim().length > 0) {
+    <div id="bio-container">
+      <span>{{user().bio}}</span>
+    </div>
+    }
+    <div id="detail-container">
+      <span>Birthday : {{user().birthday.substring(0,10)}}</span>
+      <span>Gender : {{user().gender}}</span>
+      <span>Orientation : {{user().orientation.join(", ")}}</span>
+      <span>City : {{user().cityStr}}</span>
+      <span id="interest-container">Interest : @for (item of user().interest; track $index) {
+        <span class="interest-span">{{item}}</span>
         }</span>
-      </div>
     </div>
-    @if (withChat() || withUnlike() || withIgnore() || withLike()) {
-      <div id="buttons-container">
-        @if (withIgnore()) {
-          <button (click)="ignoreUser()">X</button>
-        }
-        @if (withLike()) {
-          <button (click)="likeUser()"><3</button>
+  </div>
+  @if (withChat() || withUnlike() || withIgnore() || withLike()) {
+  <div id="buttons-container">
+    @if (withIgnore()) {
+    <button (click)="dislikeUser()">X</button>
+    }
+    @if (withLike()) { <button (click)="likeUser()"><3</button>
         }
         @if (withUnlike()) {
-          <button (click)="unlikeUser()">unlike</button>
+        <button (click)="unlikeUser()">unlike</button>
         }
         @if (withChat()) {
-          <button (click)="openChat()">chat</button>
+        <button (click)="openChat()">chat</button>
         }
-      </div>
-    }
+  </div>
+  }
 
   }
   @else {
-    <h2>Loading...</h2>
+  <h2>Loading...</h2>
   }
 </div>
 @if (blockPopup()) {
-  <div class="popup-overlay">
-    <div class="popup-block-report">
+<div class="popup-overlay">
+  <div class="popup-block-report">
 
-      @if (!blockPopupResults()) {
-        <p>Are you sure you want to block this user?</p>
+    @if (!blockPopupResults()) {
+    <p>Are you sure you want to block this user?</p>
 
-        @if (errorMessage()) {
-          <p class="error-message" style="color: red; font-weight: bold;">
-            {{ errorMessage() }}
-          </p>
-        }
+    @if (errorMessage()) {
+    <p class="error-message" style="color: red; font-weight: bold;">
+      {{ errorMessage() }}
+    </p>
+    }
 
-        <div class="actions">
-          <button (click)="blockUser()">Block</button>
-          <button (click)="reportUser()">Block and report</button>
-          <button (click)="closeBlockPopup()">Cancel</button>
-        </div>
-      }
-      @else {
-        <p>Action completed successfully.</p>
-        <button (click)="closeBlockPopupAndRedirect()">Close</button>
-      }
-
+    <div class="actions">
+      <button (click)="blockUser()">Block</button>
+      <button (click)="reportUser()">Block and report</button>
+      <button (click)="closeBlockPopup()">Cancel</button>
     </div>
+    }
+    @else {
+    <p>Action completed successfully.</p>
+    <button (click)="closeBlockPopupAndRedirect()">Close</button>
+    }
+
   </div>
+</div>
 }

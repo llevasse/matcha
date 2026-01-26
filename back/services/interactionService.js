@@ -11,6 +11,7 @@ async function performLike(fromUserId, toUserId) {
 
     await _throw404IfUserDoesNotExist(toUserId);
     await _throw400IfAlreadyLiked(fromUserId, toUserId);
+    await _deleteDislike(fromUserId, toUserId);
 
     const isMatch = await _checkIfReverseInteractionExists(toUserId, fromUserId);
     await db.execute(
@@ -225,7 +226,7 @@ async function _throw404IfUserDoesNotExist(userId) {
 
 async function _throw400IfAlreadyLiked(fromUserId, toUserId) {
     const [existingInteraction] = await db.execute(
-        'SELECT id FROM interactions WHERE from_user_id = ? AND to_user_id = ?',
+        'SELECT id FROM interactions WHERE from_user_id = ? AND to_user_id = ? AND is_like = TRUE',
         [fromUserId, toUserId]
     );
 
@@ -234,6 +235,22 @@ async function _throw400IfAlreadyLiked(fromUserId, toUserId) {
         error.status = 400;
         throw error;
     }
+}
+
+async function _deleteDislike(fromUserId, toUserId) {
+    const [existingInteraction] = await db.execute(
+        'SELECT id FROM interactions WHERE from_user_id = ? AND to_user_id = ? AND is_like = FALSE',
+        [fromUserId, toUserId]);
+
+    if (existingInteraction.length > 0) {
+        await db.execute(
+            'DELETE FROM interactions WHERE from_user_id = ? AND to_user_id = ? AND is_like = FALSE',
+            [fromUserId, toUserId]);
+
+        await db.execute('UPDATE users SET fame = fame - 3 WHERE id = ?', [toUserId]);
+
+    }
+
 }
 
 async function _checkIfReverseInteractionExists(fromUserId, toUserId) {

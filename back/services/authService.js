@@ -16,7 +16,7 @@ async function registerUser(userData) {
 
         await connection.beginTransaction();
 
-        await _throw400IfUserAlreadyExists(connection, username, email);
+        await throw400IfUserAlreadyExists(connection, username, email);
 
         const [result] = await connection.execute(
             `INSERT INTO users (username, firstname, lastname, email, password_hash, is_confirmed)
@@ -194,7 +194,7 @@ function _passwordIsValid(password) {
     return (longEnough && hasNumbers && hasLetters && hasSpecialChar)
 }
 
-async function _throw400IfUserAlreadyExists(connection, username, email) {
+async function throw400IfUserAlreadyExists(connection, username, email) {
     const [duplicates] = await connection.execute(
         `SELECT id FROM users WHERE username = ? OR email = ?`,
         [username, email]
@@ -275,5 +275,6 @@ module.exports = {
     confirmEmail,
     requestPasswordReset,
     confirmPasswordReset,
-    loginUser
+    loginUser,
+    throw400IfUserAlreadyExists
 };

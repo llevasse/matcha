@@ -2,6 +2,7 @@ const db = require('../config/database');
 const bcrypt = require('bcryptjs');
 const { getUserPrivateInfoByIdSqlStatement, getUserPublicInfoByIdSqlStatement, getUserPreviewInfoSqlStatement } = require('../utils/users');
 const { hasBeenBlockedByOrIsBlocking } = require('./blockService');
+const { throw400IfUserAlreadyExists } = require('../services/authService');
 
 const TAGS_POINTS = 10;
 const DISTANCE_MALUS_COEFF = -5; //per km away
@@ -48,6 +49,7 @@ async function updateProfile(userId, profileData) {
         await connection.beginTransaction();
 
         await _validateAge(birthdate);
+        await throw400IfUserAlreadyExists();
         const genderId = await _getGenderId(connection, gender);
 
         await connection.execute(

@@ -7,6 +7,7 @@ const fem_names = require('../utils/fem_names.json')
 const masc_names = require('../utils/masc_names.json')
 const lastnames = require('../utils/last_names.json')
 const cities = require('../utils/city.json')
+const { performLike } = require('../services/interactionService');
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -58,7 +59,7 @@ router.post('/create-users', adminAuthenticateToken, asyncHandler(async (req, re
       firstname = masc_names[getRandomInt(0, masc_names.length - 1)];
     }
     const lastname = lastnames[getRandomInt(0, lastnames.length - 1)];
-    const username = (firstname[0] + lastname + ((new Date).getTime())).substring(0, 50);
+    const username = (firstname[0] + lastname + ((new Date).getTime().toString().substring(9, 50))).substring(0, 50);
     let dob = new Date(Date.parse((new Date()).toDateString()));
     dob.setFullYear(dob.getFullYear() - getRandomInt(18, 99));
     dob = dob.toISOString().substring(0, 10);
@@ -118,7 +119,7 @@ router.post('/create-users', adminAuthenticateToken, asyncHandler(async (req, re
       await db.execute(userInterestInsertQuery, interestIdList);
     }
 
-    const pfpPath = `/default_profile_pictures/thisPersonDoesNotExist0${getRandomInt(1, 7)}.png`
+    const pfpPath = `/default_profile_pictures/thisPersonDoesNotExist${getRandomInt(0, 14)}.png`
     await db.execute('INSERT INTO profile_pictures (user_id, file_path, is_main) VALUES (?, ?, TRUE)',
       [insertUserResult.insertId, pfpPath]
     );
@@ -131,5 +132,24 @@ router.post('/create-users', adminAuthenticateToken, asyncHandler(async (req, re
   });
 }));
 
+router.post('/create-match', adminAuthenticateToken, asyncHandler(async (req, res) => {
+  await _tryPerformLike(req.body.to_user_id, req.body.from_user_id);
+  await _tryPerformLike(req.body.from_user_id, req.body.to_user_id);
+
+  return res.status(201).json({
+    message: 'Match created successfully',
+  });
+}));
+
 
 module.exports = router;
+async function _tryPerformLike(from_user_id, to_user_id) {
+  try {
+    await performLike(from_user_id, to_user_id);
+  }
+  catch (error) {
+    if (error.status != '404')
+      throw error;
+  }
+}
+

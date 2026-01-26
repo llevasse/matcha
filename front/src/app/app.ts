@@ -21,25 +21,25 @@ export class App {
 
   loaded = signal<boolean>(false);
   error503 = signal<boolean>(false);
-  constructor(private authService: AuthService, private router: Router, private userService: UserService){
+  constructor(private authService: AuthService, private router: Router, private userService: UserService) {
     // Check and ask for location permission on each load of site
     navigator.permissions.query({ name: "geolocation" }).then((result) => {
       if (result.state === "prompt") {
-        navigator.geolocation.getCurrentPosition(()=>{});
+        navigator.geolocation.getCurrentPosition(() => { });
       }
     });
 
-    document.addEventListener("clientCreated", ()=>{
-      this.userService.getClientUser().then((user)=>{
-        if (user){
+    document.addEventListener("clientCreated", () => {
+      this.userService.getClientUser().then((user) => {
+        if (user) {
           this.loaded.set(false);
           this.clientUser = user;
-          user.ws?.subscribe((obj)=>{
+          user.ws?.subscribe((obj) => {
             this.notificationHandler(obj);
             this.loaded.set(false);
             this.loaded.set(true);
           })
-          if (!this.getCurrentPathName().startsWith("/profile") && !this.clientUser.isValid){
+          if (!this.getCurrentPathName().startsWith("/profile") && !this.clientUser.isValid) {
             router.navigate(["/profile"])
           }
         }
@@ -47,48 +47,48 @@ export class App {
       })
     });
 
-    document.addEventListener("logout", ()=>{
+    document.addEventListener("logout", () => {
       this.loaded.set(false);
       this.loaded.set(true);
       this.clientUser = null;
       this.notifList.set([]);
     })
 
-    document.addEventListener("error503", ()=>{
+    document.addEventListener("error503", () => {
       this.error503.set(false);
       this.error503.set(true);
     })
 
     if (this.getCurrentPathName().startsWith("/login") || this.getCurrentPathName().startsWith("/register")
-    || this.getCurrentPathName().startsWith("/confirm-email") || this.getCurrentPathName().startsWith("/reset-password")){
+      || this.getCurrentPathName().startsWith("/confirm-email") || this.getCurrentPathName().startsWith("/reset-password")) {
       this.loaded.set(true);
       return;
     }
-    userService.createClientUser().then((value)=>{
-      if(value == null){
+    userService.createClientUser().then((value) => {
+      if (value == null) {
         router.navigate(["/login"]);
         this.loaded.set(true);
       }
     });
   }
 
-  ngOnInit(){
-    this.router.events.subscribe((event: Event)=>{
-      if (event instanceof NavigationEnd){
-        if (RegExp("^\/matches\/profile\/.*\/chat$").test(event.url)){  // check if url leads to chat and clear related notif if need be
+  ngOnInit() {
+    this.router.events.subscribe((event: Event) => {
+      if (event instanceof NavigationEnd) {
+        if (RegExp("^\/matches\/profile\/.*\/chat$").test(event.url)) {  // check if url leads to chat and clear related notif if need be
           const profileId: number = Number.parseInt(event.url.split("/")[3])
-          this.removeNotif(new MatchaNotification("","", profileId, null, notifType.MESSAGE_SENT));
+          this.removeNotif(new MatchaNotification("", "", profileId, null, notifType.MESSAGE_SENT));
         }
-        if (RegExp("^\/matches.*$").test(event.url)){ // om match page, remove match notif
+        if (RegExp("^\/matches.*$").test(event.url)) { // om match page, remove match notif
           this.notifList.set(
-            this.notifList().filter((notif)=>{
+            this.notifList().filter((notif) => {
               return notif.type != notifType.MATCH;
             })
           );
         }
-        if (RegExp("^\/likes.*$").test(event.url)){ // om like page, remove like notif
+        if (RegExp("^\/likes.*$").test(event.url)) { // om like page, remove like notif
           this.notifList.set(
-            this.notifList().filter((notif)=>{
+            this.notifList().filter((notif) => {
               return notif.type != notifType.LIKED && notif.type != notifType.UNLIKED;
             })
           );
@@ -97,65 +97,65 @@ export class App {
     });
   }
 
-  isAuth(){
+  isAuth() {
     return this.authService.isAuthenticated();
   }
 
-  getCurrentPathName(){
+  getCurrentPathName() {
     return window.location.pathname;
   }
 
-  goHome(){
+  goHome() {
     this.router.navigate([`/`]);
   }
 
-  goProfile(){
+  goProfile() {
     this.router.navigate([`/profile`]);
   }
 
-  goHistory(){
+  goHistory() {
     this.router.navigate([`/history`]);
   }
 
-  logout(){
+  logout() {
     this.authService.logout();
     this.router.navigate([`/login`]);
   }
 
-  goLikes(){
+  goLikes() {
     this.router.navigate([`/likes`]);
   }
 
-  goMatches(){
+  goMatches() {
     this.router.navigate([`/matches`]);
   }
 
-  toggleNotifDropdown(event: PointerEvent){
-    if (event.target instanceof HTMLElement){
+  toggleNotifDropdown(event: PointerEvent) {
+    if (event.target instanceof HTMLElement) {
       let container = event.target.nextElementSibling;
-      if (container?.classList.contains('inactive') && container?.children.length != 0){
+      if (container?.classList.contains('inactive') && container?.children.length != 0) {
         container?.classList.remove('inactive');
-      }else{
+      } else {
         container?.classList.add('inactive');
       }
     }
   }
 
-  @HostListener('document:mousedown', ['$event']) closeNotifDropdown(event: any){
-    if (event.target.closest(".notif-dropdown-container") == null && event.target.closest(".notif-content-container") == null){
-      document.querySelectorAll(".notif-content-container").forEach((element)=>{
+  @HostListener('document:mousedown', ['$event']) closeNotifDropdown(event: any) {
+    if (event.target.closest(".notif-dropdown-container") == null && event.target.closest(".notif-content-container") == null) {
+      document.querySelectorAll(".notif-content-container").forEach((element) => {
         if (!element.classList.contains("inactive"))
           element.classList.add('inactive');
       });
     }
   }
 
-  private removeNotif(notif:MatchaNotification){
-    this.notifList.update((list)=>{
-      const index = list.findIndex((currentNotif)=>{
+  private removeNotif(notif: MatchaNotification) {
+    this.notifList.update((list) => {
+      const index = list.findIndex((currentNotif) => {
         return (currentNotif.senderId == notif.senderId && currentNotif.type == notif.type)
       })
-      if (index != -1){
+      if (index != -1) {
         list.splice(index, 1);
       }
       return list;
@@ -164,63 +164,63 @@ export class App {
 
   private notificationHandler(obj: any) {
     const notif = createNotificationFromWsObject(obj);
-    if (notif.message != ""){
-      switch(notif.type){
-        case notifType.LIKED:{
-          if (RegExp("^\/likes.*$").test(this.router.url)){
-            return ;
+    if (notif.message != "") {
+      switch (notif.type) {
+        case notifType.LIKED: {
+          if (RegExp("^\/likes.*$").test(this.router.url)) {
+            return;
           }
-          notif.action = ()=>{
+          notif.action = () => {
             this.router.navigateByUrl(`/likes/profile/${notif.senderId}`);
             this.removeNotif(notif);
           }
           break;
         }
-        case notifType.UNLIKED:{
-          if (RegExp("^\/(likes|matches).*$").test(this.router.url)){
-            return ;
+        case notifType.UNLIKED: {
+          if (RegExp("^\/(likes|matches).*$").test(this.router.url)) {
+            return;
           }
-          notif.action = ()=>{
+          notif.action = () => {
             this.removeNotif(notif);
           }
           break;
         }
-        case notifType.MATCH:{
-          if (RegExp("^\/matches.*$").test(this.router.url)){
-            return ;
+        case notifType.MATCH: {
+          if (RegExp("^\/matches.*$").test(this.router.url)) {
+            return;
           }
-          notif.action = ()=>{
+          notif.action = () => {
             this.router.navigateByUrl(`/matches/profile/${notif.senderId}`)
             this.removeNotif(notif);
           }
           break;
         }
-        case notifType.MESSAGE_SENT:{
-          if (RegExp(`^\/matches\/profile\/${notif.senderId}\/chat$`).test(this.router.url)){  // Don't add notif if already on chat page with sender
+        case notifType.MESSAGE_SENT: {
+          if (RegExp(`^\/matches\/profile\/${notif.senderId}\/chat$`).test(this.router.url)) {  // Don't add notif if already on chat page with sender
             return
           }
-          notif.action = ()=>{
+          notif.action = () => {
             this.router.navigateByUrl(`/matches/profile/${notif.senderId}/chat`)
             this.removeNotif(notif);
           }
           break;
         }
-        default:{
-          notif.action = ()=>{
+        default: {
+          notif.action = () => {
             this.removeNotif(notif);
           }
         }
       }
-      if (notif.message != "" && (notif.senderId == null || notif.senderId! != this.clientUser?.id)){
-        this.notifList.update((list)=>{
+      if (notif.message != "" && (notif.senderId == null || notif.senderId! != this.clientUser?.id)) {
+        this.notifList.update((list) => {
           let needPush = true;
-          list.forEach((currentNotif)=>{
-            if (currentNotif.type == notif.type && currentNotif.senderId == notif.senderId){
+          list.forEach((currentNotif) => {
+            if (currentNotif.type == notif.type && currentNotif.senderId == notif.senderId) {
               currentNotif.repeated++;
               needPush = false;
             }
           })
-          if (needPush){  // add notif if notif sender has not send another notif of the same type
+          if (needPush) {  // add notif if notif sender has not send another notif of the same type
             list.push(notif)
           }
           return list;

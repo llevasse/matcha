@@ -91,7 +91,6 @@ export class User {
 
     this.isValid = obj.is_valid;
 
-    // console.log(this);
   }
 
   id: number = NaN;

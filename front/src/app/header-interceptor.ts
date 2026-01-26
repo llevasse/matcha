@@ -6,7 +6,6 @@ export const headerInterceptor: HttpInterceptorFn = (req, next) => {
 
     if (idToken) {
       const cloned = req.clone({headers: req.headers.set("Authorization","Bearer " + idToken)});
-      console.log(cloned);
       return next(cloned);
     }
   }

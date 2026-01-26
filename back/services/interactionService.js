@@ -13,7 +13,6 @@ async function performLike(fromUserId, toUserId) {
     await _throw400IfAlreadyLiked(fromUserId, toUserId);
 
     const isMatch = await _checkIfReverseInteractionExists(toUserId, fromUserId);
-
     await db.execute(
         'INSERT INTO interactions (from_user_id, to_user_id, is_match) VALUES (?, ?, ?)',
         [fromUserId, toUserId, isMatch]

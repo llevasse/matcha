@@ -374,7 +374,7 @@ async function _getSearchOrigin(userId, lat, lon, ageMin) {
 }
 
 function _buildSearchQuery(userId, userGenderId, searchOriginLat, searchOriginLon, interestWhitelist, interestBlacklist, filters, orderBy, order, limit, offset) {
-    let query = getUserPreviewInfoSqlStatement + ` FROM users u WHERE u.id != ? AND u.is_confirmed=true`;
+    let query = getUserPreviewInfoSqlStatement + ` FROM users u WHERE u.id != ? AND u.is_valid=true`;
 
     query += ` AND u.id NOT IN (SELECT i.from_user_id from interactions i where i.to_user_id = ?)`;
     query += ` AND u.gender_id IN (SELECT up.gender_id FROM user_preferences up WHERE up.user_id = ?)`;

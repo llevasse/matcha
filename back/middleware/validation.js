@@ -8,17 +8,17 @@ const allowedGenders = [
 ];
 
 const userRegistrationSchema = Joi.object({
-    username: Joi.string().alphanum().min(3).max(50).required(),
-    email: Joi.string().email().required(),
+    username: Joi.string().alphanum().min(3).max(30).required(),
+    email: Joi.string().email().max(100).required(),
     password: Joi.string().min(8).required(),
-    firstname: Joi.string().max(50).required(),
-    lastname: Joi.string().max(50).required(),
+    firstname: Joi.string().max(30).required(),
+    lastname: Joi.string().max(30).required(),
 });
 
 const profileUpdateSchema = Joi.object({
-    firstname: Joi.string().max(50).required(),
-    lastname: Joi.string().max(50).required(),
-    username: Joi.string().alphanum().min(3).max(50).required(),
+    firstname: Joi.string().max(30).required(),
+    lastname: Joi.string().max(30).required(),
+    username: Joi.string().alphanum().min(3).max(30).required(),
     email: Joi.string().email().required(),
     city: Joi.string().max(100).optional().allow(null).empty(""),
     location_latitude: Joi.number().precision(9).optional().allow(null),

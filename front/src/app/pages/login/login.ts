@@ -1,12 +1,11 @@
 import { AuthService } from './../../../services/authService';
 import { Component, output, forwardRef, input, signal } from '@angular/core';
-import { Input } from '../../core/input/input';
 import { Router } from '@angular/router';
 import { UserService } from '../../../services/userService';
 
 @Component({
   selector: 'app-login',
-  imports: [Input, forwardRef(() => LoginSelector)],
+  imports: [forwardRef(() => LoginSelector)],
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })

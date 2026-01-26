@@ -35,6 +35,7 @@ CREATE TABLE users (
     is_valid BOOLEAN DEFAULT FALSE,
     is_admin BOOLEAN DEFAULT FALSE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    tags_created INT DEFAULT 0,
     FOREIGN KEY (gender_id) REFERENCES genders (id)
 );
 

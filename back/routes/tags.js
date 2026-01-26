@@ -12,24 +12,46 @@ router.get('/', asyncHandler(async (req, res) => {
 }));
 
 
-router.post('/', authenticateToken, asyncHandler(async (req, res) => {
+router.post(
+    '/',
+    authenticateToken,
+    asyncHandler(async (req, res) => {
         const { name } = req.body;
 
         if (!name || name.trim().length === 0) {
             return res.status(400).json({ error: 'Tag name is required' });
         }
 
+        const [rows] = await db.execute(
+            'SELECT tags_created FROM users WHERE id = ?',
+            [req.user.id]
+        );
+
+        const tagsCreated = rows[0]?.tags_created ?? 0;
+
+        if (tagsCreated >= 10) {
+            return res.status(403).json({ error: 'Tag limit reached for this user' });
+        }
+
+        const normalizedName = name.trim().toLowerCase();
+
         const [result] = await db.execute(
             'INSERT INTO tags (name) VALUES (?)',
-            [name.trim().toLowerCase()]
+            [normalizedName]
+        );
+
+        await db.execute(
+            'UPDATE users SET tags_created = tags_created + 1 WHERE id = ?',
+            [req.user.id]
         );
 
         res.status(201).json({
             id: result.insertId,
-            name: name.trim().toLowerCase(),
-            message: 'Tag created successfully'
+            name: normalizedName
         });
-}));
+    })
+);
+
 
 
 router.get('/user/:user_id', asyncHandler(async (req, res) => {
@@ -51,13 +73,13 @@ router.get('/user/:user_id', asyncHandler(async (req, res) => {
 router.post('/user', authenticateToken, asyncHandler(async (req, res) => {
     const { tag_id } = req.body;
 
-    
+
     const [tags] = await db.execute('SELECT id FROM tags WHERE id = ?', [tag_id]);
     if (tags.length === 0) {
         return res.status(404).json({ error: 'Tag not found' });
     }
 
-    
+
     await db.execute(
         'INSERT IGNORE INTO user_tags (user_id, tag_id) VALUES (?, ?)',
         [req.user.id, tag_id]

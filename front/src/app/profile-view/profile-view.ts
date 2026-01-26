@@ -59,7 +59,6 @@ export class ProfileView {
   private ref = inject(ElementRef);
 
   constructor(private userService: UserService, private likesService: LikesService, private blockOrReportService: BlockOrReportService) {
-    //TODO call API to add profile to user history
     userService.getClientUser().then((user) => {
       if (user) {
         this.clientUser = user;

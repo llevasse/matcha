@@ -15,7 +15,6 @@ DC		= docker compose
 all: $(NAME)
 
 $(NAME):
-	if [ ! -f .env ]; then gpg .env.gpg ; fi # todo test this
 	mkdir -p back/uploads/profiles
 	npm install --prefix ./front -verbose
 	rm -rf ./front/node_modules/ front/package-lock.json

@@ -393,7 +393,7 @@ export class Home {
     this.userSearchCityList.set([]);
     this.userSearchCityListStr.set([]);
     this.locationInputContainer()?.toggleDropDown();
-    if (e.value != null && e.value.length > 3) { // todo make api call from back
+    if (e.value != null && e.value.length > 3) {
       this.locationService.searchCity(e.value).then((response) => {
         if (response.ok) {
           response.json().then((obj) => {

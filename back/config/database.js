@@ -14,7 +14,7 @@ const dbConfig = {
 
 const pool = mysql.createPool(dbConfig);
 
-// Test de connexion
+// Connexion test
 async function testConnection() {
   var connected = false;
   for (i = 0; i < 5 && connected === false; i++)

@@ -74,14 +74,6 @@ export class Chat {
     })
   }
 
-  ngDoCheck(){
-    // console.log("check");
-  }
-
-  ngOnChanges(){
-    // console.log("change");
-  }
-
   addMessageFromNotif(notif: MatchaNotification){
     const message = notif.rawMessage.split(":")[1];
     var mess = new Message(message, 0, notif.senderId!, notif.receiverId!, new Date(Date.now()), "");

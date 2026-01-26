@@ -2,11 +2,11 @@ import { LikesService } from './../../../services/likesService';
 import { Component, ComponentRef, inject, signal, viewChildren, ViewContainerRef } from '@angular/core';
 import { User } from '../../core/class/user';
 import { ProfilePreview } from "../../profile-preview/profile-preview";
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ProfileView } from '../../profile-view/profile-view';
 import { UserService } from '../../../services/userService';
-import { getClientCity, notifType } from '../../utilities/utils';
 import { createNotificationFromWsObject } from '../../core/class/notification';
+import { notifType } from '../../utilities/utils';
 
 @Component({
   selector: 'app-likes',
@@ -38,7 +38,6 @@ export class Likes {
       return;
     }
     this.user = tmpUser;
-    this.user = await getClientCity(this.user);
     this.profiles.set(await this.likesService.getUsersWhoLikedClient());
     // Update liked list on new match or got unliked
     this.user.ws?.asObservable().pipe().subscribe(async (obj) => {

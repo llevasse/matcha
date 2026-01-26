@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../core/class/user';
 import { ProfileView } from '../../profile-view/profile-view';
 import { ProfilePreview } from "../../profile-preview/profile-preview";
-import { getClientCity, notifType } from '../../utilities/utils';
+import { notifType } from '../../utilities/utils';
 import { createNotificationFromWsObject } from '../../core/class/notification';
 
 @Component({
@@ -33,8 +33,6 @@ export class Matches {
       return ;
     }
     this.user = tmpUser;
-    this.user = await getClientCity(this.user);
-    //TODO api call to get similar user as client
     this.profiles.set(await this.matchesService.getUserMatches());
 
     // Update match list on new match or got unliked

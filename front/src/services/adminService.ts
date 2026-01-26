@@ -16,8 +16,6 @@ export class AdminService {
   }
 
   createMatch(username1: string, username2: string) {
-    console.log("f2");
-
     return fetch(`${this.adminUrl}/create-match`, {
       method: "POST",
       headers: {

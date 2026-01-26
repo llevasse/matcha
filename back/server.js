@@ -17,14 +17,14 @@ const blockRoutes = require('./routes/blocks');
 const reportRoutes = require('./routes/reports');
 const locationRoutes = require('./routes/location');
 
-// middleware d'erreur
+// Error middleware
 const errorHandler = require('./middleware/errorHandler');
 const wsServer = require('./websockets/wsServer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware de sécurité
+// Security middleware
 app.use(helmet());
 app.use(cors({
     origin: process.env.FRONTEND_URL || 'http://localhost:3001',
@@ -34,15 +34,15 @@ app.use(cors({
 // Rate limiting
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 1000 // limite chaque IP à 100 requêtes par fenêtre //TODO reset to 100 after debug
+    max: 1000 // Limit IP to 1000 request per window
 });
 app.use(limiter);
 
-// Middleware pour parser le JSON
+// Parser middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Middleware pour intercepter les JSON mal formés
+// Bad json format middleware
 app.use((err, req, res, next) => {
     if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
         return res.status(400).json({ error: 'Invalid JSON format' });
@@ -50,13 +50,12 @@ app.use((err, req, res, next) => {
     next(err);
 });
 
-// Servir les fichiers statiques (images de profil)
+// Serv static file
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
 	setHeaders: function(res, path){
 		res.set("Cross-Origin-Resource-Policy", "cross-origin");
 	}
 }));
-// Servir les fichiers statiques (images de profil)
 app.use('/default_profile_pictures', express.static(path.join(__dirname, 'default_profile_pictures'), {
 	setHeaders: function(res, path){
 		res.set("Cross-Origin-Resource-Policy", "cross-origin");
@@ -75,15 +74,15 @@ app.use('/api/block', blockRoutes);
 app.use('/api/report', reportRoutes);
 app.use('/api/location', locationRoutes);
 
-// Route de test
+// Health route
 app.get('/api/health', (req, res) => {
     res.json({ status: 'OK', message: 'Matcha API is running' });
 });
 
-// Middleware de gestion des erreurs
+// Error middleware
 app.use(errorHandler);
 
-// Gestion des routes non trouvées
+// 404 route
 app.use('*', (req, res) => {
     res.status(404).json({ error: 'Route not found' });
 });

@@ -12,6 +12,12 @@ const router = express.Router();
 
 router.post('/', authenticateToken, validateMessage, asyncHandler(async (req, res) => {
     const { receiver_id, content } = req.body;
+    if (content.length > 100) {
+        const error = new Error('Content should be < 100 char');
+        error.status = 400;
+        throw error;
+    }
+
     const message = await sendMessage(req.user.id, receiver_id, content);
 
     res.status(201).json({

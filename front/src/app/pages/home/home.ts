@@ -249,6 +249,10 @@ export class Home {
     this.profiles.update((list)=>{
       return list.filter((checkedUser)=>{return checkedUser.id != user.id});
     })
+
+    this.surplusProfiles.update((list)=>{
+      return list.filter((checkedUser)=>{return checkedUser.id != user.id});
+    })
   }
 
   setRadius(event: Event){
